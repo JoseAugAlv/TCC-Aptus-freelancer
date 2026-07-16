@@ -1,0 +1,44 @@
+# Dependências (Composer)
+/vendor/
+composer.lock
+
+# Variáveis de ambiente / configuração sensível
+.env
+.env.local
+/app/Config/database.local.php
+
+# Logs
+/logs/*.log
+/logs/auditoria.log
+
+# Uploads de usuário (fotos de perfil, anúncios, portfólio, comprovantes)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# Cache / sessões do PHP
+/tmp/
+*.cache
+
+# IDE / editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Banco de dados local (dumps de teste, backups)
+*.sql.bak
+*.sqlite
+*.db
+
+# Node (se usar build de CSS/JS)
+node_modules/
+npm-debug.log
+
+# Arquivos temporários
+*.tmp
+*.swp

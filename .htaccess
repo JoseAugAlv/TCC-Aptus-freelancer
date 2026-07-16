@@ -1,0 +1,19 @@
+# Ativa o módulo de reescrita de URLs do Apache
+RewriteEngine On
+
+# Só executa a regra se a URL NÃO começar com /ReciclyWays/public/
+# Isso evita um loop infinito de redirecionamento
+
+RewriteCond %{REQUEST_URI} !^/RecycleWays/public/
+
+# Redireciona qualquer requisição para a pasta public
+#
+# Exemplos:
+# /RecycleWays           -> /RecycleWays/public/
+# /RecycleWays/home      -> /RecycleWays/public/home
+# /RecycleWays/produtos  -> /RecycleWays/public/produtos
+#
+# ^(.*)$ captura toda a URL solicitada
+# $1 representa o que foi capturado
+# [L] significa "Last", ou seja, para de processar outras regras
+RewriteRule ^(.*)$ public/$1 [L]

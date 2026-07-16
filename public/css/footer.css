@@ -1,0 +1,305 @@
+/* ========== VARIÁVEIS CSS ========== */
+:root {
+    --cor-primaria: #006577;
+    --cor-fundo: #e2fbff;
+    --cor-dourado: #C9A227;
+    --cor-branco: #ffffff;
+    --cor-texto-principal: #1a1a1a;
+    --cor-texto-secundario: #555555;
+    --cor-sombra: rgba(0, 101, 119, 0.1);
+    --cor-hover: #004d5c;
+    --cor-borda: #b3e5fc;
+
+    /* Transições */
+    --transicao-padrao: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== FOOTER MODERNO ========== */
+.footer-moderno {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--cor-sombra);
+    margin-top: 4rem;
+    padding: 3rem 0 1.5rem;
+    width: 100%;
+}
+
+.footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ===== GRID DO FOOTER ===== */
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* ===== COLUNAS DO FOOTER ===== */
+.footer-col {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== TÍTULOS DAS COLUNAS ===== */
+.footer-titulo {
+    color: var(--cor-primaria);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--cor-dourado);
+    display: inline-block;
+    letter-spacing: -0.3px;
+}
+
+/* ===== LISTA DE LINKS ===== */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.75rem;
+}
+
+/* ESTILO DOS LINKS - MESMO PADRÃO DO HEADER */
+.footer-links a {
+    text-decoration: none;
+    color: var(--cor-texto-principal);
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: var(--transicao-padrao);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.25rem 0;
+}
+
+/* EFEITO DE LINHA ABAIXO - IGUAL AO HEADER */
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-dourado));
+    transition: width 0.3s ease;
+}
+
+.footer-links a:hover::after {
+    width: 100%;
+}
+
+.footer-links a i {
+    font-size: 0.85rem;
+    color: var(--cor-dourado);
+    transition: var(--transicao-padrao);
+    width: 20px;
+}
+
+.footer-links a:hover {
+    color: var(--cor-primaria);
+    transform: translateX(4px);
+}
+
+/* ===== INFORMAÇÕES DE CONTATO ===== */
+.footer-contato {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--cor-texto-secundario);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    transition: var(--transicao-padrao);
+}
+
+.footer-contato i {
+    color: var(--cor-primaria);
+    width: 20px;
+    font-size: 0.9rem;
+}
+
+.footer-contato:hover {
+    color: var(--cor-primaria);
+    transform: translateX(4px);
+}
+
+/* ===== REDES SOCIAIS ===== */
+.footer-social {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.footer-social a {
+    width: 36px;
+    height: 36px;
+    background: var(--cor-primaria);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transicao-padrao);
+    color: var(--cor-branco);
+    font-size: 1.1rem;
+    text-decoration: none;
+    box-shadow: 0 2px 8px var(--cor-sombra);
+}
+
+.footer-social a:hover {
+    background: var(--cor-dourado);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.2);
+}
+
+/* ===== RODAPÉ INFERIOR ===== */
+.footer-bottom {
+    border-top: 1px solid var(--cor-sombra);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.footer-bottom p {
+    color: var(--cor-texto-secundario);
+    font-size: 0.8rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+.footer-selo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--cor-primaria);
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(0, 101, 119, 0.05);
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    transition: var(--transicao-padrao);
+}
+
+.footer-selo:hover {
+    background: rgba(0, 101, 119, 0.1);
+    transform: translateY(-2px);
+}
+
+.footer-selo i {
+    font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+/* Desktop para tablet */
+@media (max-width: 992px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+}
+
+/* Tablet para mobile */
+@media (max-width: 768px) {
+    .footer-container {
+        padding: 0 1.5rem;
+    }
+    
+    .footer-titulo {
+        font-size: 1rem;
+    }
+    
+    .footer-links a {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 550px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .footer-col {
+        align-items: center;
+    }
+    
+    .footer-titulo {
+        display: block;
+        text-align: center;
+    }
+    
+    .footer-links li {
+        text-align: center;
+    }
+    
+    .footer-links a {
+        justify-content: center;
+    }
+    
+    .footer-links a::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .footer-links a:hover::after {
+        width: 80%;
+    }
+    
+    .footer-contato {
+        justify-content: center;
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Mobile pequeno */
+@media (max-width: 480px) {
+    .footer-moderno {
+        padding: 2rem 0 1rem;
+    }
+    
+    .footer-container {
+        padding: 0 1rem;
+    }
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.footer-col {
+    animation: fadeInUp 0.5s ease backwards;
+}
+
+.footer-col:nth-child(1) { animation-delay: 0.1s; }
+.footer-col:nth-child(2) { animation-delay: 0.2s; }
+.footer-col:nth-child(3) { animation-delay: 0.3s; }
+.footer-col:nth-child(4) { animation-delay: 0.4s; }
