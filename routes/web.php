@@ -6,7 +6,7 @@
 */
 $router->get('/', 'HomeController@index');
 $router->get('/buscar', 'HomeController@buscar');
-$router->get('/sobre', 'HomeController@sobre');
+$router->get('/sobre', 'SobreController@index');
 $router->get('/contato', 'HomeController@contato');
 
 // ... resto das rotas
@@ -35,20 +35,21 @@ $router->post('/auth/redefinir-senha', 'AuthController@redefinirSenha');
 /*
    PERFIL DO USUÁRIO (Usuário logado)
 */
+// routes/web.php
 $router->get('/perfil', 'PerfilController@index', [3, 2, 1, 4]);
 $router->get('/perfil/editar', 'PerfilController@editar', [3, 2, 1, 4]);
 $router->post('/perfil/atualizar', 'PerfilController@atualizar', [3, 2, 1, 4]);
-$router->get('/perfil/{id}', 'PerfilController@publico');
-
+$router->get('/perfil/portfolio', 'PerfilController@portfolio', [3, 2, 1, 4]);
+$router->get('/perfil/publico/{id}', 'PerfilController@publico');
 /*
    PORTFÓLIO
 */
 $router->get('/perfil/portfolio', 'PortfolioController@index', [3, 2, 1, 4]);
 $router->get('/perfil/portfolio/criar', 'PortfolioController@criar', [3, 2, 1, 4]);
 $router->post('/perfil/portfolio/salvar', 'PortfolioController@salvar', [3, 2, 1, 4]);
-$router->get('/perfil/portfolio/editar', 'PortfolioController@editar', [3, 2, 1, 4]);
+$router->get('/perfil/portfolio/editar/{id}', 'PortfolioController@editar', [3, 2, 1, 4]);
 $router->post('/perfil/portfolio/atualizar', 'PortfolioController@atualizar', [3, 2, 1, 4]);
-$router->get('/perfil/portfolio/excluir', 'PortfolioController@excluir', [3, 2, 1, 4]);
+$router->get('/perfil/portfolio/excluir/{id}', 'PortfolioController@excluir', [3, 2, 1, 4]);
 
 /*
    ANÚNCIOS (Usuário logado)

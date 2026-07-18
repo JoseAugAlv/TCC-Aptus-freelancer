@@ -1,0 +1,375 @@
+/* public/css/sobre.css */
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.sobre-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 120px 2rem 4rem;
+}
+
+/* ===== HERO SECTION ===== */
+.sobre-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 101, 119, 0.05), rgba(201, 162, 39, 0.05));
+    border-radius: 20px;
+}
+
+.sobre-hero h1 {
+    font-size: 3rem;
+    color: #006577;
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.sobre-hero .tagline {
+    font-size: 1.3rem;
+    color: #C9A227;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.sobre-hero p {
+    font-size: 1.1rem;
+    color: #555555;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ===== MISSÃO, VISÃO, VALORES ===== */
+.mvp-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.mvp-card {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 101, 119, 0.1);
+    transition: all 0.4s ease;
+}
+
+.mvp-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 101, 119, 0.1);
+    border-color: #C9A227;
+}
+
+.mvp-card i {
+    font-size: 3rem;
+    color: #006577;
+    margin-bottom: 1rem;
+}
+
+.mvp-card h3 {
+    color: #006577;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.mvp-card p {
+    color: #555555;
+    line-height: 1.6;
+}
+
+/* ===== COMO FUNCIONA ===== */
+.como-funciona-section {
+    margin-bottom: 4rem;
+    background: linear-gradient(135deg, rgba(0, 101, 119, 0.03), rgba(201, 162, 39, 0.03));
+    padding: 3rem 2rem;
+    border-radius: 20px;
+}
+
+.como-funciona-section h2 {
+    text-align: center;
+    color: #006577;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.como-funciona-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #006577, #C9A227);
+    border-radius: 2px;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.step-item {
+    text-align: center;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: #006577;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.step-number::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 101, 119, 0.1);
+    border-radius: 50%;
+    top: -5px;
+    left: -5px;
+    z-index: -1;
+}
+
+.step-item h3 {
+    color: #006577;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.step-item p {
+    color: #555555;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ===== CTA SECTION ===== */
+.cta-section {
+    text-align: center;
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(0, 101, 119, 0.05), rgba(201, 162, 39, 0.05));
+    border-radius: 20px;
+}
+
+.cta-section h2 {
+    color: #006577;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.cta-section p {
+    color: #555555;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primario,
+.btn-secundario {
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.4s ease;
+}
+
+.btn-primario {
+    background: #006577;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 101, 119, 0.2);
+}
+
+.btn-primario:hover {
+    background: #004d5c;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 101, 119, 0.3);
+}
+
+.btn-secundario {
+    background: transparent;
+    color: #006577;
+    border: 2px solid #006577;
+}
+
+.btn-secundario:hover {
+    background: #006577;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ============================================================ */
+/* ===== ANIMAÇÕES ===== */
+/* ============================================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sobre-hero,
+.mvp-card,
+.step-item,
+.cta-section {
+    animation: fadeInUp 0.6s ease backwards;
+}
+
+.sobre-hero {
+    animation-delay: 0.1s;
+}
+.mvp-card:nth-child(1) {
+    animation-delay: 0.2s;
+}
+.mvp-card:nth-child(2) {
+    animation-delay: 0.3s;
+}
+.mvp-card:nth-child(3) {
+    animation-delay: 0.4s;
+}
+.step-item:nth-child(1) {
+    animation-delay: 0.5s;
+}
+.step-item:nth-child(2) {
+    animation-delay: 0.6s;
+}
+.step-item:nth-child(3) {
+    animation-delay: 0.7s;
+}
+.cta-section {
+    animation-delay: 0.8s;
+}
+
+/* ============================================================ */
+/* ===== RESPONSIVIDADE ===== */
+/* ============================================================ */
+
+@media (max-width: 992px) {
+    .mvp-section,
+    .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .sobre-hero h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .sobre-container {
+        padding: 100px 1.5rem 3rem;
+    }
+
+    .sobre-hero {
+        padding: 2rem 1rem;
+    }
+
+    .sobre-hero h1 {
+        font-size: 2rem;
+    }
+
+    .sobre-hero .tagline {
+        font-size: 1.1rem;
+    }
+
+    .sobre-hero p {
+        font-size: 1rem;
+    }
+
+    .mvp-section,
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mvp-card {
+        padding: 1.5rem;
+    }
+
+    .cta-section {
+        padding: 2rem 1rem;
+    }
+
+    .cta-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-primario,
+    .btn-secundario {
+        width: 100%;
+        max-width: 250px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .sobre-container {
+        padding: 80px 1rem 2rem;
+    }
+
+    .sobre-hero {
+        padding: 1.5rem 1rem;
+    }
+
+    .sobre-hero h1 {
+        font-size: 1.6rem;
+    }
+
+    .sobre-hero .tagline {
+        font-size: 0.95rem;
+    }
+
+    .sobre-hero p {
+        font-size: 0.9rem;
+    }
+
+    .mvp-card,
+    .step-item {
+        padding: 1.2rem;
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .step-number::after {
+        width: 50px;
+        height: 50px;
+        top: -5px;
+        left: -5px;
+    }
+}

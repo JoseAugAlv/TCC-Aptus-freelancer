@@ -1,0 +1,891 @@
+/* public/css/perfil.css */
+
+/* ============================================================ */
+/* ===== CONTAINER ===== */
+/* ============================================================ */
+
+.perfil-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    margin-top: 100px;
+}
+
+.perfil-publico-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    margin-top: 100px;
+}
+
+/* ============================================================ */
+/* ===== HEADER ===== */
+/* ============================================================ */
+
+.perfil-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #eee;
+}
+
+.perfil-header h1 {
+    color: #006577;
+    font-size: 2rem;
+}
+
+.perfil-header h1 i {
+    margin-right: 10px;
+}
+
+.perfil-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* ============================================================ */
+/* ===== BOTÕES ===== */
+/* ============================================================ */
+
+.btn-editar,
+.btn-portfolio,
+.btn-voltar {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-editar {
+    background: #006577;
+    color: white;
+}
+
+.btn-editar:hover {
+    background: #004d5c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.2);
+}
+
+.btn-portfolio {
+    background: #C9A227;
+    color: white;
+}
+
+.btn-portfolio:hover {
+    background: #b8921f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(201, 162, 39, 0.2);
+}
+
+.btn-voltar {
+    background: #e2e8f0;
+    color: #333;
+}
+
+.btn-voltar:hover {
+    background: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+.btn-salvar {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #006577, #004d5c);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-salvar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.2);
+}
+
+.btn-cancelar {
+    padding: 0.75rem 1.5rem;
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancelar:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+.btn-contatar {
+    padding: 0.75rem 1.5rem;
+    background: #006577;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-contatar:hover {
+    background: #004d5c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.2);
+}
+
+.btn-ver-servicos {
+    padding: 0.75rem 1.5rem;
+    background: #C9A227;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-ver-servicos:hover {
+    background: #b8921f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(201, 162, 39, 0.2);
+}
+
+/* ============================================================ */
+/* ===== CARD PERFIL ===== */
+/* ============================================================ */
+
+.perfil-card,
+.perfil-publico-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.perfil-card:hover,
+.perfil-publico-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.perfil-avatar,
+.perfil-publico-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #006577, #004d5c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: white;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.perfil-avatar img,
+.perfil-publico-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.perfil-info,
+.perfil-publico-info {
+    flex: 1;
+}
+
+.perfil-info h2,
+.perfil-publico-info h2 {
+    color: #1a1a1a;
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+}
+
+.perfil-info .email,
+.perfil-info .telefone,
+.perfil-info .whatsapp {
+    color: #555555;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+}
+
+.perfil-info .email i,
+.perfil-info .telefone i,
+.perfil-info .whatsapp i {
+    color: #006577;
+    margin-right: 8px;
+    width: 20px;
+}
+
+.perfil-info .whatsapp i {
+    color: #25D366;
+}
+
+.localizacao {
+    color: #555555;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.localizacao i {
+    color: #006577;
+    margin-right: 8px;
+}
+
+.perfil-info .badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: #e2e8f0;
+    color: #333;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.perfil-info .bio,
+.bio-publico {
+    color: #555555;
+    margin-top: 0.5rem;
+    line-height: 1.6;
+}
+
+/* ============================================================ */
+/* ===== AVALIAÇÃO PÚBLICA ===== */
+/* ============================================================ */
+
+.avaliacao-publico {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 0.8rem;
+}
+
+.avaliacao-publico .nota {
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-left: 0.3rem;
+}
+
+.avaliacao-publico .total-avaliacoes {
+    color: #555555;
+    font-size: 0.85rem;
+    margin-left: 0.3rem;
+}
+
+/* ============================================================ */
+/* ===== STATS ===== */
+/* ============================================================ */
+
+.perfil-stats,
+.perfil-publico-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-item {
+    background: white;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    border-color: #006577;
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.1);
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #006577;
+}
+
+.stat-label {
+    color: #555555;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* ============================================================ */
+/* ===== AÇÕES PÚBLICAS ===== */
+/* ============================================================ */
+
+.perfil-publico-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* ============================================================ */
+/* ===== FLASH MESSAGES ===== */
+/* ============================================================ */
+
+.flash-message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.flash-sucesso {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flash-erro {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.flash-aviso {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+}
+
+.flash-message i {
+    font-size: 1.2rem;
+}
+
+/* ============================================================ */
+/* ===== FORMULÁRIO ===== */
+/* ============================================================ */
+
+.perfil-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.perfil-form .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.perfil-form .form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.perfil-form .form-control:focus {
+    outline: none;
+    border-color: #006577;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(0, 101, 119, 0.1);
+}
+
+.perfil-form .form-control::placeholder {
+    color: #aaa;
+}
+
+.perfil-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.perfil-form textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.perfil-form input[type="file"].form-control {
+    padding: 10px 12px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* ============================================================ */
+/* ===== PORTFÓLIO ===== */
+/* ============================================================ */
+
+.portfolio-actions {
+    margin-bottom: 2rem;
+}
+
+.btn-adicionar {
+    padding: 0.75rem 1.5rem;
+    background: #006577;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-adicionar:hover {
+    background: #004d5c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.2);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.portfolio-item {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.portfolio-item:hover {
+    border-color: #006577;
+}
+
+.portfolio-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+}
+
+.portfolio-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.portfolio-placeholder p {
+    font-size: 0.9rem;
+}
+
+.portfolio-empty {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    color: #555555;
+}
+
+.portfolio-empty i {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+.portfolio-empty h3 {
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.portfolio-empty p {
+    color: #888;
+}
+
+/* ============================================================ */
+/* ===== RESPONSIVIDADE ===== */
+/* ============================================================ */
+
+@media (max-width: 1024px) {
+    .perfil-container,
+    .perfil-publico-container {
+        padding: 1.5rem;
+    }
+
+    .perfil-stats,
+    .perfil-publico-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .perfil-container,
+    .perfil-publico-container {
+        padding: 1rem;
+        margin-top: 80px;
+    }
+
+    .perfil-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .perfil-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .perfil-actions {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .perfil-actions .btn-editar,
+    .perfil-actions .btn-portfolio,
+    .perfil-actions .btn-voltar {
+        flex: 1;
+        justify-content: center;
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+
+    .perfil-card,
+    .perfil-publico-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .perfil-avatar,
+    .perfil-publico-avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 3rem;
+    }
+
+    .perfil-info h2,
+    .perfil-publico-info h2 {
+        font-size: 1.5rem;
+    }
+
+    .perfil-stats,
+    .perfil-publico-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .perfil-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn-salvar,
+    .form-actions .btn-cancelar {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .perfil-publico-actions {
+        flex-direction: column;
+    }
+
+    .perfil-publico-actions .btn-contatar,
+    .perfil-publico-actions .btn-ver-servicos {
+        justify-content: center;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .perfil-container,
+    .perfil-publico-container {
+        padding: 0.8rem;
+        margin-top: 60px;
+    }
+
+    .perfil-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .perfil-actions .btn-editar,
+    .perfil-actions .btn-portfolio,
+    .perfil-actions .btn-voltar {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .perfil-stats,
+    .perfil-publico-stats {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+
+    .stat-item {
+        padding: 1rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .perfil-card,
+    .perfil-publico-card {
+        padding: 1rem;
+    }
+
+    .perfil-avatar,
+    .perfil-publico-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+    }
+
+    .perfil-info h2,
+    .perfil-publico-info h2 {
+        font-size: 1.2rem;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+
+    .portfolio-item {
+        aspect-ratio: 1;
+    }
+
+    .portfolio-placeholder i {
+        font-size: 2rem;
+    }
+
+    .portfolio-placeholder p {
+        font-size: 0.75rem;
+    }
+}
+
+/* ============================================================ */
+/* ===== PORTFÓLIO - ESTILOS ADICIONAIS ===== */
+/* ============================================================ */
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.portfolio-item {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.portfolio-item .portfolio-placeholder {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    color: #94a3b8;
+    font-size: 3rem;
+}
+
+.portfolio-item-info {
+    padding: 1rem;
+}
+
+.portfolio-item-info h4 {
+    color: #006577;
+    margin-bottom: 0.3rem;
+    font-size: 1rem;
+}
+
+.portfolio-item-info p {
+    color: #555555;
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+}
+
+.portfolio-item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.portfolio-item-actions .btn-edit,
+.portfolio-item-actions .btn-delete {
+    padding: 0.3rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.portfolio-item-actions .btn-edit {
+    background: #006577;
+    color: white;
+}
+
+.portfolio-item-actions .btn-edit:hover {
+    background: #004d5c;
+}
+
+.portfolio-item-actions .btn-delete {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.portfolio-item-actions .btn-delete:hover {
+    background: #f5c6cb;
+}
+
+/* ============================================================ */
+/* ===== PORTFOLIO EMPTY ===== */
+/* ============================================================ */
+
+.portfolio-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+}
+
+.portfolio-empty i {
+    font-size: 4rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+.portfolio-empty h3 {
+    color: #555;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.portfolio-empty p {
+    color: #888;
+    margin-bottom: 1rem;
+}
+
+/* ============================================================ */
+/* ===== RESPONSIVIDADE PORTFÓLIO ===== */
+/* ============================================================ */
+
+@media (max-width: 768px) {
+    .portfolio-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .portfolio-item img,
+    .portfolio-item .portfolio-placeholder {
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+
+    .portfolio-item img,
+    .portfolio-item .portfolio-placeholder {
+        height: 120px;
+    }
+
+    .portfolio-item-info {
+        padding: 0.8rem;
+    }
+
+    .portfolio-item-info h4 {
+        font-size: 0.9rem;
+    }
+
+    .portfolio-item-info p {
+        font-size: 0.8rem;
+    }
+
+    .portfolio-item-actions .btn-edit,
+    .portfolio-item-actions .btn-delete {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.7rem;
+    }
+
+    .portfolio-empty {
+        padding: 2rem 1rem;
+    }
+
+    .portfolio-empty i {
+        font-size: 3rem;
+    }
+}
