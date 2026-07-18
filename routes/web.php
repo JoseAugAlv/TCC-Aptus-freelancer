@@ -7,7 +7,10 @@
 $router->get('/', 'HomeController@index');
 $router->get('/buscar', 'HomeController@buscar');
 $router->get('/sobre', 'SobreController@index');
-$router->get('/contato', 'HomeController@contato');
+
+// Contato - GET exibe o formulário, POST processa o envio
+$router->get('/contato', 'ContatoController@index');
+$router->post('/contato', 'ContatoController@index');
 
 // ... resto das rotas
 /*

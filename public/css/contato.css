@@ -1,0 +1,716 @@
+/* public/css/contato.css - MODO CLARO */
+
+/* ============================================================ */
+/* ===== HERO ===== */
+/* ============================================================ */
+
+.contato-hero {
+    margin-top: 70px;
+    background: linear-gradient(135deg, rgba(0,101,119,.06) 0%, rgba(201,162,39,.06) 100%);
+    padding: 3rem 1rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contato-hero::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(0,101,119,.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 7s ease-in-out infinite;
+}
+
+.contato-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: -60px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(201,162,39,.08) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 9s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(10px, 15px) rotate(5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.contato-hero h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #006577, #C9A227);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: .75rem;
+    position: relative;
+    z-index: 1;
+    padding: 0 1rem;
+}
+
+.contato-hero p {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: #555555;
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    padding: 0 1rem;
+}
+
+/* ============================================================ */
+/* ===== WRAPPER PRINCIPAL ===== */
+/* ============================================================ */
+
+.contato-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    flex: 1;
+    width: 100%;
+}
+
+/* ============================================================ */
+/* ===== CARD DE INFORMAÇÕES ===== */
+/* ============================================================ */
+
+.info-card {
+    flex: 1;
+    min-width: 0;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 4px 30px rgba(0,101,119,.1);
+    border-top: 4px solid #006577;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    box-shadow: 0 8px 40px rgba(0,101,119,.15);
+}
+
+.info-card h2 {
+    font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+    font-weight: 700;
+    color: #006577;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.6rem;
+    padding: 0.5rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    background: rgba(0,101,119,0.03);
+}
+
+.info-icon {
+    width: 46px;
+    min-width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #006577, #00899e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #ffffff;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(0,101,119,.25);
+}
+
+.info-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.info-text strong {
+    display: block;
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #555555;
+    margin-bottom: .2rem;
+}
+
+.info-text span,
+.info-text a {
+    font-size: clamp(0.9rem, 1.2vw, 0.97rem);
+    color: #1a2f3e;
+    text-decoration: none;
+    transition: color .2s;
+    word-break: break-word;
+}
+
+.info-text a:hover {
+    color: #006577;
+}
+
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, #006577 0%, transparent 100%);
+    opacity: .15;
+    margin: 1.8rem 0;
+}
+
+.redes-title {
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #555555;
+    margin-bottom: 1rem;
+}
+
+.redes-sociais {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+.rede-btn {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #ffffff;
+    text-decoration: none;
+    transition: transform .25s, box-shadow .25s;
+    cursor: pointer;
+}
+
+.rede-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,.15);
+}
+
+.rede-btn:active {
+    transform: scale(0.95);
+}
+
+.rede-btn.instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.rede-btn.linkedin  { background: #0077b5; }
+.rede-btn.whatsapp  { background: #25d366; }
+.rede-btn.facebook  { background: #1877f2; }
+
+/* ============================================================ */
+/* ===== CARD DO FORMULÁRIO ===== */
+/* ============================================================ */
+
+.form-card {
+    flex: 1.6;
+    min-width: 0;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem 2rem;
+    box-shadow: 0 4px 30px rgba(0,101,119,.1);
+    border-top: 4px solid #C9A227;
+    transition: all 0.3s ease;
+}
+
+.form-card:hover {
+    box-shadow: 0 8px 40px rgba(0,101,119,.15);
+}
+
+.form-card h2 {
+    font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+    font-weight: 700;
+    color: #1a2f3e;
+    margin-bottom: .4rem;
+}
+
+.form-card .subtitulo {
+    color: #555555;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    margin-bottom: 1.5rem;
+}
+
+/* ===== ALERTAS ===== */
+.alerta {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: clamp(0.85rem, 1vw, 0.95rem);
+    animation: slideInDown .4s ease;
+}
+
+.alerta.sucesso {
+    background: #e8f8f0;
+    border: 1px solid #82d9a8;
+    color: #1a7a47;
+}
+
+.alerta.erro {
+    background: #fff0f0;
+    border: 1px solid #f5a8a8;
+    color: #c0392b;
+}
+
+.alerta i {
+    margin-top: 2px;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.alerta small {
+    display: block;
+    margin-top: 4px;
+    opacity: 0.8;
+}
+
+@keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== FORMULÁRIO ===== */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+.form-group {
+    margin-bottom: 1.4rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: clamp(0.8rem, 1vw, 0.87rem);
+    font-weight: 600;
+    color: #1a2f3e;
+    margin-bottom: .45rem;
+}
+
+.form-group label span.obrigatorio {
+    color: #C9A227;
+    margin-left: 2px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: .85rem 1.1rem;
+    border: 1.5px solid #d8edf1;
+    border-radius: 12px;
+    font-size: clamp(0.9rem, 1vw, 0.97rem);
+    font-family: inherit;
+    color: #1a2f3e;
+    background: #f8fdfe;
+    transition: border-color .25s, box-shadow .25s, background .25s;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #006577;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(0,101,119,.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #a0b8c4;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23006577'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 22px;
+    padding-right: 40px;
+}
+
+.char-count {
+    text-align: right;
+    font-size: .78rem;
+    color: #555555;
+    margin-top: .3rem;
+    transition: color .3s;
+}
+
+.char-count.limite {
+    color: #e74c3c;
+}
+
+/* ===== BOTÃO ENVIAR ===== */
+.btn-enviar {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #006577, #00899e);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: clamp(0.95rem, 1.2vw, 1rem);
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(0,101,119,.3);
+    letter-spacing: .02em;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-enviar:hover {
+    background: linear-gradient(135deg, #004d5c, #006b7e);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,101,119,.35);
+}
+
+.btn-enviar:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn-enviar:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-enviar i {
+    font-size: 1.1rem;
+}
+
+.privacidade {
+    text-align: center;
+    font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+    color: #555555;
+    margin-top: 1rem;
+    padding: 0 0.5rem;
+}
+
+.privacidade i {
+    color: #006577;
+    margin-right: 4px;
+}
+
+/* ============================================================ */
+/* ===== FAQ ===== */
+/* ============================================================ */
+
+.faq-section {
+    max-width: 1200px;
+    margin: 0 auto 4rem;
+    padding: 0 1rem;
+    width: 100%;
+}
+
+.faq-section h2 {
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+    color: #006577;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+}
+
+.faq-item {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 16px rgba(0,101,119,.07);
+    border-left: 4px solid #006577;
+    cursor: pointer;
+    transition: box-shadow .25s, transform .25s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.faq-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0,101,119,.12);
+}
+
+.faq-item:active {
+    transform: scale(0.98);
+}
+
+.faq-pergunta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: clamp(0.9rem, 1.1vw, 0.97rem);
+    color: #1a2f3e;
+    gap: 1rem;
+}
+
+.faq-pergunta i {
+    color: #006577;
+    transition: transform .3s;
+    font-size: .85rem;
+    flex-shrink: 0;
+}
+
+.faq-item.aberto .faq-pergunta i {
+    transform: rotate(180deg);
+}
+
+.faq-resposta {
+    display: none;
+    font-size: clamp(0.85rem, 1vw, 0.9rem);
+    color: #555555;
+    margin-top: .8rem;
+    line-height: 1.6;
+}
+
+.faq-item.aberto .faq-resposta {
+    display: block;
+    animation: fadeIn .3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================ */
+/* ===== RESPONSIVIDADE ===== */
+/* ============================================================ */
+
+@media (max-width: 1024px) {
+    .contato-wrapper {
+        padding: 2rem 1.5rem 3rem;
+        gap: 1.5rem;
+    }
+
+    .form-card {
+        padding: 1.8rem 1.5rem;
+    }
+
+    .info-card {
+        padding: 1.8rem 1.2rem;
+    }
+}
+
+@media (max-width: 868px) {
+    .contato-wrapper {
+        flex-direction: column;
+        padding: 1.5rem 1rem 3rem;
+        gap: 1.5rem;
+    }
+
+    .info-card,
+    .form-card {
+        width: 100%;
+        padding: 1.5rem 1.2rem;
+    }
+
+    .info-card {
+        order: 2;
+    }
+
+    .form-card {
+        order: 1;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .faq-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .redes-sociais {
+        justify-content: center;
+    }
+
+    .info-item {
+        padding: 0.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contato-hero {
+        padding: 2rem 0.5rem 1.5rem;
+        margin-top: 60px;
+    }
+
+    .contato-hero::before,
+    .contato-hero::after {
+        display: none;
+    }
+
+    .contato-wrapper {
+        padding: 1rem 1rem 2rem;
+        gap: 1rem;
+    }
+
+    .info-card,
+    .form-card {
+        padding: 1.2rem 0.8rem;
+        border-radius: 16px;
+    }
+
+    .form-card .subtitulo {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.7rem 0.9rem;
+        font-size: 0.9rem;
+    }
+
+    .form-group textarea {
+        min-height: 120px;
+    }
+
+    .info-item {
+        gap: 0.8rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .info-icon {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+        font-size: 0.95rem;
+    }
+
+    .btn-enviar {
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .faq-item {
+        padding: 1rem;
+    }
+
+    .faq-section {
+        margin-bottom: 2rem;
+        padding: 0 0.5rem;
+    }
+
+    .rede-btn {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        font-size: 0.95rem;
+    }
+
+    .alerta {
+        padding: 0.8rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .char-count {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .contato-hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .contato-hero p {
+        font-size: 0.85rem;
+    }
+
+    .info-card h2,
+    .form-card h2 {
+        font-size: 1.1rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-enviar {
+        font-size: 0.85rem;
+        padding: 0.7rem 0.8rem;
+    }
+
+    .faq-pergunta {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+    .contato-hero {
+        padding: 1.5rem 1rem;
+        margin-top: 60px;
+    }
+
+    .contato-wrapper {
+        padding: 1rem 1rem 2rem;
+    }
+
+    .form-group textarea {
+        min-height: 80px;
+    }
+
+    .info-item {
+        margin-bottom: 0.8rem;
+    }
+}
+
+/* Suporte para prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .btn-enviar::after {
+        display: none;
+    }
+}
