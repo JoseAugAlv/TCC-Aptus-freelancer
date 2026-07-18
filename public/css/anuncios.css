@@ -1,0 +1,503 @@
+/* public/css/anuncios.css */
+
+/* ===== HEADER ===== */
+.servicos-header {
+    margin-top: 70px;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 101, 119, 0.05) 0%, rgba(201, 162, 39, 0.05) 100%);
+    text-align: center;
+}
+
+.servicos-header h1 {
+    color: #006577;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.servicos-header h1 i {
+    margin-right: 10px;
+}
+
+.servicos-header p {
+    color: #555555;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ===== CONTAINER ===== */
+.servicos-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+/* ===== STATS ===== */
+.stats-info {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #555555;
+}
+
+.stats-info strong {
+    color: #006577;
+    font-size: 1.2rem;
+}
+
+/* ===== FILTROS ===== */
+.filtro-bar {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filtro-btn {
+    padding: 0.7rem 1.5rem;
+    border: 2px solid #006577;
+    background: white;
+    color: #006577;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.filtro-btn:hover {
+    background: #006577;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 101, 119, 0.2);
+}
+
+.filtro-btn.ativo {
+    background: #006577;
+    color: white;
+}
+
+/* ===== GRID ===== */
+.profissionais-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+/* ===== CARD ===== */
+.profissional-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.profissional-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 101, 119, 0.15);
+}
+
+.profissional-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #006577, #C9A227);
+}
+
+/* ===== CATEGORIA TAG ===== */
+.categoria-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0, 101, 119, 0.1);
+    color: #006577;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 1.5rem 1.5rem 0 1.5rem;
+    width: fit-content;
+}
+
+/* ===== TÍTULO ===== */
+.profissional-card h3 {
+    color: #006577;
+    font-size: 1.3rem;
+    margin: 1rem 1.5rem 0.5rem 1.5rem;
+    line-height: 1.4;
+    font-weight: 700;
+}
+
+/* ===== DESCRIÇÃO ===== */
+.profissional-card .descricao {
+    color: #555555;
+    font-size: 0.95rem;
+    margin: 0 1.5rem;
+    flex-grow: 1;
+    line-height: 1.5;
+}
+
+/* ===== INFOS ===== */
+.info-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.info-footer .autor {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #555555;
+    font-size: 0.9rem;
+}
+
+.info-footer .autor i {
+    color: #006577;
+}
+
+.info-footer .preco {
+    color: #006577;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* ===== AVALIAÇÃO ===== */
+.avaliacao {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0 1.5rem 0.5rem 1.5rem;
+}
+
+.avaliacao i {
+    font-size: 0.9rem;
+}
+
+.avaliacao .nota {
+    color: #555555;
+    font-size: 0.85rem;
+    margin-left: 0.3rem;
+}
+
+/* ===== VISUALIZAÇÕES ===== */
+.visualizacoes {
+    color: #888;
+    font-size: 0.8rem;
+    margin: 0 1.5rem 0.5rem 1.5rem;
+}
+
+.visualizacoes i {
+    margin-right: 4px;
+}
+
+/* ===== BOTÃO ===== */
+.btn-perfil {
+    background: linear-gradient(135deg, #006577, #004d5c);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin: 0 1.5rem 1.5rem 1.5rem;
+    display: inline-block;
+    width: calc(100% - 3rem);
+}
+
+.btn-perfil:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 101, 119, 0.3);
+}
+
+/* ===== MSG VAZIA ===== */
+.msg-vazia {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #888;
+    background: white;
+    border-radius: 15px;
+    border: 2px dashed #ddd;
+}
+
+.msg-vazia i {
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #ccc;
+}
+
+.msg-vazia h3 {
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.msg-vazia p {
+    color: #888;
+}
+
+.msg-vazia .btn-perfil {
+    display: inline-block;
+    width: auto;
+    padding: 0.8rem 2rem;
+}
+
+/* ============================================================ */
+/* ===== PÁGINA CRIAR ANÚNCIO ===== */
+/* ============================================================ */
+
+.criar-container {
+    max-width: 800px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.criar-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.criar-header h1 {
+    color: #006577;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.criar-header h1 i {
+    margin-right: 10px;
+}
+
+.criar-header p {
+    color: #555555;
+    font-size: 1.1rem;
+}
+
+.criar-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.criar-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.criar-form .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.criar-form .form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.criar-form .form-control:focus {
+    outline: none;
+    border-color: #006577;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(0, 101, 119, 0.1);
+}
+
+.criar-form .form-control::placeholder {
+    color: #aaa;
+}
+
+.criar-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.criar-form textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.criar-form input[type="file"].form-control {
+    padding: 10px 12px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #006577, #004d5c);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 101, 119, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 101, 119, 0.3);
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+/* ============================================================ */
+/* ===== RESPONSIVIDADE ===== */
+/* ============================================================ */
+
+@media (max-width: 1024px) {
+    .profissionais-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .servicos-header {
+        margin-top: 60px;
+        padding: 2rem 1rem;
+    }
+
+    .servicos-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .servicos-header p {
+        font-size: 1rem;
+    }
+
+    .servicos-container {
+        padding: 2rem 1rem;
+    }
+
+    .filtro-bar {
+        gap: 0.5rem;
+    }
+
+    .filtro-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .profissionais-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .info-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    /* ===== CRIAR ===== */
+    .criar-container {
+        margin-top: 80px;
+        padding: 0 16px;
+    }
+
+    .criar-card {
+        padding: 1.5rem;
+    }
+
+    .criar-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .criar-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .servicos-header {
+        margin-top: 50px;
+        padding: 1.5rem 1rem;
+    }
+
+    .servicos-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .servicos-header p {
+        font-size: 0.9rem;
+    }
+
+    .servicos-container {
+        padding: 1.5rem 0.8rem;
+    }
+
+    .filtro-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+
+    .profissional-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .profissional-card .descricao {
+        font-size: 0.9rem;
+    }
+
+    .profissional-card {
+        border-radius: 12px;
+    }
+}

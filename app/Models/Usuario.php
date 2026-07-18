@@ -9,7 +9,7 @@ class Usuario
 
     public function __construct()
     {
-        $this->conn = AptusDatabase::getConnection();
+        $this->conn = Database::getConnection();
     }
 
     public function findByEmail($email)

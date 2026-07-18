@@ -1,7 +1,7 @@
 <?php
 // app/Config/database.php
 
-class AptusDatabase
+class Database
 {
     private static $connection = null;
 
@@ -9,49 +9,54 @@ class AptusDatabase
     {
         if (self::$connection === null) {
             try {
-                // Carregar variáveis do .env se não estiverem carregadas
-                if (empty($_ENV['DB_HOST'])) {
-                    $envFile = __DIR__ . '/../../.env';
-                    if (file_exists($envFile)) {
-                        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-                        foreach ($lines as $line) {
-                            if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
-                                list($key, $value) = explode('=', $line, 2);
-                                $_ENV[trim($key)] = trim($value);
-                            }
-                        }
+                // Tenta diferentes portas e configurações
+                $configs = [
+                    ['host' => '127.0.0.1', 'port' => '3306'],
+                    ['host' => '127.0.0.1', 'port' => '3307'],
+                    ['host' => 'localhost', 'port' => '3306'],
+                    ['host' => 'localhost', 'port' => '3307'],
+                ];
+                
+                $lastError = null;
+                
+                foreach ($configs as $config) {
+                    try {
+                        $host = $config['host'];
+                        $port = $config['port'];
+                        $dbname = 'Aptus';
+                        $user = 'root';
+                        $pass = '';
+
+                        self::$connection = new PDO(
+                            "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4",
+                            $user,
+                            $pass,
+                            [
+                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                                PDO::ATTR_EMULATE_PREPARES => false
+                            ]
+                        );
+                        
+                        // Se chegou aqui, conectou com sucesso
+                        error_log("Conectado ao MySQL em {$host}:{$port}");
+                        return self::$connection;
+                        
+                    } catch (PDOException $e) {
+                        $lastError = $e->getMessage();
+                        continue;
                     }
                 }
-
-                $host = $_ENV['DB_HOST'] ?? '127.0.0.1';
-                $port = '3306';
                 
-                // Extrair porta se estiver no host
-                if (strpos($host, ':') !== false) {
-                    $parts = explode(':', $host);
-                    $host = $parts[0];
-                    $port = $parts[1];
-                }
+                // Se nenhuma configuração funcionou
+                throw new Exception("Não foi possível conectar ao MySQL. Último erro: " . $lastError);
                 
-                $dbname = $_ENV['DB_NAME'] ?? 'Aptus';
-                $user = $_ENV['DB_USER'] ?? 'root';
-                $pass = $_ENV['DB_PASS'] ?? '';
-
-                self::$connection = new PDO(
-                    "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4",
-                    $user,
-                    $pass,
-                    [
-                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                        PDO::ATTR_EMULATE_PREPARES => false,
-                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
-                    ]
-                );
-                
-            } catch (PDOException $e) {
-                error_log("Erro de conexão com o banco: " . $e->getMessage());
-                throw new Exception("Erro de conexão com o banco de dados");
+            } catch (Exception $e) {
+                die("Erro de conexão: " . $e->getMessage() . 
+                    "<br><br>Verifique se o MySQL está rodando:<br>" .
+                    "1. No XAMPP, clique em 'Start' no MySQL<br>" .
+                    "2. Ou execute: net start MySQL<br>" .
+                    "3. Verifique se a porta é 3306 ou 3307");
             }
         }
 

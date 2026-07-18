@@ -9,7 +9,7 @@ class BuscaLog
 
     public function __construct()
     {
-        $this->conn = AptusDatabase::getConnection();
+        $this->conn = Database::getConnection();
     }
 
     /**

@@ -15,7 +15,7 @@ class SessionConfig
 
         session_set_cookie_params([
             'lifetime' => 3600,
-            'path' => '/Aputs',
+            'path' => '/Aptus',  // ← CORRIGIDO: "/Aptus" com "u"
             'domain' => $_SERVER['HTTP_HOST'] ?? 'localhost',
             'secure' => $isProduction && $isHttps,
             'httponly' => true,
