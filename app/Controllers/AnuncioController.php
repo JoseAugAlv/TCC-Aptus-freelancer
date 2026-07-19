@@ -17,21 +17,41 @@ class AnuncioController
         $tituloPagina = 'Serviços - Aptus';
         $cssPagina = 'anuncios.css';
         
-        // Buscar anúncios do banco de dados
         $anuncios = $this->anuncio->getAll();
         $totalAnuncios = count($anuncios);
         
         require '../app/Views/anuncios/index.php';
     }
 
-    public function detalhes($slug = null)
+    public function show($slug)
     {
-        $tituloPagina = 'Detalhes do Serviço - Aptus';
+        // Buscar anúncio pelo slug
+        $anuncio = $this->anuncio->findBySlug($slug);
+        
+        if (!$anuncio) {
+            header('Location: /Aptus/anuncios');
+            exit;
+        }
+        
+        // Incrementar visualizações
+        $this->anuncio->incrementarVisualizacao($anuncio['id_anuncio']);
+        
+        // Buscar fotos adicionais
+        $fotos = $this->anuncio->getFotos($anuncio['id_anuncio']);
+        
+        // Verificar se o usuário já enviou interesse
+        $usuarioInteressado = false;
+        if (isset($_SESSION['usuario'])) {
+            $usuarioInteressado = $this->anuncio->hasInteresse(
+                $anuncio['id_anuncio'], 
+                $_SESSION['usuario']['id']
+            );
+        }
+        
+        $tituloPagina = $anuncio['titulo'] . ' - Aptus';
         $cssPagina = 'anuncios.css';
         
-        // Por enquanto, apenas redireciona para a lista
-        header('Location: /Aptus/anuncios');
-        exit;
+        require '../app/Views/anuncios/show.php';
     }
 
     public function criar()

@@ -17,7 +17,8 @@ $router->post('/contato', 'ContatoController@index');
    ANÚNCIOS (Público)
 */
 $router->get('/anuncios', 'AnuncioController@index');
-$router->get('/anuncios/{slug}', 'AnuncioController@detalhes');
+$router->get('/anuncios/criar', 'AnuncioController@criar', [3, 2, 1, 4]);
+$router->get('/anuncios/{slug}', 'AnuncioController@show');
 
 /*
    AUTENTICAÇÃO
@@ -76,11 +77,12 @@ $router->get('/favoritos', 'FavoritoController@index', [3, 2, 1, 4]);
    INTERESSES (Contratar)
 */
 $router->post('/interesses/criar', 'InteresseController@criar', [3, 2, 1, 4]);
-$router->get('/interesses/meus', 'InteresseController@meus', [3, 2, 1, 4]);
+$router->get('/interesses/meus', 'InteresseController@meus', [3, 2, 1, 4]);  
 $router->get('/interesses/recebidos', 'InteresseController@recebidos', [3, 2, 1, 4]);
-$router->get('/interesses/detalhes', 'InteresseController@detalhes', [3, 2, 1, 4]);
+$router->get('/interesses/detalhes/{id}', 'InteresseController@detalhes', [3, 2, 1, 4]);
 $router->post('/interesses/cancelar', 'InteresseController@cancelar', [3, 2, 1, 4]);
 $router->post('/interesses/concluir', 'InteresseController@concluir', [3, 2, 1, 4]);
+
 
 /*
    CONFIRMAÇÃO DE PAGAMENTO
