@@ -112,7 +112,12 @@ if ($usuario) {
             </button>
 
             <?php if ($usuario): ?>
-
+                <?php if ($role == 3): ?>
+                    <a href="/Aptus/cliente" class="menu-item">
+                        <i class="fas fa-chart-line"></i> Dashboard Cliente
+                    </a>
+                <?php endif; ?>
+    
                 <a href="/Aptus/freelancer" class="menu-item">
                     <i class="fas fa-chart-line"></i> Dashboard Freelancer
                 </a>

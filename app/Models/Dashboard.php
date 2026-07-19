@@ -303,4 +303,105 @@ class Dashboard
             'total' => $result['total_avaliacoes'] ?? 0
         ];
     }
+
+    /**
+     * Total de interesses enviados pelo cliente
+     */
+    public function getTotalInteressesCliente($clienteId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM interesse WHERE id_contratante = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$clienteId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Interesses ativos do cliente
+     */
+    public function getInteressesAtivosCliente($clienteId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM interesse WHERE id_contratante = ? AND situacao = 'ativo'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$clienteId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Interesses concluídos do cliente
+     */
+    public function getInteressesConcluidosCliente($clienteId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM interesse WHERE id_contratante = ? AND situacao = 'concluido'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$clienteId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Interesses cancelados do cliente
+     */
+    public function getInteressesCanceladosCliente($clienteId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM interesse WHERE id_contratante = ? AND situacao = 'cancelado'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$clienteId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Últimos interesses enviados pelo cliente
+     */
+    public function getUltimosInteressesCliente($clienteId, $limit = 5)
+    {
+        $sql = "SELECT i.*, a.titulo as anuncio_titulo, a.preco as anuncio_preco,
+                       f.nome as freelancer_nome, f.foto_perfil as freelancer_foto
+                FROM interesse i
+                JOIN anuncio_servico a ON i.id_anuncio = a.id_anuncio
+                JOIN usuario f ON i.id_freelancer = f.id_usuario
+                WHERE i.id_contratante = ?
+                ORDER BY i.data_interesse DESC
+                LIMIT ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$clienteId, $limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Favoritos do cliente
+     */
+    public function getFavoritosCliente($clienteId, $limit = 5)
+    {
+        $sql = "SELECT f.*, a.titulo, a.preco, a.slug, a.foto_capa,
+                       u.nome as freelancer_nome, c.nome as categoria_nome
+                FROM favorito f
+                JOIN anuncio_servico a ON f.id_anuncio = a.id_anuncio
+                JOIN usuario u ON a.id_usuario = u.id_usuario
+                JOIN categoria c ON a.id_categoria = c.id_categoria
+                WHERE f.id_usuario = ?
+                ORDER BY f.data_criacao DESC
+                LIMIT ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$clienteId, $limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Total de favoritos do cliente
+     */
+    public function getTotalFavoritosCliente($clienteId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM favorito WHERE id_usuario = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$clienteId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+    
+    
+    
+
 }
