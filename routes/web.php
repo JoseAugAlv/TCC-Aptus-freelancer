@@ -164,10 +164,18 @@ $router->get('/admin/logs', 'AdminLogController@index', [1, 4]);
 */
 $router->get('/moderator', 'ModeradorController@index', [1, 2, 4]);
 $router->get('/moderator/anuncios', 'ModeradorController@anuncios', [1, 2, 4]);
-$router->get('/moderator/denuncias', 'ModeradorController@denuncias', [1, 2, 4]);
 $router->get('/moderator/disputas', 'ModeradorController@disputas', [1, 2, 4]);
 $router->get('/moderator/usuarios', 'ModeradorController@usuarios', [1, 2, 4]);
 $router->get('/moderator/categorias', 'ModeradorController@categorias', [1, 2, 4]);
+
+/*
+   MODERADOR - DENUNCIAS
+*/
+$router->get('/moderator/denuncias', 'ModeradorController@denuncias', [1, 2, 4]);
+$router->get('/moderator/denuncias/visualizar/{id}', 'DenunciaController@visualizar', [1, 2, 4]);
+$router->post('/moderator/denuncias/aprovar', 'DenunciaController@aprovar', [1, 2, 4]);
+$router->post('/moderator/denuncias/rejeitar', 'DenunciaController@rejeitar', [1, 2, 4]);
+
 
 // Freelancer
 $router->get('/freelancer', 'FreelancerController@dashboard', [2, 3, 4]);

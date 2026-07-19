@@ -9,13 +9,25 @@ class SessionConfig
             return;
         }
 
-        // Verificar se $_ENV['APP_ENV'] existe
+        // Definir caminho alternativo para sessões
+        $sessionPath = __DIR__ . '/../../tmp';
+        
+        // Criar diretório se não existir
+        if (!is_dir($sessionPath)) {
+            mkdir($sessionPath, 0777, true);
+        }
+        
+        // Verificar se o diretório tem permissão de escrita
+        if (is_writable($sessionPath)) {
+            session_save_path($sessionPath);
+        }
+
         $isProduction = isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'production';
         $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
 
         session_set_cookie_params([
             'lifetime' => 3600,
-            'path' => '/Aptus',  // ← CORRIGIDO: "/Aptus" com "u"
+            'path' => '/Aptus',
             'domain' => $_SERVER['HTTP_HOST'] ?? 'localhost',
             'secure' => $isProduction && $isHttps,
             'httponly' => true,
@@ -23,9 +35,9 @@ class SessionConfig
         ]);
 
         session_name('APTUS_SESSION');
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        
+        // Iniciar sessão com supressão de erros
+        @session_start();
 
         if (!isset($_SESSION['last_regenerate'])) {
             $_SESSION['last_regenerate'] = time();
