@@ -26,6 +26,8 @@ class AnuncioController
         require '../app/Views/anuncios/index.php';
     }
 
+    // app/Controllers/AnuncioController.php - No metodo show()
+
     public function show($slug)
     {
         $anuncio = $this->anuncio->findBySlug($slug);
@@ -39,11 +41,20 @@ class AnuncioController
         $fotos = $this->anuncio->getFotos($anuncio['id_anuncio']);
         
         $usuarioInteressado = false;
+        $favoritado = false;
+        $totalFavoritos = 0;
+        
         if (isset($_SESSION['usuario'])) {
-            $usuarioInteressado = $this->anuncio->hasInteresse(
-                $anuncio['id_anuncio'], 
-                $_SESSION['usuario']['id']
-            );
+            $usuarioId = $_SESSION['usuario']['id'];
+            
+            // Verificar se o usuario ja tem interesse
+            $usuarioInteressado = $this->anuncio->hasInteresse($anuncio['id_anuncio'], $usuarioId);
+            
+            // Verificar se o anuncio esta nos favoritos
+            require_once __DIR__ . '/../Models/Favorito.php';
+            $favorito = new Favorito();
+            $favoritado = $favorito->existe($usuarioId, $anuncio['id_anuncio']);
+            $totalFavoritos = $favorito->contarPorAnuncio($anuncio['id_anuncio']);
         }
         
         $tituloPagina = $anuncio['titulo'] . ' - Aptus';

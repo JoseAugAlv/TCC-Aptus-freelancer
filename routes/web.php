@@ -70,12 +70,6 @@ $router->post('/anuncios/atualizar', 'AnuncioController@atualizar', [3, 2, 1, 4]
 $router->post('/anuncios/pausar', 'AnuncioController@pausar', [3, 2, 1, 4]);
 $router->post('/anuncios/ativar', 'AnuncioController@ativar', [3, 2, 1, 4]);
 $router->get('/anuncios/excluir/{id}', 'AnuncioController@excluir', [3, 2, 1, 4]);
-/*
-   FAVORITOS
-*/
-$router->post('/favoritos/adicionar', 'FavoritoController@adicionar', [3, 2, 1, 4]);
-$router->post('/favoritos/remover', 'FavoritoController@remover', [3, 2, 1, 4]);
-$router->get('/favoritos', 'FavoritoController@index', [3, 2, 1, 4]);
 
 /*
    INTERESSES (Contratar)
@@ -205,3 +199,13 @@ $router->get('/avaliacoes/criar/{id}', 'AvaliacaoController@criar', [3, 2, 1, 4]
 $router->post('/avaliacoes/salvar', 'AvaliacaoController@salvar', [3, 2, 1, 4]);
 $router->get('/avaliacoes/responder/{id}', 'AvaliacaoController@responder', [3, 2, 1, 4]);
 $router->post('/avaliacoes/salvar-resposta', 'AvaliacaoController@salvarResposta', [3, 2, 1, 4]);
+
+// routes/web.php
+
+/*
+   FAVORITOS
+*/
+$router->get('/favoritos', 'FavoritoController@index', [3, 2, 1, 4]);
+$router->post('/favoritos/adicionar', 'FavoritoController@adicionar', [3, 2, 1, 4]);
+$router->post('/favoritos/remover', 'FavoritoController@remover', [3, 2, 1, 4]);
+$router->get('/favoritos/verificar', 'FavoritoController@verificar', [3, 2, 1, 4]);

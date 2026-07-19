@@ -106,11 +106,6 @@ if ($usuario) {
                 <i class="fas fa-user-circle"></i>
                 <span>Minha Conta</span>
             </div>
-
-            <button onclick="irParaPainel()">
-                <i class="fas fa-id-card"></i> Meu Painel
-            </button>
-
             <?php if ($usuario): ?>
                 <?php if ($role == 3): ?>
                     <a href="/Aptus/cliente" class="menu-item">
@@ -125,6 +120,11 @@ if ($usuario) {
                 <a href="/Aptus/perfil" class="menu-item">
                     <i class="fas fa-user"></i> Meu Perfil
                 </a>
+    
+                <a href="/Aptus/favoritos" class="menu-item">
+                    <i class="fas fa-heart"></i> Meus Favoritos
+                </a>
+
                 <a href="/Aptus/anuncios/criar" class="menu-item">
                     <i class="fas fa-plus"></i> Criar Anúncio
                 </a>
