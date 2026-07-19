@@ -184,6 +184,9 @@ $router->get('/moderator/disputas', 'ModeradorController@disputas', [1, 2, 4]);
 $router->get('/moderator/usuarios', 'ModeradorController@usuarios', [1, 2, 4]);
 $router->get('/moderator/categorias', 'ModeradorController@categorias', [1, 2, 4]);
 
+// Freelancer
+$router->get('/freelancer', 'FreelancerController@dashboard', [2, 3, 4]);
+
 /*
    LOGS
 */

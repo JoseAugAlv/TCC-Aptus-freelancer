@@ -32,7 +32,6 @@ class Dashboard
             $totais[$row['tipo_usuario']] = $row['total'];
         }
         
-        // Garantir que todos os perfis existem
         $defaults = ['Admin' => 0, 'Moderador' => 0, 'Usuario' => 0, 'Master' => 0];
         return array_merge($defaults, $totais);
     }
@@ -177,5 +176,131 @@ class Dashboard
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([$limite]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // ============================================================
+    // MÉTODOS PARA FREELANCER
+    // ============================================================
+
+    /**
+     * Total de serviços do freelancer
+     */
+    public function getTotalServicosFreelancer($freelancerId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM anuncio_servico WHERE id_usuario = ? AND situacao != 'excluido'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Serviços ativos do freelancer
+     */
+    public function getServicosAtivosFreelancer($freelancerId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM anuncio_servico WHERE id_usuario = ? AND situacao = 'ativo' AND id_situacao_moderacao = 2";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Serviços pausados do freelancer
+     */
+    public function getServicosPausadosFreelancer($freelancerId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM anuncio_servico WHERE id_usuario = ? AND situacao = 'pausado'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Serviços pendentes de moderação do freelancer
+     */
+    public function getServicosPendentesFreelancer($freelancerId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM anuncio_servico WHERE id_usuario = ? AND id_situacao_moderacao = 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Interesses recebidos (propostas) do freelancer
+     */
+    public function getInteressesRecebidosFreelancer($freelancerId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM interesse WHERE id_freelancer = ? AND situacao = 'ativo'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Interesses concluídos do freelancer
+     */
+    public function getInteressesConcluidosFreelancer($freelancerId)
+    {
+        $sql = "SELECT COUNT(*) as total FROM interesse WHERE id_freelancer = ? AND situacao = 'concluido'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Últimos serviços criados pelo freelancer
+     */
+    public function getUltimosServicosFreelancer($freelancerId, $limit = 5)
+    {
+        $sql = "SELECT a.*, c.nome as categoria_nome,
+                       (SELECT COUNT(*) FROM interesse i WHERE i.id_anuncio = a.id_anuncio AND i.situacao = 'ativo') as total_interesses
+                FROM anuncio_servico a
+                JOIN categoria c ON a.id_categoria = c.id_categoria
+                WHERE a.id_usuario = ? AND a.situacao != 'excluido'
+                ORDER BY a.data_criacao DESC
+                LIMIT ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId, $limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Últimos interesses recebidos pelo freelancer
+     */
+    public function getUltimosInteressesFreelancer($freelancerId, $limit = 5)
+    {
+        $sql = "SELECT i.*, a.titulo as anuncio_titulo,
+                       u.nome as contratante_nome, u.foto_perfil as contratante_foto
+                FROM interesse i
+                JOIN anuncio_servico a ON i.id_anuncio = a.id_anuncio
+                JOIN usuario u ON i.id_contratante = u.id_usuario
+                WHERE i.id_freelancer = ?
+                ORDER BY i.data_interesse DESC
+                LIMIT ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId, $limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Avaliação média do freelancer
+     */
+    public function getNotaMediaFreelancer($freelancerId)
+    {
+        $sql = "SELECT nota_media, total_avaliacoes FROM usuario WHERE id_usuario = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$freelancerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return [
+            'nota' => $result['nota_media'] ?? 0,
+            'total' => $result['total_avaliacoes'] ?? 0
+        ];
     }
 }
