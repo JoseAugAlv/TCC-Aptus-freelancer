@@ -38,7 +38,15 @@ if ($usuario) {
         <li><a href="/Aptus/contato"><i class="fas fa-envelope"></i> Contato</a></li>
         
         <?php if ($usuario && $role == 3): ?>
-            <li><a href="/Aptus/anuncios/criar"><i class="fas fa-plus-circle"></i> Anunciar</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">
+                    <i class="fas fa-plus-circle"></i> Anunciar <i class="fas fa-chevron-down"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/Aptus/anuncios/criar"><i class="fas fa-plus"></i> Criar Anúncio</a></li>
+                    <li><a href="/Aptus/anuncios/meus"><i class="fas fa-list"></i> Meus Anúncios</a></li>
+                </ul>
+            </li>
         <?php endif; ?>
         
         <?php if ($usuario && ($role == 1 || $role == 2 || $role == 4)): ?>
@@ -106,6 +114,12 @@ if ($usuario) {
             <?php if ($usuario): ?>
                 <a href="/Aptus/perfil" class="menu-item">
                     <i class="fas fa-user"></i> Meu Perfil
+                </a>
+                <a href="/Aptus/anuncios/criar" class="menu-item">
+                    <i class="fas fa-plus"></i> Criar Anúncio
+                </a>
+                <a href="/Aptus/anuncios/meus" class="menu-item">
+                    <i class="fas fa-list"></i> Meus Anúncios
                 </a>
                 <a href="/Aptus/notificacoes" class="menu-item" id="menuNotificacao">
                     <i class="fas fa-bell"></i> Notificações

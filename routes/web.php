@@ -58,14 +58,18 @@ $router->get('/perfil/portfolio/excluir/{id}', 'PortfolioController@excluir', [3
 /*
    ANÚNCIOS (Usuário logado)
 */
+$router->get('/anuncios', 'AnuncioController@index');
+$router->get('/anuncios/{slug}', 'AnuncioController@show');
+
+// Anúncios - CRUD (usuário logado)
+$router->get('/anuncios/meus', 'AnuncioController@meus', [3, 2, 1, 4]);
 $router->get('/anuncios/criar', 'AnuncioController@criar', [3, 2, 1, 4]);
 $router->post('/anuncios/salvar', 'AnuncioController@salvar', [3, 2, 1, 4]);
-$router->get('/anuncios/editar', 'AnuncioController@editar', [3, 2, 1, 4]);
+$router->get('/anuncios/editar/{id}', 'AnuncioController@editar', [3, 2, 1, 4]);
 $router->post('/anuncios/atualizar', 'AnuncioController@atualizar', [3, 2, 1, 4]);
-$router->get('/anuncios/excluir', 'AnuncioController@excluir', [3, 2, 1, 4]);
 $router->post('/anuncios/pausar', 'AnuncioController@pausar', [3, 2, 1, 4]);
 $router->post('/anuncios/ativar', 'AnuncioController@ativar', [3, 2, 1, 4]);
-
+$router->get('/anuncios/excluir/{id}', 'AnuncioController@excluir', [3, 2, 1, 4]);
 /*
    FAVORITOS
 */
