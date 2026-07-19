@@ -199,3 +199,9 @@ $router->get('/termos', 'TermosController@index');
 
 // Cliente
 $router->get('/cliente', 'ClienteController@dashboard', [2, 3, 4]);
+
+// Avaliações
+$router->get('/avaliacoes/criar/{id}', 'AvaliacaoController@criar', [3, 2, 1, 4]);
+$router->post('/avaliacoes/salvar', 'AvaliacaoController@salvar', [3, 2, 1, 4]);
+$router->get('/avaliacoes/responder/{id}', 'AvaliacaoController@responder', [3, 2, 1, 4]);
+$router->post('/avaliacoes/salvar-resposta', 'AvaliacaoController@salvarResposta', [3, 2, 1, 4]);

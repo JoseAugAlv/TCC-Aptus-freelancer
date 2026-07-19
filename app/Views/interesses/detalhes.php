@@ -6,8 +6,27 @@ $cssPagina = $cssPagina ?? 'interesses.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
+// CORREÇÃO: Caminho absoluto para o Model
+require_once __DIR__ . '/../../Models/Avaliacao.php';
+
 $interesse = $interesse ?? [];
 $usuario = $_SESSION['usuario'] ?? null;
+
+// Verificar avaliação
+$avaliacaoModel = new Avaliacao();
+$jaAvaliou = false;
+$avaliacaoData = null;
+$podeAvaliar = false;
+
+if ($interesse && isset($interesse['situacao']) && $interesse['situacao'] == 'concluido') {
+    $jaAvaliou = $avaliacaoModel->exists($interesse['id_interesse']);
+    if ($jaAvaliou) {
+        $avaliacaoData = $avaliacaoModel->findByInteresse($interesse['id_interesse']);
+    }
+    if ($usuario && $usuario['id'] == $interesse['id_contratante']) {
+        $podeAvaliar = true;
+    }
+}
 ?>
 
 <h1>Detalhes do Interesse</h1>
@@ -26,7 +45,12 @@ $usuario = $_SESSION['usuario'] ?? null;
     
     <p><strong>Preço:</strong> R$ <?= number_format($interesse['anuncio_preco'] ?? 0, 2, ',', '.') ?></p>
     <p><strong>Status:</strong> 
-        <span style="color: <?= match($interesse['situacao'] ?? '') { 'ativo' => 'green', 'concluido' => 'blue', 'cancelado' => 'red', default => 'gray' } ?>">
+        <span style="color: <?= match($interesse['situacao'] ?? '') { 
+            'ativo' => 'green', 
+            'concluido' => 'blue', 
+            'cancelado' => 'red', 
+            default => 'gray' 
+        } ?>">
             <?= ucfirst($interesse['situacao'] ?? 'Desconhecido') ?>
         </span>
     </p>
@@ -54,6 +78,41 @@ $usuario = $_SESSION['usuario'] ?? null;
     <?php endif; ?>
     
     <hr>
+    
+    <!-- ============================================================ -->
+    <!-- ÁREA DE AVALIAÇÃO -->
+    <!-- ============================================================ -->
+    <?php if (isset($interesse['situacao']) && $interesse['situacao'] == 'concluido'): ?>
+        <h3>Avaliação</h3>
+        
+        <?php if ($usuario && $usuario['id'] == $interesse['id_contratante']): ?>
+            <?php if ($jaAvaliou): ?>
+                <p>Você já avaliou este serviço.</p>
+                <p><strong>Nota:</strong> <?= $avaliacaoData['nota'] ?? 0 ?> estrelas</p>
+                <p><strong>Comentário:</strong> <?= nl2br(htmlspecialchars($avaliacaoData['comentario'] ?? '')) ?></p>
+                <?php if (!empty($avaliacaoData['resposta_avaliado'])): ?>
+                    <p><strong>Resposta do freelancer:</strong> <?= nl2br(htmlspecialchars($avaliacaoData['resposta_avaliado'])) ?></p>
+                <?php endif; ?>
+            <?php else: ?>
+                <p><a href="/Aptus/avaliacoes/criar/<?= $interesse['id_interesse'] ?>">Avaliar Serviço</a></p>
+            <?php endif; ?>
+            
+        <?php elseif ($usuario && $usuario['id'] == $interesse['id_freelancer']): ?>
+            <?php if ($jaAvaliou): ?>
+                <p><strong>Nota:</strong> <?= $avaliacaoData['nota'] ?? 0 ?> estrelas</p>
+                <p><strong>Comentário:</strong> <?= nl2br(htmlspecialchars($avaliacaoData['comentario'] ?? '')) ?></p>
+                <?php if (empty($avaliacaoData['resposta_avaliado'])): ?>
+                    <p><a href="/Aptus/avaliacoes/responder/<?= $avaliacaoData['id_avaliacao'] ?? 0 ?>">Responder Avaliação</a></p>
+                <?php else: ?>
+                    <p><strong>Sua resposta:</strong> <?= nl2br(htmlspecialchars($avaliacaoData['resposta_avaliado'])) ?></p>
+                <?php endif; ?>
+            <?php else: ?>
+                <p>O cliente ainda não avaliou este serviço.</p>
+            <?php endif; ?>
+        <?php endif; ?>
+        
+        <hr>
+    <?php endif; ?>
     
     <div style="margin-top: 20px;">
         <a href="/Aptus/interesses/meus">Voltar</a>
