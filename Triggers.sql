@@ -1,11 +1,14 @@
 -- ============================================================================
--- TRIGGERS DE NOTIFICAÇÃO - APTUS
+-- TRIGGERS DO SISTEMA APTUS
+-- ============================================================================
+-- NOTA: Execute este script APÓS os dados, se desejar ativar triggers
 -- ============================================================================
 
+DELIMITER //
+
 -- ============================================================================
--- 1. NOTIFICAÇÃO: NOVO ANÚNCIO CRIADO (para moderadores)
+-- 1. NOTIFICAÇÃO - NOVO ANÚNCIO AGUARDANDO APROVAÇÃO
 -- ============================================================================
-DELIMITER $$
 CREATE TRIGGER trg_notif_novo_anuncio
 AFTER INSERT ON anuncio_servico
 FOR EACH ROW
@@ -16,7 +19,6 @@ BEGIN
         SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4);
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
-    -- Notifica todos os moderadores e admins sobre novo anúncio pendente
     OPEN cur_moderadores;
     
     read_loop: LOOP
@@ -35,13 +37,11 @@ BEGIN
     END LOOP;
     
     CLOSE cur_moderadores;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 2. NOTIFICAÇÃO: ANÚNCIO APROVADO (para o freelancer)
+-- 2. NOTIFICAÇÃO - ANÚNCIO APROVADO
 -- ============================================================================
-DELIMITER $$
 CREATE TRIGGER trg_notif_anuncio_aprovado
 AFTER UPDATE ON anuncio_servico
 FOR EACH ROW
@@ -57,13 +57,11 @@ BEGIN
             NEW.id_anuncio
         );
     END IF;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 3. NOTIFICAÇÃO: ANÚNCIO REJEITADO (para o freelancer)
+-- 3. NOTIFICAÇÃO - ANÚNCIO REJEITADO
 -- ============================================================================
-DELIMITER $$
 CREATE TRIGGER trg_notif_anuncio_rejeitado
 AFTER UPDATE ON anuncio_servico
 FOR EACH ROW
@@ -79,13 +77,11 @@ BEGIN
             NEW.id_anuncio
         );
     END IF;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 4. NOTIFICAÇÃO: NOVO INTERESSE (para o freelancer)
+-- 4. NOTIFICAÇÃO - NOVO INTERESSE
 -- ============================================================================
-DELIMITER $$
 CREATE TRIGGER trg_notif_novo_interesse
 AFTER INSERT ON interesse
 FOR EACH ROW
@@ -100,13 +96,11 @@ BEGIN
         'interesse',
         NEW.id_interesse
     );
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 5. NOTIFICAÇÃO: INTERESSE CONCLUÍDO (para contratante e freelancer)
+-- 5. NOTIFICAÇÃO - INTERESSE CONCLUÍDO
 -- ============================================================================
-DELIMITER $$
 CREATE TRIGGER trg_notif_interesse_concluido
 AFTER UPDATE ON interesse
 FOR EACH ROW
@@ -136,126 +130,274 @@ BEGIN
             NEW.id_interesse
         );
     END IF;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 6. NOTIFICAÇÃO: CONFIRMAÇÃO DE PAGAMENTO (contratante confirma)
+-- 6. NOTIFICAÇÃO - INTERESSE CANCELADO
 -- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_pagamento_contratante
-AFTER UPDATE ON confirmacao_pagamento
+CREATE TRIGGER trg_notif_interesse_cancelado
+AFTER UPDATE ON interesse
 FOR EACH ROW
 BEGIN
-    IF NEW.confirmado_contratante = TRUE AND OLD.confirmado_contratante = FALSE THEN
-        -- Notifica o freelancer que o contratante confirmou
+    IF NEW.situacao = 'cancelado' AND OLD.situacao != 'cancelado' THEN
+        -- Notifica o contratante
         INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-        SELECT 
-            i.id_freelancer,
-            i.id_interesse,
-            'pagamento_confirmado_contratante',
-            'Cliente confirmou pagamento',
-            CONCAT((SELECT nome FROM usuario WHERE id_usuario = i.id_contratante), ' confirmou que realizou o pagamento no valor de R$ ', FORMAT(NEW.valor_informado_contratante, 2), '.'),
-            'confirmacao_pagamento',
-            NEW.id_confirmacao
-        FROM interesse i
-        WHERE i.id_interesse = NEW.id_interesse;
+        VALUES (
+            NEW.id_contratante,
+            NEW.id_interesse,
+            'interesse_cancelado',
+            'Interesse cancelado',
+            CONCAT('O interesse no serviço "', (SELECT titulo FROM anuncio_servico WHERE id_anuncio = NEW.id_anuncio), '" foi cancelado.'),
+            'interesse',
+            NEW.id_interesse
+        );
+        
+        -- Notifica o freelancer
+        INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+        VALUES (
+            NEW.id_freelancer,
+            NEW.id_interesse,
+            'interesse_cancelado',
+            'Interesse cancelado',
+            CONCAT('O interesse do cliente ', (SELECT nome FROM usuario WHERE id_usuario = NEW.id_contratante), ' foi cancelado.'),
+            'interesse',
+            NEW.id_interesse
+        );
     END IF;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 7. NOTIFICAÇÃO: CONFIRMAÇÃO DE PAGAMENTO (freelancer confirma)
+-- 7. NOTIFICAÇÃO - NOVA AVALIAÇÃO
 -- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_pagamento_freelancer
-AFTER UPDATE ON confirmacao_pagamento
+CREATE TRIGGER trg_notif_nova_avaliacao
+AFTER INSERT ON avaliacao
 FOR EACH ROW
 BEGIN
-    IF NEW.confirmado_freelancer = TRUE AND OLD.confirmado_freelancer = FALSE THEN
-        -- Notifica o contratante que o freelancer confirmou
-        INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-        SELECT 
-            i.id_contratante,
-            i.id_interesse,
-            'pagamento_confirmado_freelancer',
-            'Freelancer confirmou recebimento',
-            CONCAT((SELECT nome FROM usuario WHERE id_usuario = i.id_freelancer), ' confirmou que recebeu o pagamento no valor de R$ ', FORMAT(NEW.valor_informado_freelancer, 2), '.'),
-            'confirmacao_pagamento',
-            NEW.id_confirmacao
-        FROM interesse i
-        WHERE i.id_interesse = NEW.id_interesse;
-    END IF;
-END$$
-DELIMITER ;
+    INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+    VALUES (
+        NEW.id_avaliado,
+        NEW.id_interesse,
+        'nova_avaliacao',
+        'Você recebeu uma nova avaliação!',
+        CONCAT('O usuário ', (SELECT nome FROM usuario WHERE id_usuario = NEW.id_avaliador), ' avaliou seu serviço com nota ', NEW.nota, ' estrelas.'),
+        'avaliacao',
+        NEW.id_avaliacao
+    );
+END//
 
 -- ============================================================================
--- 8. NOTIFICAÇÃO: DIVERGÊNCIA NO PAGAMENTO
+-- 8. NOTIFICAÇÃO - RESPOSTA À AVALIAÇÃO
 -- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_pagamento_divergente
-AFTER UPDATE ON confirmacao_pagamento
+CREATE TRIGGER trg_notif_resposta_avaliacao
+AFTER UPDATE ON avaliacao
 FOR EACH ROW
 BEGIN
-    IF NEW.situacao_final = 'divergente' AND OLD.situacao_final != 'divergente' THEN
-        -- Notifica ambos os lados sobre a divergência
+    IF NEW.resposta_avaliado IS NOT NULL AND OLD.resposta_avaliado IS NULL THEN
         INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-        SELECT 
-            i.id_contratante,
-            i.id_interesse,
-            'pagamento_divergente',
-            'Divergência no pagamento',
-            'Os valores informados por você e pelo freelancer não coincidem. Por favor, verifique e considere abrir uma disputa.',
-            'confirmacao_pagamento',
-            NEW.id_confirmacao
-        FROM interesse i
-        WHERE i.id_interesse = NEW.id_interesse;
-        
-        INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-        SELECT 
-            i.id_freelancer,
-            i.id_interesse,
-            'pagamento_divergente',
-            'Divergência no pagamento',
-            'Os valores informados por você e pelo cliente não coincidem. Por favor, verifique e considere abrir uma disputa.',
-            'confirmacao_pagamento',
-            NEW.id_confirmacao
-        FROM interesse i
-        WHERE i.id_interesse = NEW.id_interesse;
-        
-        -- Notifica moderadores
-        DECLARE done INT DEFAULT FALSE;
-        DECLARE id_moderador INT;
-        DECLARE cur_moderadores CURSOR FOR 
-            SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4);
-        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-        
-        OPEN cur_moderadores;
-        read_loop: LOOP
-            FETCH cur_moderadores INTO id_moderador;
-            IF done THEN LEAVE read_loop; END IF;
-            
-            INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-            SELECT 
-                id_moderador,
-                i.id_interesse,
-                'pagamento_divergente_moderador',
-                'Divergência de pagamento aguardando análise',
-                CONCAT('Divergência de pagamento entre ', (SELECT nome FROM usuario WHERE id_usuario = i.id_contratante), ' e ', (SELECT nome FROM usuario WHERE id_usuario = i.id_freelancer), '. Valores: R$ ', FORMAT(NEW.valor_informado_contratante, 2), ' vs R$ ', FORMAT(NEW.valor_informado_freelancer, 2), '.'),
-                'confirmacao_pagamento',
-                NEW.id_confirmacao
-            FROM interesse i
-            WHERE i.id_interesse = NEW.id_interesse;
-        END LOOP;
-        CLOSE cur_moderadores;
+        VALUES (
+            NEW.id_avaliador,
+            NEW.id_interesse,
+            'resposta_avaliacao',
+            'O freelancer respondeu sua avaliação',
+            CONCAT((SELECT nome FROM usuario WHERE id_usuario = NEW.id_avaliado), ' respondeu ao seu comentário: "', NEW.resposta_avaliado, '"'),
+            'avaliacao',
+            NEW.id_avaliacao
+        );
     END IF;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 9. NOTIFICAÇÃO: NOVA DISPUTA CRIADA (para moderadores)
+-- 9. NOTIFICAÇÃO - NOVA MENSAGEM
 -- ============================================================================
-DELIMITER $$
+CREATE TRIGGER trg_notif_nova_mensagem
+AFTER INSERT ON mensagem
+FOR EACH ROW
+BEGIN
+    INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+    VALUES (
+        NEW.id_destinatario,
+        NEW.id_interesse,
+        'nova_mensagem',
+        'Nova mensagem no chat',
+        CONCAT((SELECT nome FROM usuario WHERE id_usuario = NEW.id_remetente), ' enviou uma mensagem: "', LEFT(NEW.mensagem, 50), '..."'),
+        'mensagem',
+        NEW.id_mensagem
+    );
+END//
+
+-- ============================================================================
+-- 10. NOTIFICAÇÃO - USUÁRIO BANIDO
+-- ============================================================================
+CREATE TRIGGER trg_notif_usuario_banido
+AFTER UPDATE ON usuario
+FOR EACH ROW
+BEGIN
+    IF NEW.banido = TRUE AND OLD.banido = FALSE THEN
+        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+        VALUES (
+            NEW.id_usuario,
+            'usuario_banido',
+            'Sua conta foi banida',
+            CONCAT('Sua conta foi banida. Motivo: ', COALESCE(NEW.motivo_banimento, 'Não informado'), '. Entre em contato com o suporte para mais informações.'),
+            'usuario',
+            NEW.id_usuario
+        );
+    END IF;
+END//
+
+-- ============================================================================
+-- 11. NOTIFICAÇÃO - USUÁRIO DESBANIDO
+-- ============================================================================
+CREATE TRIGGER trg_notif_usuario_desbanido
+AFTER UPDATE ON usuario
+FOR EACH ROW
+BEGIN
+    IF NEW.banido = FALSE AND OLD.banido = TRUE THEN
+        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+        VALUES (
+            NEW.id_usuario,
+            'usuario_desbanido',
+            'Sua conta foi reativada',
+            'Sua conta foi reativada. Você já pode acessar o sistema novamente.',
+            'usuario',
+            NEW.id_usuario
+        );
+    END IF;
+END//
+
+-- ============================================================================
+-- 12. NOTIFICAÇÃO - NOVO FAVORITO
+-- ============================================================================
+CREATE TRIGGER trg_notif_novo_favorito
+AFTER INSERT ON favorito
+FOR EACH ROW
+BEGIN
+    INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+    SELECT 
+        a.id_usuario,
+        'novo_favorito',
+        'Alguém favoritou seu serviço!',
+        CONCAT((SELECT nome FROM usuario WHERE id_usuario = NEW.id_usuario), ' favoritou seu anúncio "', a.titulo, '".'),
+        'favorito',
+        NEW.id_favorito
+    FROM anuncio_servico a
+    WHERE a.id_anuncio = NEW.id_anuncio;
+END//
+
+-- ============================================================================
+-- 13. NOTIFICAÇÃO - NOVA DENÚNCIA
+-- ============================================================================
+CREATE TRIGGER trg_notif_nova_denuncia
+AFTER INSERT ON denuncia
+FOR EACH ROW
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE id_moderador INT;
+    DECLARE cur_moderadores CURSOR FOR 
+        SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4);
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    OPEN cur_moderadores;
+    
+    read_loop: LOOP
+        FETCH cur_moderadores INTO id_moderador;
+        IF done THEN LEAVE read_loop; END IF;
+        
+        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+        VALUES (
+            id_moderador,
+            'nova_denuncia',
+            'Nova denúncia aguardando análise',
+            CONCAT('O usuário ', (SELECT nome FROM usuario WHERE id_usuario = NEW.id_denunciante), ' denunciou ', (SELECT nome FROM usuario WHERE id_usuario = NEW.id_denunciado), '. Motivo: ', NEW.motivo),
+            'denuncia',
+            NEW.id_denuncia
+        );
+    END LOOP;
+    
+    CLOSE cur_moderadores;
+END//
+
+-- ============================================================================
+-- 14. NOTIFICAÇÃO - DENÚNCIA ANALISADA
+-- ============================================================================
+CREATE TRIGGER trg_notif_denuncia_analisada
+AFTER UPDATE ON denuncia
+FOR EACH ROW
+BEGIN
+    IF NEW.id_situacao != OLD.id_situacao THEN
+        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+        VALUES (
+            NEW.id_denunciante,
+            'denuncia_analisada',
+            'Sua denúncia foi analisada',
+            CONCAT('Sua denúncia foi analisada. Status: ', (SELECT situacao FROM situacao WHERE id_situacao = NEW.id_situacao)),
+            'denuncia',
+            NEW.id_denuncia
+        );
+    END IF;
+END//
+
+-- ============================================================================
+-- 15. NOTIFICAÇÃO - NOVO USUÁRIO (ADMIN)
+-- ============================================================================
+CREATE TRIGGER trg_notif_novo_usuario_admin
+AFTER INSERT ON usuario
+FOR EACH ROW
+BEGIN
+    DECLARE id_admin INT DEFAULT 1;
+    
+    INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+    VALUES (
+        id_admin,
+        'novo_usuario_cadastrado',
+        'Novo usuário cadastrado no sistema!',
+        CONCAT('O usuário "', NEW.nome, '" (', NEW.email, ') acabou de se cadastrar no sistema.'),
+        'usuario',
+        NEW.id_usuario
+    );
+END//
+
+-- ============================================================================
+-- 16. NOTIFICAÇÃO - PERFIL ATUALIZADO
+-- ============================================================================
+CREATE TRIGGER trg_notif_perfil_atualizado
+AFTER UPDATE ON usuario
+FOR EACH ROW
+BEGIN
+    IF OLD.nome != NEW.nome OR OLD.telefone != NEW.telefone OR OLD.bio != NEW.bio OR OLD.foto_perfil != NEW.foto_perfil THEN
+        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+        VALUES (
+            NEW.id_usuario,
+            'perfil_atualizado',
+            'Seu perfil foi atualizado',
+            'Suas informações foram atualizadas com sucesso.',
+            'usuario',
+            NEW.id_usuario
+        );
+    END IF;
+END//
+
+-- ============================================================================
+-- 17. NOTIFICAÇÃO - NOVO PORTFÓLIO
+-- ============================================================================
+CREATE TRIGGER trg_notif_novo_portfolio
+AFTER INSERT ON portfolio
+FOR EACH ROW
+BEGIN
+    INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+    VALUES (
+        NEW.id_usuario,
+        'portfolio_adicionado',
+        'Novo item no seu portfólio',
+        CONCAT('Seu item "', NEW.titulo, '" foi adicionado ao portfólio com sucesso.'),
+        'portfolio',
+        NEW.id_portfolio
+    );
+END//
+
+-- ============================================================================
+-- 18. NOTIFICAÇÃO - NOVA DISPUTA (MODERADORES)
+-- ============================================================================
 CREATE TRIGGER trg_notif_nova_disputa
 AFTER INSERT ON disputa
 FOR EACH ROW
@@ -266,7 +408,6 @@ BEGIN
         SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4);
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
-    -- Notifica todos os moderadores e admins sobre nova disputa
     OPEN cur_moderadores;
     
     read_loop: LOOP
@@ -287,13 +428,11 @@ BEGIN
     END LOOP;
     
     CLOSE cur_moderadores;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 10. NOTIFICAÇÃO: DISPUTA RESOLVIDA (para ambos os lados)
+-- 19. NOTIFICAÇÃO - DISPUTA RESOLVIDA
 -- ============================================================================
-DELIMITER $$
 CREATE TRIGGER trg_notif_disputa_resolvida
 AFTER UPDATE ON disputa
 FOR EACH ROW
@@ -325,234 +464,50 @@ BEGIN
         FROM interesse i
         WHERE i.id_interesse = NEW.id_interesse;
     END IF;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 11. NOTIFICAÇÃO: NOVA AVALIAÇÃO RECEBIDA
+-- 20. NOTIFICAÇÃO - CONFIRMAÇÃO DE PAGAMENTO (CONTRATANTE)
 -- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_nova_avaliacao
-AFTER INSERT ON avaliacao
+CREATE TRIGGER trg_notif_pagamento_contratante
+AFTER UPDATE ON confirmacao_pagamento
 FOR EACH ROW
 BEGIN
-    INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-    VALUES (
-        NEW.id_avaliado,
-        NEW.id_interesse,
-        'nova_avaliacao',
-        'Você recebeu uma nova avaliação!',
-        CONCAT('O usuário ', (SELECT nome FROM usuario WHERE id_usuario = NEW.id_avaliador), ' avaliou seu serviço com nota ', NEW.nota, ' estrelas.'),
-        'avaliacao',
-        NEW.id_avaliacao
-    );
-END$$
-DELIMITER ;
-
--- ============================================================================
--- 12. NOTIFICAÇÃO: RESPOSTA À AVALIAÇÃO
--- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_resposta_avaliacao
-AFTER UPDATE ON avaliacao
-FOR EACH ROW
-BEGIN
-    IF NEW.resposta_avaliado IS NOT NULL AND OLD.resposta_avaliado IS NULL THEN
+    IF NEW.confirmado_contratante = TRUE AND OLD.confirmado_contratante = FALSE THEN
         INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-        VALUES (
-            NEW.id_avaliador,
-            NEW.id_interesse,
-            'resposta_avaliacao',
-            'O freelancer respondeu sua avaliação',
-            CONCAT((SELECT nome FROM usuario WHERE id_usuario = NEW.id_avaliado), ' respondeu ao seu comentário: "', NEW.resposta_avaliado, '"'),
-            'avaliacao',
-            NEW.id_avaliacao
-        );
+        SELECT 
+            i.id_freelancer,
+            i.id_interesse,
+            'pagamento_confirmado_contratante',
+            'Cliente confirmou pagamento',
+            CONCAT((SELECT nome FROM usuario WHERE id_usuario = i.id_contratante), ' confirmou que realizou o pagamento no valor de R$ ', FORMAT(NEW.valor_informado_contratante, 2), '.'),
+            'confirmacao_pagamento',
+            NEW.id_confirmacao
+        FROM interesse i
+        WHERE i.id_interesse = NEW.id_interesse;
     END IF;
-END$$
-DELIMITER ;
+END//
 
 -- ============================================================================
--- 13. NOTIFICAÇÃO: USUÁRIO BANIDO (para o usuário)
+-- 21. NOTIFICAÇÃO - CONFIRMAÇÃO DE PAGAMENTO (FREELANCER)
 -- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_usuario_banido
-AFTER UPDATE ON usuario
+CREATE TRIGGER trg_notif_pagamento_freelancer
+AFTER UPDATE ON confirmacao_pagamento
 FOR EACH ROW
 BEGIN
-    IF NEW.banido = TRUE AND OLD.banido = FALSE THEN
-        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
-        VALUES (
-            NEW.id_usuario,
-            'usuario_banido',
-            'Sua conta foi banida',
-            CONCAT('Sua conta foi banida. Motivo: ', COALESCE(NEW.motivo_banimento, 'Não informado'), '. Entre em contato com o suporte para mais informações.'),
-            'usuario',
-            NEW.id_usuario
-        );
+    IF NEW.confirmado_freelancer = TRUE AND OLD.confirmado_freelancer = FALSE THEN
+        INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+        SELECT 
+            i.id_contratante,
+            i.id_interesse,
+            'pagamento_confirmado_freelancer',
+            'Freelancer confirmou recebimento',
+            CONCAT((SELECT nome FROM usuario WHERE id_usuario = i.id_freelancer), ' confirmou que recebeu o pagamento no valor de R$ ', FORMAT(NEW.valor_informado_freelancer, 2), '.'),
+            'confirmacao_pagamento',
+            NEW.id_confirmacao
+        FROM interesse i
+        WHERE i.id_interesse = NEW.id_interesse;
     END IF;
-END$$
-DELIMITER ;
+END//
 
--- ============================================================================
--- 14. NOTIFICAÇÃO: USUÁRIO DESBANIDO
--- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_usuario_desbanido
-AFTER UPDATE ON usuario
-FOR EACH ROW
-BEGIN
-    IF NEW.banido = FALSE AND OLD.banido = TRUE THEN
-        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
-        VALUES (
-            NEW.id_usuario,
-            'usuario_desbanido',
-            'Sua conta foi reativada',
-            'Sua conta foi reativada. Você já pode acessar o sistema novamente.',
-            'usuario',
-            NEW.id_usuario
-        );
-    END IF;
-END$$
-DELIMITER ;
-
--- ============================================================================
--- 15. NOTIFICAÇÃO: NOVO FAVORITO (para o freelancer)
--- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_novo_favorito
-AFTER INSERT ON favorito
-FOR EACH ROW
-BEGIN
-    INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
-    SELECT 
-        a.id_usuario,
-        'novo_favorito',
-        'Alguém favoritou seu serviço!',
-        CONCAT((SELECT nome FROM usuario WHERE id_usuario = NEW.id_usuario), ' favoritou seu anúncio "', a.titulo, '".'),
-        'favorito',
-        NEW.id_favorito
-    FROM anuncio_servico a
-    WHERE a.id_anuncio = NEW.id_anuncio;
-END$$
-DELIMITER ;
-
--- ============================================================================
--- 16. NOTIFICAÇÃO: NOVA DENÚNCIA (para moderadores)
--- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_nova_denuncia
-AFTER INSERT ON denuncia
-FOR EACH ROW
-BEGIN
-    DECLARE done INT DEFAULT FALSE;
-    DECLARE id_moderador INT;
-    DECLARE cur_moderadores CURSOR FOR 
-        SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4);
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-    
-    OPEN cur_moderadores;
-    
-    read_loop: LOOP
-        FETCH cur_moderadores INTO id_moderador;
-        IF done THEN LEAVE read_loop; END IF;
-        
-        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
-        VALUES (
-            id_moderador,
-            'nova_denuncia',
-            'Nova denúncia aguardando análise',
-            CONCAT('O usuário ', (SELECT nome FROM usuario WHERE id_usuario = NEW.id_denunciante), ' denunciou ', (SELECT nome FROM usuario WHERE id_usuario = NEW.id_denunciado), '. Motivo: ', NEW.motivo),
-            'denuncia',
-            NEW.id_denuncia
-        );
-    END LOOP;
-    
-    CLOSE cur_moderadores;
-END$$
-DELIMITER ;
-
--- ============================================================================
--- 17. NOTIFICAÇÃO: DENÚNCIA ANALISADA (para o denunciante)
--- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_denuncia_analisada
-AFTER UPDATE ON denuncia
-FOR EACH ROW
-BEGIN
-    IF NEW.id_situacao != OLD.id_situacao THEN
-        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
-        VALUES (
-            NEW.id_denunciante,
-            'denuncia_analisada',
-            'Sua denúncia foi analisada',
-            CONCAT('Sua denúncia foi analisada. Status: ', (SELECT situacao FROM situacao WHERE id_situacao = NEW.id_situacao)),
-            'denuncia',
-            NEW.id_denuncia
-        );
-    END IF;
-END$$
-DELIMITER ;
-
--- ============================================================================
--- 18. NOTIFICAÇÃO: NOVA MENSAGEM NO CHAT
--- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_nova_mensagem
-AFTER INSERT ON mensagem
-FOR EACH ROW
-BEGIN
-    INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-    VALUES (
-        NEW.id_destinatario,
-        NEW.id_interesse,
-        'nova_mensagem',
-        'Nova mensagem no chat',
-        CONCAT((SELECT nome FROM usuario WHERE id_usuario = NEW.id_remetente), ' enviou uma mensagem: "', LEFT(NEW.mensagem, 50), '..."'),
-        'mensagem',
-        NEW.id_mensagem
-    );
-END$$
-DELIMITER ;
-
--- ============================================================================
--- 19. NOTIFICAÇÃO: PERFIL ATUALIZADO (para o usuário)
--- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_perfil_atualizado
-AFTER UPDATE ON usuario
-FOR EACH ROW
-BEGIN
-    IF OLD.nome != NEW.nome OR OLD.telefone != NEW.telefone OR OLD.bio != NEW.bio THEN
-        INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
-        VALUES (
-            NEW.id_usuario,
-            'perfil_atualizado',
-            'Seu perfil foi atualizado',
-            'Suas informações foram atualizadas com sucesso.',
-            'usuario',
-            NEW.id_usuario
-        );
-    END IF;
-END$$
-DELIMITER ;
-
--- ============================================================================
--- 20. NOTIFICAÇÃO: NOVO PORTFÓLIO ADICIONADO (para o usuário)
--- ============================================================================
-DELIMITER $$
-CREATE TRIGGER trg_notif_novo_portfolio
-AFTER INSERT ON portfolio
-FOR EACH ROW
-BEGIN
-    INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
-    VALUES (
-        NEW.id_usuario,
-        'portfolio_adicionado',
-        'Novo item no seu portfólio',
-        CONCAT('Seu item "', NEW.titulo, '" foi adicionado ao portfólio com sucesso.'),
-        'portfolio',
-        NEW.id_portfolio
-    );
-END$$
 DELIMITER ;
