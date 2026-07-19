@@ -171,30 +171,12 @@ $router->get('/admin/logs', 'AdminLogController@index', [1, 4]);
 /*
    MODERADOR (Perfil 2 - Moderador)
 */
-$router->get('/moderator', 'ModeradorController@index', [2, 4]);
-$router->get('/moderator/dashboard', 'ModeradorController@dashboard', [2, 4]);
-
-// Moderador - Anúncios para aprovação
-$router->get('/moderator/anuncios', 'ModeradorAnuncioController@index', [2, 4]);
-$router->post('/moderator/anuncios/aprovar', 'ModeradorAnuncioController@aprovar', [2, 4]);
-$router->post('/moderator/anuncios/rejeitar', 'ModeradorAnuncioController@rejeitar', [2, 4]);
-
-// Moderador - Denúncias
-$router->get('/moderator/denuncias', 'ModeradorDenunciaController@index', [2, 4]);
-$router->get('/moderator/denuncias/detalhes', 'ModeradorDenunciaController@detalhes', [2, 4]);
-$router->post('/moderator/denuncias/analisar', 'ModeradorDenunciaController@analisar', [2, 4]);
-
-// Moderador - Disputas
-$router->get('/moderator/disputas', 'ModeradorDisputaController@index', [2, 4]);
-$router->get('/moderator/disputas/detalhes', 'ModeradorDisputaController@detalhes', [2, 4]);
-$router->post('/moderator/disputas/resolver', 'ModeradorDisputaController@resolver', [2, 4]);
-
-// Moderador - Usuários (visualização)
-$router->get('/moderator/usuarios', 'ModeradorUsuarioController@index', [2, 4]);
-$router->get('/moderator/usuarios/detalhes', 'ModeradorUsuarioController@detalhes', [2, 4]);
-
-// Moderador - Categorias (visualização)
-$router->get('/moderator/categorias', 'ModeradorCategoriaController@index', [2, 4]);
+$router->get('/moderator', 'ModeradorController@index', [1, 2, 4]);
+$router->get('/moderator/anuncios', 'ModeradorController@anuncios', [1, 2, 4]);
+$router->get('/moderator/denuncias', 'ModeradorController@denuncias', [1, 2, 4]);
+$router->get('/moderator/disputas', 'ModeradorController@disputas', [1, 2, 4]);
+$router->get('/moderator/usuarios', 'ModeradorController@usuarios', [1, 2, 4]);
+$router->get('/moderator/categorias', 'ModeradorController@categorias', [1, 2, 4]);
 
 /*
    LOGS

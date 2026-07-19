@@ -1,0 +1,250 @@
+/* public/css/admin.css */
+
+.admin-container {
+    max-width: 1400px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-header h1 {
+    color: #006577;
+    font-size: 1.8rem;
+}
+
+.admin-header-info {
+    color: #555555;
+    font-size: 0.9rem;
+}
+
+.admin-header-info i {
+    color: #006577;
+    margin-right: 6px;
+}
+
+/* ===== KPI CARDS ===== */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.kpi-icon {
+    font-size: 1.5rem;
+    color: #006577;
+    margin-bottom: 8px;
+}
+
+.kpi-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* ===== ADMIN CONTENT ===== */
+.admin-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    font-size: 1rem;
+    color: #1e293b;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 12px;
+}
+
+.card h3 i {
+    color: #006577;
+}
+
+/* ===== TABLES ===== */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+th {
+    text-align: left;
+    font-size: 0.75rem;
+    color: #64748b;
+    padding: 10px 8px;
+    border-bottom: 2px solid #e2e8f0;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1e293b;
+}
+
+tr:hover td {
+    background: #f8fafc;
+}
+
+.avatar-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* ===== BADGES ===== */
+.badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-admin { background: #fee2e2; color: #991b1b; }
+.badge-moderador { background: #fef3c7; color: #92400e; }
+.badge-usuario { background: #dbeafe; color: #1e40af; }
+.badge-master { background: #f3e8ff; color: #7c3aed; }
+
+.badge-ativo { background: #dcfce7; color: #166534; }
+.badge-pausado { background: #fef3c7; color: #92400e; }
+.badge-excluido { background: #fee2e2; color: #991b1b; }
+.badge-pendente { background: #fef9c3; color: #854d0e; }
+
+/* ===== RESUMO ===== */
+.resumo-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.resumo-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.resumo-list li:last-child {
+    border-bottom: none;
+}
+
+.resumo-list li i {
+    width: 24px;
+    text-align: center;
+}
+
+.resumo-list li span {
+    flex: 1;
+    color: #1e293b;
+}
+
+.resumo-list li strong {
+    font-weight: 700;
+    color: #006577;
+    font-size: 1.1rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .admin-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        margin-top: 80px;
+        padding: 0 16px;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    table {
+        font-size: 0.8rem;
+    }
+
+    th, td {
+        padding: 6px 4px;
+    }
+}

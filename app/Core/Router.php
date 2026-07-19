@@ -70,7 +70,9 @@ class Router
         $action = $route['action'];
         $roles = $route['roles'];
 
-        // Verificar permissões
+        // ============================================================
+        // VERIFICAÇÃO DE PERMISSÕES
+        // ============================================================
         if (!empty($roles)) {
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
@@ -90,6 +92,9 @@ class Router
             if ($roleUsuario !== 4 && !in_array($roleUsuario, $rolesPermitidos, true)) {
                 http_response_code(403);
                 echo "<h1>403 - Acesso Negado</h1>";
+                echo "<p>Seu perfil: " . $roleUsuario . "</p>";
+                echo "<p>Perfis permitidos: " . implode(', ', $rolesPermitidos) . "</p>";
+                echo '<p><a href="/Aptus/">Voltar para o início</a></p>';
                 exit;
             }
         }

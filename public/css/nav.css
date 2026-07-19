@@ -280,3 +280,20 @@
         font-size: 0.85rem;
     }
 }
+
+/* public/css/nav.css - Adicione estas regras no final */
+
+/* ===== DROPDOWN POR HOVER (FALLBACK) ===== */
+.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Para evitar que o hover atrapalhe o clique em mobile */
+@media (max-width: 1024px) {
+    .dropdown:hover > .dropdown-menu {
+        display: none;
+    }
+    .dropdown.open > .dropdown-menu {
+        display: block;
+    }
+}

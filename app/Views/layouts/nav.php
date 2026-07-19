@@ -42,24 +42,22 @@ if ($usuario) {
                     <i class="fas fa-cog"></i> Admin <i class="fas fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <?php if ($role == 1 || $role == 2): ?>
-                        <li><a href="/Aptus/moderator/anuncios"><i class="fas fa-clipboard-list"></i> Moderar Anúncios</a></li>
-                        <li><a href="/Aptus/moderator/denuncias"><i class="fas fa-exclamation-triangle"></i> Denúncias</a></li>
-                        <li><a href="/Aptus/moderator/disputas"><i class="fas fa-gavel"></i> Disputas</a></li>
-                        <li><a href="/Aptus/moderator/usuarios"><i class="fas fa-users"></i> Usuários</a></li>
-                        <li><a href="/Aptus/moderator/categorias"><i class="fas fa-tags"></i> Categorias</a></li>
-                    <?php endif; ?>
-                    
+                    <!-- Dashboard (Admin e Master) -->
                     <?php if ($role == 1 || $role == 4): ?>
                         <li><a href="/Aptus/admin/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-                        <li><a href="/Aptus/admin/usuarios"><i class="fas fa-user-cog"></i> Gerenciar Usuários</a></li>
-                        <li><a href="/Aptus/admin/anuncios"><i class="fas fa-briefcase"></i> Gerenciar Anúncios</a></li>
-                        <li><a href="/Aptus/admin/denuncias"><i class="fas fa-flag"></i> Gerenciar Denúncias</a></li>
-                        <li><a href="/Aptus/admin/disputas"><i class="fas fa-scale-balanced"></i> Gerenciar Disputas</a></li>
-                        <li><a href="/Aptus/admin/categorias"><i class="fas fa-list"></i> Gerenciar Categorias</a></li>
-                        <li><a href="/Aptus/logs"><i class="fas fa-history"></i> Logs do Sistema</a></li>
                     <?php endif; ?>
                     
+                    <!-- Moderador (Admin e Moderador) -->
+                    <?php if ($role == 1 || $role == 2): ?>
+                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderação</a></li>
+                    <?php endif; ?>
+                    
+                    <!-- Configurações (Admin e Master) -->
+                    <?php if ($role == 1 || $role == 4): ?>
+                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configurações</a></li>
+                    <?php endif; ?>
+                    
+                    <!-- Área Master (Apenas Master) -->
                     <?php if ($role == 4): ?>
                         <li><a href="/Aptus/master" style="color: #f59e0b;"><i class="fas fa-crown"></i> Área Master</a></li>
                     <?php endif; ?>
