@@ -104,15 +104,6 @@ $router->post('/disputas/resolver', 'DisputaController@resolver', [1, 2, 4]);
 $router->get('/avaliacoes/criar', 'AvaliacaoController@criar', [3, 2, 1, 4]);
 $router->post('/avaliacoes/salvar', 'AvaliacaoController@salvar', [3, 2, 1, 4]);
 $router->post('/avaliacoes/responder', 'AvaliacaoController@responder', [3, 2, 1, 4]);
-
-/*
-   CHAT
-*/
-$router->get('/chat', 'ChatController@index', [3, 2, 1, 4]);
-$router->post('/chat/enviar', 'ChatController@enviar', [3, 2, 1, 4]);
-$router->post('/chat/marcar-lida', 'ChatController@marcarLida', [3, 2, 1, 4]);
-$router->get('/chat/mensagens', 'ChatController@mensagens', [3, 2, 1, 4]);
-
 /*
    DENÚNCIAS
 */
@@ -209,3 +200,11 @@ $router->get('/favoritos', 'FavoritoController@index', [3, 2, 1, 4]);
 $router->post('/favoritos/adicionar', 'FavoritoController@adicionar', [3, 2, 1, 4]);
 $router->post('/favoritos/remover', 'FavoritoController@remover', [3, 2, 1, 4]);
 $router->get('/favoritos/verificar', 'FavoritoController@verificar', [3, 2, 1, 4]);
+
+
+// CHAT
+$router->get('/chat', 'ChatController@index', [3, 2, 1, 4]);
+$router->get('/chat/{id}', 'ChatController@conversa', [3, 2, 1, 4]);
+$router->post('/chat/enviar', 'ChatController@enviar', [3, 2, 1, 4]);
+$router->get('/chat/mensagens', 'ChatController@mensagens', [3, 2, 1, 4]);
+$router->post('/chat/marcar-lida', 'ChatController@marcarLida', [3, 2, 1, 4]);

@@ -18,7 +18,7 @@ class Interesse
     public function findById($id)
     {
         $sql = "SELECT i.*, 
-                       a.titulo as anuncio_titulo, a.preco as anuncio_preco,
+                       a.titulo as anuncio_titulo, a.preco as anuncio_preco, a.slug as anuncio_slug,
                        c.nome as contratante_nome, c.email as contratante_email, c.telefone as contratante_telefone,
                        f.nome as freelancer_nome, f.email as freelancer_email, f.telefone as freelancer_telefone
                 FROM interesse i

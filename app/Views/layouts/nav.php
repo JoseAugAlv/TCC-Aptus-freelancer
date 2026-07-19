@@ -112,6 +112,13 @@ if ($usuario) {
                         <i class="fas fa-chart-line"></i> Dashboard Cliente
                     </a>
                 <?php endif; ?>
+
+                <a href="/Aptus/chat" class="menu-item">
+                    <i class="fas fa-comments"></i> Chat
+                    <?php if ($totalNotificacoes > 0): ?>
+                        <span class="badge-notificacao badge-menu"><?= $totalNotificacoes ?></span>
+                    <?php endif; ?>
+                </a>
     
                 <a href="/Aptus/freelancer" class="menu-item">
                     <i class="fas fa-chart-line"></i> Dashboard Freelancer
