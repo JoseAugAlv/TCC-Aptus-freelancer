@@ -67,6 +67,11 @@ if ($usuario) {
                         <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configuracoes</a></li>
                     <?php endif; ?>
                     
+                    <!-- RELATORIOS - ADICIONADO AQUI -->
+                    <?php if ($role == 1 || $role == 2 || $role == 4): ?>
+                        <li><a href="/Aptus/relatorios"><i class="fas fa-chart-bar"></i> Relatorios</a></li>
+                    <?php endif; ?>
+                    
                     <?php if ($role == 4): ?>
                         <li><a href="/Aptus/master" style="color: #f59e0b;"><i class="fas fa-crown"></i> Area Master</a></li>
                     <?php endif; ?>

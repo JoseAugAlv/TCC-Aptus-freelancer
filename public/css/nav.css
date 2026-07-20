@@ -380,24 +380,3 @@
         transform: scale(1.1);
     }
 }
-
-/* Navbar perfil - posicao relativa para o badge */
-.btn-perfil-navbar {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: transparent;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #1a2f3e;
-}
-
-.btn-perfil-navbar:hover {
-    background: #f1f5f9;
-}

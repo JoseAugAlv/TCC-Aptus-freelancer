@@ -222,3 +222,11 @@ $router->get('/chat/{id}', 'ChatController@conversa', [3, 2, 1, 4]);
 $router->post('/chat/enviar', 'ChatController@enviar', [3, 2, 1, 4]);
 $router->get('/chat/mensagens', 'ChatController@mensagens', [3, 2, 1, 4]);
 $router->post('/chat/marcar-lida', 'ChatController@marcarLida', [3, 2, 1, 4]);
+
+
+/*
+   RELATORIOS
+*/
+$router->get('/relatorios', 'RelatorioController@index', [1, 2, 4]);
+$router->get('/relatorios/categorias-pdf', 'RelatorioController@categoriasPdf', [1, 2, 4]);
+$router->get('/relatorios/termos-pdf', 'RelatorioController@termosPdf', [1, 2, 4]);
