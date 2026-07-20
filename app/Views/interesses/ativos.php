@@ -63,6 +63,12 @@ $avaliacaoModel = new Avaliacao();
                     
                     $usuarioJaAvaliou = $interesseModel->usuarioJaAvaliou($interesse['id_interesse'], $usuario['id']);
                     
+                    // Verificar se pagamento divergente
+                    $pagamentoDivergente = false;
+                    if (isset($interesse['situacao_final']) && $interesse['situacao_final'] == 'divergente') {
+                        $pagamentoDivergente = true;
+                    }
+                    
                     if ($jaConfirmou && $outroConfirmou) {
                         $statusConfirmacao = 'Ambos confirmaram - Concluido!';
                         $statusCor = '#10b981';
@@ -87,6 +93,9 @@ $avaliacaoModel = new Avaliacao();
                                 </div>
                             </div>
                             <span class="interesse-status ativo">Ativo</span>
+                            <?php if ($pagamentoDivergente): ?>
+                                <span class="interesse-status divergente">Divergente</span>
+                            <?php endif; ?>
                         </div>
 
                         <div class="interesse-body">
@@ -102,10 +111,16 @@ $avaliacaoModel = new Avaliacao();
                                     Voce ja confirmou a execucao do servico.
                                 </p>
                             <?php endif; ?>
+                            <?php if ($pagamentoDivergente): ?>
+                                <p class="interesse-pagamento-divergente" style="color: #dc2626;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Pagamento divergente. Abra uma disputa para resolver.
+                                </p>
+                            <?php endif; ?>
                         </div>
 
                         <!-- FORMULARIO DE AVALIACAO -->
-                        <?php if (!$usuarioJaAvaliou): ?>
+                        <?php if (!$usuarioJaAvaliou && !$pagamentoDivergente): ?>
                             <div class="avaliacao-form-container">
                                 <h4>Avaliar Servico</h4>
                                 <p>Avalie o servico antes de confirmar a execucao</p>
@@ -140,12 +155,12 @@ $avaliacaoModel = new Avaliacao();
                                     
                                     <div class="avaliacao-acoes">
                                         <button type="submit" class="btn-enviar-avaliacao">
-                                            <i class="fas fa-paper-plane"></i> Enviar Avaliacao
+                                            Enviar Avaliacao
                                         </button>
                                     </div>
                                 </form>
                             </div>
-                        <?php else: ?>
+                        <?php elseif ($usuarioJaAvaliou && !$pagamentoDivergente): ?>
                             <div class="avaliacao-ja-feita">
                                 <p><i class="fas fa-check-circle" style="color: #10b981;"></i> Voce ja avaliou este servico.</p>
                             </div>
@@ -159,13 +174,19 @@ $avaliacaoModel = new Avaliacao();
                                 Detalhes
                             </a>
                             
-                            <?php if ($usuarioJaAvaliou && !$jaConfirmou): ?>
+                            <?php if ($usuarioJaAvaliou && !$jaConfirmou && !$pagamentoDivergente): ?>
                                 <form method="POST" action="/Aptus/interesses/confirmar-execucao" style="display: inline;">
                                     <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
                                     <button type="submit" class="btn-confirmar" onclick="return confirm('Confirmar que o servico foi executado?')">
                                         Confirmar Execucao
                                     </button>
                                 </form>
+                            <?php endif; ?>
+                            
+                            <?php if ($pagamentoDivergente): ?>
+                                <a href="/Aptus/disputas/criar?interesse_id=<?= $interesse['id_interesse'] ?>" class="btn-disputa">
+                                    Abrir Disputa
+                                </a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -200,6 +221,11 @@ $avaliacaoModel = new Avaliacao();
                             <p class="interesse-preco">
                                 R$ <?= number_format($interesse['anuncio_preco'] ?? 0, 2, ',', '.') ?>
                             </p>
+                            <?php if (!$usuarioJaAvaliou): ?>
+                                <p class="interesse-avaliacao-pendente" style="color: #f59e0b;">
+                                    Avalie o servico para concluir o processo.
+                                </p>
+                            <?php endif; ?>
                         </div>
 
                         <?php if (!$usuarioJaAvaliou): ?>
@@ -237,7 +263,7 @@ $avaliacaoModel = new Avaliacao();
                                     
                                     <div class="avaliacao-acoes">
                                         <button type="submit" class="btn-enviar-avaliacao">
-                                            <i class="fas fa-paper-plane"></i> Enviar Avaliacao
+                                            Enviar Avaliacao
                                         </button>
                                     </div>
                                 </form>
@@ -269,5 +295,348 @@ $avaliacaoModel = new Avaliacao();
         <a href="/Aptus/">Voltar</a>
     </div>
 </div>
+
+<style>
+.interesses-container {
+    max-width: 900px;
+    margin: 120px auto 40px;
+    padding: 0 20px;
+}
+
+.interesses-header h1 {
+    color: #006577;
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+}
+
+.interesses-header p {
+    color: #555;
+}
+
+.interesses-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px dashed #d1d5db;
+}
+
+.interesses-empty p {
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #006577;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #004d5c;
+}
+
+.interesses-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.interesse-card {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s;
+}
+
+.interesse-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.interesse-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.interesse-cliente {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.interesse-cliente i {
+    font-size: 1.8rem;
+    color: #94a3b8;
+}
+
+.interesse-cliente strong {
+    display: block;
+    color: #1a2f3e;
+}
+
+.interesse-data {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.interesse-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.interesse-status.ativo {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.interesse-status.concluido {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.interesse-status.divergente {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.interesse-body h3 {
+    color: #006577;
+    margin: 0 0 4px 0;
+    font-size: 1.1rem;
+}
+
+.interesse-preco {
+    font-weight: 700;
+    color: #C9A227;
+    margin: 4px 0;
+}
+
+.interesse-status-confirmacao {
+    font-size: 0.85rem;
+    margin: 4px 0;
+}
+
+.interesse-confirmado {
+    color: #10b981;
+    font-size: 0.85rem;
+    margin: 4px 0;
+}
+
+.interesse-pagamento-divergente {
+    font-size: 0.85rem;
+    margin: 4px 0;
+}
+
+.avaliacao-form-container {
+    background: #f8fafc;
+    padding: 16px 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    margin: 12px 0;
+}
+
+.avaliacao-form-container h4 {
+    color: #006577;
+    margin: 0 0 4px 0;
+}
+
+.avaliacao-form-container p {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin: 0 0 12px 0;
+}
+
+.avaliacao-form .avaliacao-estrelas {
+    margin-bottom: 12px;
+}
+
+.avaliacao-form .avaliacao-estrelas label {
+    display: block;
+    font-weight: 600;
+    color: #1a2f3e;
+    margin-bottom: 4px;
+}
+
+.avaliacao-form .estrelas {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+.avaliacao-form .estrelas input {
+    display: none;
+}
+
+.avaliacao-form .estrelas label {
+    font-size: 1.5rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0 2px;
+}
+
+.avaliacao-form .estrelas label:hover,
+.avaliacao-form .estrelas label:hover ~ label,
+.avaliacao-form .estrelas input:checked ~ label {
+    color: #f59e0b;
+}
+
+.avaliacao-form .avaliacao-comentario {
+    margin-bottom: 12px;
+}
+
+.avaliacao-form .avaliacao-comentario label {
+    display: block;
+    font-weight: 600;
+    color: #1a2f3e;
+    margin-bottom: 4px;
+}
+
+.avaliacao-form .avaliacao-comentario textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.3s;
+}
+
+.avaliacao-form .avaliacao-comentario textarea:focus {
+    border-color: #006577;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.1);
+}
+
+.btn-enviar-avaliacao {
+    padding: 8px 20px;
+    background: #006577;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-enviar-avaliacao:hover {
+    background: #004d5c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.3);
+}
+
+.avaliacao-ja-feita {
+    background: #f0fdf4;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #10b981;
+    margin: 12px 0;
+}
+
+.avaliacao-ja-feita p {
+    color: #065f46;
+    margin: 0;
+    font-weight: 500;
+}
+
+.interesse-acoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-chat {
+    padding: 8px 16px;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-chat:hover {
+    background: #2563eb;
+}
+
+.btn-detalhes {
+    padding: 8px 16px;
+    background: #6b7280;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-detalhes:hover {
+    background: #4b5563;
+}
+
+.btn-confirmar {
+    padding: 8px 16px;
+    background: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-confirmar:hover {
+    background: #059669;
+}
+
+.btn-disputa {
+    padding: 8px 16px;
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-disputa:hover {
+    background: #b91c1c;
+}
+
+.interesses-links {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.interesses-links a {
+    color: #006577;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.interesses-links a:hover {
+    color: #C9A227;
+}
+</style>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

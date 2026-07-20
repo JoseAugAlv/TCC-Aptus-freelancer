@@ -117,38 +117,62 @@ class Anuncio
     /**
      * Busca avançada com filtros
      */
-    public function buscar($termo, $categoriaId = 0, $avaliacaoMin = 0, $ordenar = 'recentes')
+    public function buscarAvancado($filtros)
     {
-        $sql = "SELECT a.*, u.nome as freelancer_nome, u.foto_perfil, u.nota_media, u.total_avaliacoes,
-                c.nome as categoria_nome, c.icone as categoria_icone
+        $sql = "SELECT a.*, 
+                       u.nome as freelancer_nome, u.foto_perfil, u.nota_media, u.total_avaliacoes,
+                       c.nome as categoria_nome, c.icone as categoria_icone,
+                       (SELECT COUNT(*) FROM interesse i WHERE i.id_anuncio = a.id_anuncio AND i.situacao = 'ativo') as total_interesses
                 FROM anuncio_servico a 
                 JOIN usuario u ON a.id_usuario = u.id_usuario
                 JOIN categoria c ON a.id_categoria = c.id_categoria
                 WHERE a.situacao = 'ativo' AND a.id_situacao_moderacao = 2";
+        
         $params = [];
 
-        if (!empty($termo)) {
+        // Filtro por termo de busca
+        if (!empty($filtros['termo'])) {
             $sql .= " AND (a.titulo LIKE ? OR a.descricao LIKE ?)";
-            $params[] = "%$termo%";
-            $params[] = "%$termo%";
+            $termo = "%" . $filtros['termo'] . "%";
+            $params[] = $termo;
+            $params[] = $termo;
         }
 
-        if ($categoriaId > 0) {
+        // Filtro por categoria
+        if (!empty($filtros['categoria']) && $filtros['categoria'] > 0) {
             $sql .= " AND a.id_categoria = ?";
-            $params[] = $categoriaId;
+            $params[] = $filtros['categoria'];
         }
 
-        if ($avaliacaoMin > 0) {
+        // Filtro por avaliação minima
+        if (!empty($filtros['avaliacao']) && $filtros['avaliacao'] > 0) {
             $sql .= " AND u.nota_media >= ?";
-            $params[] = $avaliacaoMin;
+            $params[] = $filtros['avaliacao'];
         }
 
-        switch ($ordenar) {
+        // Filtro por preço minimo
+        if (!empty($filtros['preco_min']) && $filtros['preco_min'] > 0) {
+            $sql .= " AND a.preco >= ?";
+            $params[] = $filtros['preco_min'];
+        }
+
+        // Filtro por preço maximo
+        if (!empty($filtros['preco_max']) && $filtros['preco_max'] > 0) {
+            $sql .= " AND a.preco <= ?";
+            $params[] = $filtros['preco_max'];
+        }
+
+        // Ordenação
+        $ordenacao = $filtros['ordenar'] ?? 'recentes';
+        switch ($ordenacao) {
             case 'avaliacao':
                 $sql .= " ORDER BY u.nota_media DESC, a.data_criacao DESC";
                 break;
-            case 'preco':
+            case 'preco_asc':
                 $sql .= " ORDER BY a.preco ASC";
+                break;
+            case 'preco_desc':
+                $sql .= " ORDER BY a.preco DESC";
                 break;
             case 'visualizacoes':
                 $sql .= " ORDER BY a.visualizacoes DESC";
@@ -162,6 +186,20 @@ class Anuncio
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Busca com filtros (versão antiga - mantida para compatibilidade)
+     */
+    public function buscar($termo, $categoriaId = 0, $avaliacaoMin = 0, $ordenar = 'recentes')
+    {
+        $filtros = [
+            'termo' => $termo,
+            'categoria' => $categoriaId,
+            'avaliacao' => $avaliacaoMin,
+            'ordenar' => $ordenar
+        ];
+        return $this->buscarAvancado($filtros);
     }
 
     /**
