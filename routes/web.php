@@ -31,6 +31,8 @@ $router->get('/login/cadastrar', 'AuthController@cadastrar');
 $router->post('/login/salvar', 'AuthController@salvar');
 
 $router->get('/auth/verificar', 'AuthController@verificar');
+$router->get('/auth/reenviar-verificacao', 'AuthController@reenviarVerificacao');
+
 $router->get('/auth/esqueci-senha', 'AuthController@esqueciSenha');
 $router->post('/auth/enviar-token', 'AuthController@enviarToken');
 $router->get('/auth/redefinir', 'AuthController@redefinir');
