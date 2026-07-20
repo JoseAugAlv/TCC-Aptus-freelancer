@@ -25,7 +25,32 @@ $usuario = $usuarioData ?? $_SESSION['usuario'];
     <?php endif; ?>
 
     <div class="perfil-card">
-        <form method="POST" action="/Aptus/perfil/atualizar" class="perfil-form">
+        <form method="POST" action="/Aptus/perfil/atualizar" class="perfil-form" enctype="multipart/form-data">
+            
+            <!-- Foto de Perfil com Preview -->
+            <div class="form-group foto-perfil-group">
+                <label>Foto de Perfil</label>
+                <div class="foto-preview-container">
+                    <div class="foto-preview">
+                        <?php if (!empty($usuario['foto_perfil']) && $usuario['foto_perfil'] != 'default.png'): ?>
+                            <img src="/Aptus/public/<?= htmlspecialchars($usuario['foto_perfil']) ?>" 
+                                 alt="Foto de perfil" id="fotoPreview">
+                        <?php else: ?>
+                            <img src="/Aptus/public/images/default-avatar.png" 
+                                 alt="Foto de perfil" id="fotoPreview">
+                        <?php endif; ?>
+                    </div>
+                    <div class="foto-upload">
+                        <label for="foto_perfil" class="btn-upload">
+                            <i class="fas fa-camera"></i> Escolher foto
+                        </label>
+                        <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*" style="display: none;">
+                        <p class="foto-helper">Formatos: JPG, PNG, WEBP. Maximo: 2MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demais campos -->
             <div class="form-group">
                 <label for="nome">Nome Completo</label>
                 <input type="text" id="nome" name="nome" class="form-control" value="<?= htmlspecialchars($usuario['nome'] ?? '') ?>" required>
@@ -48,7 +73,7 @@ $usuario = $usuarioData ?? $_SESSION['usuario'];
 
             <div class="form-group">
                 <label for="bio">Biografia</label>
-                <textarea id="bio" name="bio" class="form-control" rows="4" placeholder="Conte um pouco sobre você..."><?= htmlspecialchars($usuario['bio'] ?? '') ?></textarea>
+                <textarea id="bio" name="bio" class="form-control" rows="4" placeholder="Conte um pouco sobre voce..."><?= htmlspecialchars($usuario['bio'] ?? '') ?></textarea>
             </div>
 
             <div class="form-row">
@@ -64,7 +89,7 @@ $usuario = $usuarioData ?? $_SESSION['usuario'];
 
             <div class="form-actions">
                 <button type="submit" class="btn-salvar">
-                    <i class="fas fa-save"></i> Salvar Alterações
+                    <i class="fas fa-save"></i> Salvar Alteracoes
                 </button>
                 <a href="/Aptus/perfil" class="btn-cancelar">
                     <i class="fas fa-times"></i> Cancelar
@@ -73,5 +98,27 @@ $usuario = $usuarioData ?? $_SESSION['usuario'];
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Preview da foto de perfil
+    var inputFoto = document.getElementById('foto_perfil');
+    var preview = document.getElementById('fotoPreview');
+    
+    if (inputFoto && preview) {
+        inputFoto.addEventListener('change', function(e) {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

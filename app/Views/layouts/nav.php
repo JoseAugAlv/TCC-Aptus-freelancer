@@ -1,10 +1,6 @@
 <?php
 // app/Views/layouts/nav.php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 $usuario = $_SESSION['usuario'] ?? null;
 
 if ($usuario) {

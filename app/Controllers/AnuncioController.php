@@ -85,65 +85,6 @@ class AnuncioController
         require '../app/Views/anuncios/criar.php';
     }
 
-    /**
-     * Salva novo anúncio
-     */
-    public function salvar()
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-
-        $usuarioId = $_SESSION['usuario']['id'];
-        
-        $titulo = trim($_POST['titulo'] ?? '');
-        $descricao = trim($_POST['descricao'] ?? '');
-        $categoriaId = (int)($_POST['categoria_id'] ?? 0);
-        $preco = (float)($_POST['preco'] ?? 0);
-
-        if (empty($titulo) || empty($descricao) || $categoriaId <= 0 || $preco <= 0) {
-            $_SESSION['flash'] = [
-                'tipo' => 'erro',
-                'mensagem' => 'Preencha todos os campos corretamente.'
-            ];
-            header('Location: /Aptus/anuncios/criar');
-            exit;
-        }
-
-        // Gerar slug
-        $slug = $this->gerarSlug($titulo);
-
-        $dados = [
-            'id_usuario' => $usuarioId,
-            'id_categoria' => $categoriaId,
-            'titulo' => $titulo,
-            'descricao' => $descricao,
-            'slug' => $slug,
-            'preco' => $preco
-        ];
-
-        $id = $this->anuncio->create($dados);
-
-        if ($id) {
-            $_SESSION['flash'] = [
-                'tipo' => 'sucesso',
-                'mensagem' => 'Anúncio criado! Aguarde a aprovação do moderador.'
-            ];
-            header('Location: /Aptus/anuncios/meus');
-        } else {
-            $_SESSION['flash'] = [
-                'tipo' => 'erro',
-                'mensagem' => 'Erro ao criar anúncio. Tente novamente.'
-            ];
-            header('Location: /Aptus/anuncios/criar');
-        }
-        exit;
-    }
 
     /**
      * Página para editar anúncio
@@ -371,4 +312,69 @@ class AnuncioController
         $slug = trim($slug, '-');
         return $slug . '-' . time();
     }
+
+    public function salvar()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        if (!isset($_SESSION['usuario'])) {
+            header('Location: /Aptus/login');
+            exit;
+        }
+
+        $usuarioId = $_SESSION['usuario']['id'];
+        
+        $titulo = trim($_POST['titulo'] ?? '');
+        $descricao = trim($_POST['descricao'] ?? '');
+        $categoriaId = (int)($_POST['categoria_id'] ?? 0);
+        $preco = (float)($_POST['preco'] ?? 0);
+
+        if (empty($titulo) || empty($descricao) || $categoriaId <= 0 || $preco <= 0) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Preencha todos os campos corretamente.'];
+            header('Location: /Aptus/anuncios/criar');
+            exit;
+        }
+
+        // Upload da foto de capa
+        $fotoCapa = null;
+        if (isset($_FILES['foto_capa']) && $_FILES['foto_capa']['error'] === UPLOAD_ERR_OK) {
+            require_once __DIR__ . '/../Helpers/UploadHelper.php';
+            
+            $resultado = UploadHelper::upload($_FILES['foto_capa'], 'anuncio');
+            
+            if ($resultado['success']) {
+                $fotoCapa = $resultado['arquivo'];
+            } else {
+                $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro no upload: ' . $resultado['message']];
+                header('Location: /Aptus/anuncios/criar');
+                exit;
+            }
+        }
+
+        $slug = $this->gerarSlug($titulo);
+
+        $dados = [
+            'id_usuario' => $usuarioId,
+            'id_categoria' => $categoriaId,
+            'titulo' => $titulo,
+            'descricao' => $descricao,
+            'slug' => $slug,
+            'preco' => $preco,
+            'foto_capa' => $fotoCapa
+        ];
+
+        $id = $this->anuncio->create($dados);
+
+        if ($id) {
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anuncio criado! Aguarde a aprovacao do moderador.'];
+            header('Location: /Aptus/anuncios/meus');
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao criar anuncio. Tente novamente.'];
+            header('Location: /Aptus/anuncios/criar');
+        }
+        exit;
+    }
+
 }

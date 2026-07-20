@@ -97,26 +97,6 @@ class SecurityHelper
     }
 
     /**
-     * Valida tipo real de arquivo com finfo
-     */
-    public static function validarMimeArquivo($caminhoTemp, $mimesPermitidos = ['image/jpeg', 'image/png', 'application/pdf'])
-    {
-        if (!function_exists('finfo_file')) {
-            if (in_array('image/jpeg', $mimesPermitidos) || in_array('image/png', $mimesPermitidos)) {
-                $info = @getimagesize($caminhoTemp);
-                return $info !== false;
-            }
-            return false;
-        }
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $caminhoTemp);
-        finfo_close($finfo);
-
-        return in_array($mime, $mimesPermitidos);
-    }
-
-    /**
      * Log de ações sensíveis
      */
     public static function logAuditoria($acao, $usuario_id, $detalhes = '', $tipo = 'info')
@@ -153,4 +133,25 @@ class SecurityHelper
     {
         return bin2hex(random_bytes($tamanho));
     }
+    /**
+     * Valida tipo real de arquivo com finfo
+     */
+    public static function validarMimeArquivo($caminhoTemp, $mimesPermitidos = ['image/jpeg', 'image/png', 'application/pdf'])
+    {
+        if (!function_exists('finfo_file')) {
+            // Fallback: usar getimagesize para imagens
+            if (in_array('image/jpeg', $mimesPermitidos) || in_array('image/png', $mimesPermitidos)) {
+                $info = @getimagesize($caminhoTemp);
+                return $info !== false;
+            }
+            return false;
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $caminhoTemp);
+        finfo_close($finfo);
+
+        return in_array($mime, $mimesPermitidos);
+    }
+
 }

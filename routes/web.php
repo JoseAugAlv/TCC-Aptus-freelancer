@@ -169,10 +169,13 @@ $router->get('/admin/logs', 'AdminLogController@index', [1, 4]);
    MODERADOR (Perfil 2 - Moderador)
 */
 $router->get('/moderator', 'ModeradorController@index', [1, 2, 4]);
-$router->get('/moderator/anuncios', 'ModeradorController@anuncios', [1, 2, 4]);
 $router->get('/moderator/disputas', 'ModeradorController@disputas', [1, 2, 4]);
 $router->get('/moderator/usuarios', 'ModeradorController@usuarios', [1, 2, 4]);
 $router->get('/moderator/categorias', 'ModeradorController@categorias', [1, 2, 4]);
+
+$router->get('/moderator/anuncios', 'ModeradorController@anuncios', [1, 2, 4]);
+$router->post('/moderator/anuncios/aprovar', 'ModeradorController@aprovarAnuncio', [1, 2, 4]);
+$router->post('/moderator/anuncios/rejeitar', 'ModeradorController@rejeitarAnuncio', [1, 2, 4]);
 
 /*
    MODERADOR - DENUNCIAS
