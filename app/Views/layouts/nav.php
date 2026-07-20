@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $usuario = $_SESSION['usuario'] ?? null;
 
 if ($usuario) {
-    $nomeUsuario = $usuario['nome'] ?? 'Usuário';
+    $nomeUsuario = $usuario['nome'] ?? 'Usuario';
     $role = $usuario['role'] ?? 3;
     $totalNotificacoes = 0;
     
@@ -32,8 +32,8 @@ if ($usuario) {
     </a>
 
     <ul class="navbar-links">
-        <li><a href="/Aptus/"><i class="fas fa-home"></i> Início</a></li>
-        <li><a href="/Aptus/anuncios"><i class="fas fa-tools"></i> Serviços</a></li>
+        <li><a href="/Aptus/"><i class="fas fa-home"></i> Inicio</a></li>
+        <li><a href="/Aptus/anuncios"><i class="fas fa-tools"></i> Servicos</a></li>
         <li><a href="/Aptus/sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>
         <li><a href="/Aptus/contato"><i class="fas fa-envelope"></i> Contato</a></li>
         
@@ -43,8 +43,8 @@ if ($usuario) {
                     <i class="fas fa-plus-circle"></i> Anunciar <i class="fas fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/Aptus/anuncios/criar"><i class="fas fa-plus"></i> Criar Anúncio</a></li>
-                    <li><a href="/Aptus/anuncios/meus"><i class="fas fa-list"></i> Meus Anúncios</a></li>
+                    <li><a href="/Aptus/anuncios/criar"><i class="fas fa-plus"></i> Criar Anuncio</a></li>
+                    <li><a href="/Aptus/anuncios/meus"><i class="fas fa-list"></i> Meus Anuncios</a></li>
                 </ul>
             </li>
         <?php endif; ?>
@@ -60,27 +60,28 @@ if ($usuario) {
                     <?php endif; ?>
                     
                     <?php if ($role == 1 || $role == 2): ?>
-                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderação</a></li>
+                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderacao</a></li>
                     <?php endif; ?>
                     
                     <?php if ($role == 1 || $role == 4): ?>
-                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configurações</a></li>
+                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configuracoes</a></li>
                     <?php endif; ?>
                     
                     <?php if ($role == 4): ?>
-                        <li><a href="/Aptus/master" style="color: #f59e0b;"><i class="fas fa-crown"></i> Área Master</a></li>
+                        <li><a href="/Aptus/master" style="color: #f59e0b;"><i class="fas fa-crown"></i> Area Master</a></li>
                     <?php endif; ?>
                 </ul>
             </li>
         <?php endif; ?>
         
+        <!-- NOTIFICACAO COM BADGE -->
         <?php if ($usuario): ?>
             <li>
                 <a href="/Aptus/notificacoes" class="nav-notificacao" id="navNotificacao">
                     <i class="fas fa-bell"></i>
-                    <?php if ($totalNotificacoes > 0): ?>
-                        <span class="badge-notificacao" id="badgeNotificacao"><?= $totalNotificacoes ?></span>
-                    <?php endif; ?>
+                    <span class="badge-notificacao" id="badgeNotificacao" style="display: <?= $totalNotificacoes > 0 ? 'inline-flex' : 'none' ?>;">
+                        <?= $totalNotificacoes ?>
+                    </span>
                 </a>
             </li>
         <?php endif; ?>
@@ -106,6 +107,7 @@ if ($usuario) {
                 <i class="fas fa-user-circle"></i>
                 <span>Minha Conta</span>
             </div>
+
             <?php if ($usuario): ?>
                 <?php if ($role == 3): ?>
                     <a href="/Aptus/cliente" class="menu-item">
@@ -116,7 +118,7 @@ if ($usuario) {
                 <a href="/Aptus/chat" class="menu-item">
                     <i class="fas fa-comments"></i> Chat
                     <?php if ($totalNotificacoes > 0): ?>
-                        <span class="badge-notificacao badge-menu"><?= $totalNotificacoes ?></span>
+                        <span class="badge-notificacao badge-menu" id="badgeMenu"><?= $totalNotificacoes ?></span>
                     <?php endif; ?>
                 </a>
     
@@ -131,20 +133,29 @@ if ($usuario) {
                 <a href="/Aptus/favoritos" class="menu-item">
                     <i class="fas fa-heart"></i> Meus Favoritos
                 </a>
+
+                <a href="/Aptus/anuncios/criar" class="menu-item">
+                    <i class="fas fa-plus"></i> Criar Anuncio
+                </a>
+                <a href="/Aptus/anuncios/meus" class="menu-item">
+                    <i class="fas fa-list"></i> Meus Anuncios
+                </a>
+                
                 <a href="/Aptus/notificacoes" class="menu-item" id="menuNotificacao">
-                    <i class="fas fa-bell"></i> Notificações
+                    <i class="fas fa-bell"></i> Notificacoes
                     <?php if ($totalNotificacoes > 0): ?>
                         <span class="badge-notificacao badge-menu" id="badgeMenu"><?= $totalNotificacoes ?></span>
                     <?php endif; ?>
                 </a>
-                <a href="/Aptus/interesses/meus" class="menu-item">
-                    <i class="fas fa-paper-plane"></i> Interesses Enviados
-                </a>
+
                 <a href="/Aptus/interesses/pendentes" class="menu-item">
                     <i class="fas fa-clock"></i> Propostas Pendentes
                 </a>
                 <a href="/Aptus/interesses/ativos" class="menu-item">
-                    <i class="fas fa-check-circle"></i> Serviços Ativos
+                    <i class="fas fa-check-circle"></i> Servicos Ativos
+                </a>
+                <a href="/Aptus/interesses/meus" class="menu-item">
+                    <i class="fas fa-paper-plane"></i> Meus Interesses
                 </a>
             <?php endif; ?>
 

@@ -297,3 +297,107 @@
         display: block;
     }
 }
+/* ============================================================
+   NOTIFICACAO BADGE
+   ============================================================ */
+.nav-notificacao {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    color: #1a2f3e;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.nav-notificacao:hover {
+    color: #006577;
+}
+
+.nav-notificacao i {
+    font-size: 1.2rem;
+}
+
+.badge-notificacao {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    animation: pulse-badge 2s infinite;
+}
+
+.badge-mobile {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.55rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.badge-menu {
+    margin-left: auto;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Navbar perfil - posicao relativa para o badge */
+.btn-perfil-navbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1a2f3e;
+}
+
+.btn-perfil-navbar:hover {
+    background: #f1f5f9;
+}

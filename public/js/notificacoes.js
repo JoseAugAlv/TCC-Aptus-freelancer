@@ -3,113 +3,112 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     /**
-     * Atualiza o badge de notificações
+     * Atualiza o badge de notificacoes via AJAX
      */
     function atualizarBadgeNotificacoes() {
         fetch('/Aptus/notificacoes/contador')
-            .then(response => response.json())
-            .then(data => {
-                const total = data.total || 0;
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                var total = data.total || 0;
                 
-                // Atualizar badge na navbar (links)
-                const badgeNav = document.querySelector('.nav-notificacao .badge-notificacao');
-                const badgeMobile = document.getElementById('badgeMobile');
-                const badgeMenu = document.getElementById('badgeMenu');
-                const badgeNotificacao = document.getElementById('badgeNotificacao');
-                
-                // Badge na navbar
+                // Atualizar badge na navbar (icone do sino)
+                var badgeNav = document.getElementById('badgeNotificacao');
                 if (badgeNav) {
                     if (total > 0) {
                         badgeNav.textContent = total;
-                        badgeNav.style.display = 'inline';
+                        badgeNav.style.display = 'inline-flex';
                     } else {
                         badgeNav.style.display = 'none';
                     }
-                } else if (badgeNotificacao) {
-                    if (total > 0) {
-                        badgeNotificacao.textContent = total;
-                        badgeNotificacao.style.display = 'inline';
-                    } else {
-                        badgeNotificacao.style.display = 'none';
-                    }
                 }
                 
-                // Badge mobile (no botão de perfil)
+                // Badge mobile (no botao de perfil)
+                var badgeMobile = document.getElementById('badgeMobile');
                 if (badgeMobile) {
                     if (total > 0) {
                         badgeMobile.textContent = total;
-                        badgeMobile.style.display = 'inline';
+                        badgeMobile.style.display = 'inline-flex';
                     } else {
                         badgeMobile.style.display = 'none';
                     }
                 }
                 
                 // Badge no menu dropdown
+                var badgeMenu = document.getElementById('badgeMenu');
                 if (badgeMenu) {
                     if (total > 0) {
                         badgeMenu.textContent = total;
-                        badgeMenu.style.display = 'inline';
+                        badgeMenu.style.display = 'inline-flex';
                     } else {
                         badgeMenu.style.display = 'none';
                     }
                 }
             })
-            .catch(error => {
-                console.log('Erro ao buscar notificações:', error);
+            .catch(function(error) {
+                console.log('Erro ao buscar notificacoes:', error);
             });
     }
 
     /**
-     * Marca notificação como lida via AJAX
+     * Marca notificacao como lida via AJAX
      */
     function marcarNotificacaoLida(id, element) {
-        const formData = new FormData();
+        var formData = new FormData();
         formData.append('id', id);
         
         fetch('/Aptus/notificacoes/marcar-lida', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.text())
-        .then(() => {
-            // Remover visualmente a notificação
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function() {
+            // Remover visualmente a notificacao
             if (element) {
-                const item = element.closest('.notificacao-item');
+                var item = element.closest('.notificacao-item');
                 if (item) {
                     item.style.opacity = '0.5';
-                    const badge = item.querySelector('.notificacao-badge');
+                    var badge = item.querySelector('.notificacao-badge');
                     if (badge) badge.remove();
-                    const btn = item.querySelector('.btn-marcar-lida');
+                    var btn = item.querySelector('.btn-marcar-lida');
                     if (btn) btn.remove();
                 }
             }
             atualizarBadgeNotificacoes();
         })
-        .catch(error => {
+        .catch(function(error) {
             console.log('Erro ao marcar como lida:', error);
         });
     }
 
     /**
-     * Marca todas as notificações como lidas via AJAX
+     * Marca todas as notificacoes como lidas via AJAX
      */
     function marcarTodasLidas() {
         fetch('/Aptus/notificacoes/marcar-todas-lidas', {
             method: 'POST'
         })
-        .then(response => response.text())
-        .then(() => {
-            // Remover visualmente todas as notificações não lidas
-            document.querySelectorAll('.notificacao-item.nao-lida').forEach(item => {
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function() {
+            // Remover visualmente todas as notificacoes nao lidas
+            document.querySelectorAll('.notificacao-item.nao-lida').forEach(function(item) {
                 item.style.opacity = '0.5';
-                const badge = item.querySelector('.notificacao-badge');
+                var badge = item.querySelector('.notificacao-badge');
                 if (badge) badge.remove();
-                const btn = item.querySelector('.btn-marcar-lida');
+                var btn = item.querySelector('.btn-marcar-lida');
                 if (btn) btn.remove();
             });
             atualizarBadgeNotificacoes();
         })
-        .catch(error => {
+        .catch(function(error) {
             console.log('Erro ao marcar todas como lidas:', error);
         });
     }
@@ -121,18 +120,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Atualizar a cada 30 segundos
     setInterval(atualizarBadgeNotificacoes, 30000);
 
-    // Atualizar quando a página ganhar foco
+    // Atualizar quando a pagina ganhar foco
     document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
             atualizarBadgeNotificacoes();
         }
     });
 
-    // Marcar notificação como lida (botões individuais)
+    // Atualizar ao carregar a pagina
+    atualizarBadgeNotificacoes();
+
+    // Marcar notificacao como lida (botoes individuais)
     document.querySelectorAll('.btn-marcar-lida').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const id = this.dataset.id;
+            var id = this.dataset.id;
             if (id) {
                 marcarNotificacaoLida(id, this);
             }
@@ -140,17 +142,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Marcar todas como lidas
-    const btnMarcarTodas = document.querySelector('.btn-marcar-todas');
+    var btnMarcarTodas = document.querySelector('.btn-marcar-todas');
     if (btnMarcarTodas) {
         btnMarcarTodas.addEventListener('click', function(e) {
             e.preventDefault();
-            if (confirm('Marcar todas as notificações como lidas?')) {
+            if (confirm('Marcar todas as notificacoes como lidas?')) {
                 marcarTodasLidas();
             }
         });
     }
 
-    // Tornar funções globais para uso inline
+    // Tornar funcoes globais para uso inline
     window.atualizarBadgeNotificacoes = atualizarBadgeNotificacoes;
     window.marcarNotificacaoLida = marcarNotificacaoLida;
     window.marcarTodasLidas = marcarTodasLidas;

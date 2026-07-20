@@ -28,7 +28,7 @@ class NotificacaoController
         $naoLidas = $this->notificacao->getNaoLidas($usuarioId);
         $todas = $this->notificacao->getTodas($usuarioId);
         
-        $tituloPagina = 'Notificações - Aptus';
+        $tituloPagina = 'Notificacoes - Aptus';
         $cssPagina = 'notificacoes.css';
         
         require '../app/Views/notificacoes/index.php';
@@ -74,6 +74,10 @@ class NotificacaoController
         exit;
     }
 
+    /**
+     * Retorna o contador de notificacoes (AJAX)
+     * Rota: GET /notificacoes/contador
+     */
     public function contador()
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -81,7 +85,8 @@ class NotificacaoController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            echo json_encode(['total' => 0]);
+            http_response_code(401);
+            echo json_encode(['total' => 0, 'error' => 'Nao logado']);
             exit;
         }
 
