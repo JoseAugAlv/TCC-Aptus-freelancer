@@ -98,9 +98,12 @@ $router->get('/pagamentos', 'PagamentoController@index', [3, 2, 1, 4]);
 */
 $router->get('/disputas/criar', 'DisputaController@criar', [3, 2, 1, 4]);
 $router->post('/disputas/salvar', 'DisputaController@salvar', [3, 2, 1, 4]);
-$router->get('/disputas/detalhes', 'DisputaController@detalhes', [3, 2, 1, 4]);
-$router->post('/disputas/resolver', 'DisputaController@resolver', [1, 2, 4]);
+$router->get('/disputas/detalhes/{id}', 'DisputaController@detalhes', [3, 2, 1, 4]);
 
+// Moderador - Disputas
+$router->get('/moderator/disputas', 'DisputaController@listar', [1, 2, 4]);
+$router->post('/moderator/disputas/aprovar', 'DisputaController@aprovar', [1, 2, 4]);
+$router->post('/moderator/disputas/rejeitar', 'DisputaController@rejeitar', [1, 2, 4]);
 /*
    AVALIAÇÕES
 */
