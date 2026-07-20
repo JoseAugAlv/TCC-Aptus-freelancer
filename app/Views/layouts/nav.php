@@ -134,21 +134,7 @@ if ($usuario) {
                 <a href="/Aptus/favoritos" class="menu-item">
                     <i class="fas fa-heart"></i> Meus Favoritos
                 </a>
-
-                <a href="/Aptus/anuncios/criar" class="menu-item">
-                    <i class="fas fa-plus"></i> Criar Anuncio
-                </a>
-                <a href="/Aptus/anuncios/meus" class="menu-item">
-                    <i class="fas fa-list"></i> Meus Anuncios
-                </a>
                 
-                <a href="/Aptus/notificacoes" class="menu-item" id="menuNotificacao">
-                    <i class="fas fa-bell"></i> Notificacoes
-                    <?php if ($totalNotificacoes > 0): ?>
-                        <span class="badge-notificacao badge-menu" id="badgeMenu"><?= $totalNotificacoes ?></span>
-                    <?php endif; ?>
-                </a>
-
                 <a href="/Aptus/interesses/pendentes" class="menu-item">
                     <i class="fas fa-clock"></i> Propostas Pendentes
                 </a>

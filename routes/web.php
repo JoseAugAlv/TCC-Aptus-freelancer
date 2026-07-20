@@ -233,3 +233,9 @@ $router->post('/chat/marcar-lida', 'ChatController@marcarLida', [3, 2, 1, 4]);
 $router->get('/relatorios', 'RelatorioController@index', [1, 2, 4]);
 $router->get('/relatorios/categorias-pdf', 'RelatorioController@categoriasPdf', [1, 2, 4]);
 $router->get('/relatorios/termos-pdf', 'RelatorioController@termosPdf', [1, 2, 4]);
+
+/*
+   ADMIN - CONFIGURACOES
+*/
+$router->get('/admin/configuracoes', 'ConfiguracaoController@index', [1, 4]);
+$router->post('/admin/configuracoes/salvar', 'ConfiguracaoController@salvar', [1, 4]);

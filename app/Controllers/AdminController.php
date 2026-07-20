@@ -73,13 +73,13 @@ class AdminController
         
         if (!in_array($role, [1, 4])) {
             echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o início</a></p>';
+            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
             exit;
         }
         
-        $tituloPagina = 'Configurações - Admin';
-        $cssPagina = 'admin.css';
-        
-        require '../app/Views/admin/configuracoes.php';
+        // Redirecionar para o novo controller
+        header('Location: /Aptus/admin/configuracoes');
+        exit;
     }
+
 }
