@@ -45,6 +45,7 @@ class FreelancerController
         $servicosPendentes = $this->dashboard->getServicosPendentesFreelancer($usuarioId);
         $interessesRecebidos = $this->dashboard->getInteressesRecebidosFreelancer($usuarioId);
         $interessesConcluidos = $this->dashboard->getInteressesConcluidosFreelancer($usuarioId);
+        $propostasPendentes = $this->interesse->countPendentesByFreelancer($usuarioId);
         $avaliacao = $this->dashboard->getNotaMediaFreelancer($usuarioId);
 
         // Últimos serviços e interesses

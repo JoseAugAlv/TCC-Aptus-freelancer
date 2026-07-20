@@ -75,12 +75,15 @@ $router->get('/anuncios/excluir/{id}', 'AnuncioController@excluir', [3, 2, 1, 4]
    INTERESSES (Contratar)
 */
 $router->post('/interesses/criar', 'InteresseController@criar', [3, 2, 1, 4]);
-$router->get('/interesses/meus', 'InteresseController@meus', [3, 2, 1, 4]);  
-$router->get('/interesses/recebidos', 'InteresseController@recebidos', [3, 2, 1, 4]);
+$router->post('/interesses/aceitar', 'InteresseController@aceitar', [3, 2, 1, 4]);
+$router->post('/interesses/recusar', 'InteresseController@recusar', [3, 2, 1, 4]);
+$router->get('/interesses/pendentes', 'InteresseController@pendentes', [3, 2, 1, 4]);
+$router->get('/interesses/ativos', 'InteresseController@ativos', [3, 2, 1, 4]);
+$router->post('/interesses/confirmar-execucao', 'InteresseController@confirmarExecucao', [3, 2, 1, 4]);
 $router->get('/interesses/detalhes/{id}', 'InteresseController@detalhes', [3, 2, 1, 4]);
 $router->post('/interesses/cancelar', 'InteresseController@cancelar', [3, 2, 1, 4]);
-$router->post('/interesses/concluir', 'InteresseController@concluir', [3, 2, 1, 4]);
-
+$router->get('/interesses/meus', 'InteresseController@meus', [3, 2, 1, 4]);
+$router->get('/interesses/recebidos', 'InteresseController@recebidos', [3, 2, 1, 4]);
 
 /*
    CONFIRMAÇÃO DE PAGAMENTO

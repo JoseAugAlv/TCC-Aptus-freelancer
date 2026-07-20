@@ -19,15 +19,11 @@ class AvaliacaoController
     }
 
     /**
-     * Página para criar avaliação
-     * Rota: /avaliacoes/criar/{id}
+     * Pagina para criar avaliacao
+     * Rota: GET /avaliacoes/criar/{id}
      */
     public function criar($interesseId = null)
     {
-        // Ativar debug
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
-
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -38,11 +34,7 @@ class AvaliacaoController
         }
 
         if (!$interesseId) {
-            $_SESSION['flash'] = [
-                'tipo' => 'erro',
-                'mensagem' => 'ID do interesse não informado.'
-            ];
-            header('Location: /Aptus/interesses/meus');
+            header('Location: /Aptus/interesses/ativos');
             exit;
         }
 
@@ -54,53 +46,55 @@ class AvaliacaoController
         if (!$interesse) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'Interesse não encontrado.'
+                'mensagem' => 'Interesse nao encontrado.'
             ];
-            header('Location: /Aptus/interesses/meus');
+            header('Location: /Aptus/interesses/ativos');
             exit;
         }
         
-        // Verificar se o usuário é o contratante
-        if ($interesse['id_contratante'] != $usuarioId) {
+        // Verificar se o usuario faz parte do interesse (cliente OU freelancer)
+        if ($interesse['id_contratante'] != $usuarioId && $interesse['id_freelancer'] != $usuarioId) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'Você não tem permissão para avaliar este serviço.'
+                'mensagem' => 'Voce nao tem permissao para avaliar este servico.'
             ];
-            header('Location: /Aptus/interesses/meus');
+            header('Location: /Aptus/interesses/ativos');
             exit;
         }
         
-        // Verificar se o interesse está concluído
-        if ($interesse['situacao'] != 'concluido') {
+        // Verificar se o interesse esta ativo ou concluido
+        if (!in_array($interesse['situacao'], ['ativo', 'concluido'])) {
             $_SESSION['flash'] = [
                 'tipo' => 'aviso',
-                'mensagem' => 'Apenas serviços concluídos podem ser avaliados.'
+                'mensagem' => 'Apenas servicos ativos ou concluidos podem ser avaliados.'
             ];
-            header('Location: /Aptus/interesses/detalhes/' . $interesseId);
+            header('Location: /Aptus/interesses/ativos');
             exit;
         }
         
-        // Verificar se já existe avaliação
-        if ($this->avaliacao->exists($interesseId)) {
+        // Verificar se o usuario ja avaliou
+        require_once __DIR__ . '/../Models/Interesse.php';
+        $interesseModel = new Interesse();
+        if ($interesseModel->usuarioJaAvaliou($interesseId, $usuarioId)) {
             $_SESSION['flash'] = [
                 'tipo' => 'aviso',
-                'mensagem' => 'Este serviço já foi avaliado.'
+                'mensagem' => 'Voce ja avaliou este servico.'
             ];
-            header('Location: /Aptus/interesses/detalhes/' . $interesseId);
+            header('Location: /Aptus/interesses/ativos');
             exit;
         }
 
-        // Buscar dados do anúncio
+        // Buscar dados do anuncio
         $anuncio = $this->anuncio->findById($interesse['id_anuncio']);
 
-        $tituloPagina = 'Avaliar Serviço - Aptus';
+        $tituloPagina = 'Avaliar Servico - Aptus';
         $cssPagina = 'avaliacoes.css';
         
         require '../app/Views/avaliacoes/criar.php';
     }
 
     /**
-     * Salva uma nova avaliação
+     * Salva uma nova avaliacao
      * Rota: POST /avaliacoes/salvar
      */
     public function salvar()
@@ -122,61 +116,69 @@ class AvaliacaoController
         if ($interesseId <= 0 || $nota < 1 || $nota > 5) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'Dados inválidos.'
+                'mensagem' => 'Dados invalidos.'
             ];
-            header('Location: /Aptus/interesses/meus');
+            header('Location: /Aptus/interesses/ativos');
             exit;
         }
 
         try {
+            $pdo = Database::getConnection();
+            $pdo->beginTransaction();
+
             // Buscar interesse
             $interesse = $this->interesse->findById($interesseId);
             
             if (!$interesse) {
-                throw new Exception('Interesse não encontrado.');
+                throw new Exception('Interesse nao encontrado.');
             }
             
-            if ($interesse['id_contratante'] != $usuarioId) {
-                throw new Exception('Você não tem permissão para avaliar este serviço.');
+            // Verificar se o usuario faz parte do interesse
+            if ($interesse['id_contratante'] != $usuarioId && $interesse['id_freelancer'] != $usuarioId) {
+                throw new Exception('Voce nao tem permissao para avaliar este servico.');
             }
 
-            // Verificar se já existe avaliação
-            if ($this->avaliacao->exists($interesseId)) {
-                throw new Exception('Este serviço já foi avaliado.');
+            // Verificar se ja existe avaliacao deste usuario
+            require_once __DIR__ . '/../Models/Interesse.php';
+            $interesseModel = new Interesse();
+            if ($interesseModel->usuarioJaAvaliou($interesseId, $usuarioId)) {
+                throw new Exception('Voce ja avaliou este servico.');
             }
 
-            // Verificar se o interesse está concluído
-            if ($interesse['situacao'] != 'concluido') {
-                throw new Exception('Apenas serviços concluídos podem ser avaliados.');
+            // Verificar se o interesse esta ativo ou concluido
+            if (!in_array($interesse['situacao'], ['ativo', 'concluido'])) {
+                throw new Exception('Apenas servicos ativos ou concluidos podem ser avaliados.');
             }
 
-            $pdo = Database::getConnection();
-            $pdo->beginTransaction();
+            // Determinar quem esta sendo avaliado (o outro usuario)
+            $avaliadoId = ($interesse['id_contratante'] == $usuarioId) 
+                ? $interesse['id_freelancer'] 
+                : $interesse['id_contratante'];
 
-            // Criar avaliação
+            // Criar avaliacao
             $dados = [
                 'id_interesse' => $interesseId,
                 'id_avaliador' => $usuarioId,
-                'id_avaliado' => $interesse['id_freelancer'],
+                'id_avaliado' => $avaliadoId,
                 'nota' => $nota,
                 'comentario' => $comentario
             ];
             
             $this->avaliacao->create($dados);
             
-            // Recalcular nota média do freelancer
-            $this->avaliacao->recalcularNotaMedia($interesse['id_freelancer']);
+            // Recalcular nota media do avaliado
+            $this->avaliacao->recalcularNotaMedia($avaliadoId);
             
-            // Criar notificação para o freelancer
+            // Criar notificacao para o avaliado
             $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id) 
                     VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                $interesse['id_freelancer'],
+                $avaliadoId,
                 $interesseId,
                 'nova_avaliacao',
-                'Você recebeu uma nova avaliação!',
-                "O cliente " . $_SESSION['usuario']['nome'] . " avaliou seu serviço com nota {$nota} estrelas.",
+                'Voce recebeu uma nova avaliacao!',
+                "O usuario " . $_SESSION['usuario']['nome'] . " avaliou o servico com nota {$nota} estrelas.",
                 'avaliacao',
                 $pdo->lastInsertId()
             ]);
@@ -185,8 +187,17 @@ class AvaliacaoController
 
             $_SESSION['flash'] = [
                 'tipo' => 'sucesso',
-                'mensagem' => 'Avaliação enviada com sucesso!'
+                'mensagem' => 'Avaliacao enviada com sucesso!'
             ];
+
+            // Redirecionar de volta para a pagina de origem
+            $origem = $_POST['origem'] ?? 'ativos';
+            if ($origem === 'detalhes') {
+                header('Location: /Aptus/interesses/detalhes/' . $interesseId);
+            } else {
+                header('Location: /Aptus/interesses/ativos');
+            }
+            exit;
 
         } catch (Exception $e) {
             if (isset($pdo) && $pdo->inTransaction()) {
@@ -194,17 +205,16 @@ class AvaliacaoController
             }
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'Erro ao enviar avaliação: ' . $e->getMessage()
+                'mensagem' => 'Erro ao enviar avaliacao: ' . $e->getMessage()
             ];
+            header('Location: /Aptus/interesses/ativos');
+            exit;
         }
-
-        header('Location: /Aptus/interesses/detalhes/' . $interesseId);
-        exit;
     }
 
     /**
-     * Página para responder avaliação (freelancer)
-     * Rota: /avaliacoes/responder/{id}
+     * Pagina para responder avaliacao (freelancer)
+     * Rota: GET /avaliacoes/responder/{id}
      */
     public function responder($avaliacaoId = null)
     {
@@ -220,7 +230,7 @@ class AvaliacaoController
         if (!$avaliacaoId) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'ID da avaliação não informado.'
+                'mensagem' => 'ID da avaliacao nao informado.'
             ];
             header('Location: /Aptus/interesses/recebidos');
             exit;
@@ -228,46 +238,46 @@ class AvaliacaoController
 
         $usuarioId = $_SESSION['usuario']['id'];
         
-        // Buscar avaliação
+        // Buscar avaliacao
         $avaliacao = $this->avaliacao->findByInteresse($avaliacaoId);
         
         if (!$avaliacao) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'Avaliação não encontrada.'
+                'mensagem' => 'Avaliacao nao encontrada.'
             ];
             header('Location: /Aptus/interesses/recebidos');
             exit;
         }
         
-        // Verificar se o usuário é o avaliado (freelancer)
+        // Verificar se o usuario e o avaliado
         if ($avaliacao['id_avaliado'] != $usuarioId) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'Você não tem permissão para responder esta avaliação.'
+                'mensagem' => 'Voce nao tem permissao para responder esta avaliacao.'
             ];
             header('Location: /Aptus/interesses/recebidos');
             exit;
         }
         
-        // Verificar se já existe resposta
+        // Verificar se ja existe resposta
         if (!empty($avaliacao['resposta_avaliado'])) {
             $_SESSION['flash'] = [
                 'tipo' => 'aviso',
-                'mensagem' => 'Esta avaliação já foi respondida.'
+                'mensagem' => 'Esta avaliacao ja foi respondida.'
             ];
             header('Location: /Aptus/interesses/detalhes/' . $avaliacao['id_interesse']);
             exit;
         }
 
-        $tituloPagina = 'Responder Avaliação - Aptus';
+        $tituloPagina = 'Responder Avaliacao - Aptus';
         $cssPagina = 'avaliacoes.css';
         
         require '../app/Views/avaliacoes/responder.php';
     }
 
     /**
-     * Salva a resposta da avaliação
+     * Salva a resposta da avaliacao
      * Rota: POST /avaliacoes/salvar-resposta
      */
     public function salvarResposta()
@@ -288,18 +298,18 @@ class AvaliacaoController
         if ($avaliacaoId <= 0 || empty($resposta)) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'Resposta inválida.'
+                'mensagem' => 'Resposta invalida.'
             ];
             header('Location: /Aptus/interesses/recebidos');
             exit;
         }
 
         try {
-            // Buscar avaliação
+            // Buscar avaliacao
             $avaliacao = $this->avaliacao->findByInteresse($avaliacaoId);
             
             if (!$avaliacao || $avaliacao['id_avaliado'] != $usuarioId) {
-                throw new Exception('Você não tem permissão para responder esta avaliação.');
+                throw new Exception('Voce nao tem permissao para responder esta avaliacao.');
             }
 
             $pdo = Database::getConnection();
@@ -308,7 +318,7 @@ class AvaliacaoController
             // Salvar resposta
             $this->avaliacao->responder($avaliacaoId, $resposta);
             
-            // Criar notificação para o avaliador
+            // Criar notificacao para o avaliador
             $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id) 
                     VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
@@ -316,8 +326,8 @@ class AvaliacaoController
                 $avaliacao['id_avaliador'],
                 $avaliacao['id_interesse'],
                 'resposta_avaliacao',
-                'Sua avaliação foi respondida!',
-                "O freelancer " . $_SESSION['usuario']['nome'] . " respondeu ao seu comentário.",
+                'Sua avaliacao foi respondida!',
+                "O usuario " . $_SESSION['usuario']['nome'] . " respondeu ao seu comentario.",
                 'avaliacao',
                 $avaliacaoId
             ]);

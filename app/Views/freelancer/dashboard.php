@@ -51,6 +51,11 @@ $usuarioData = $usuarioData ?? [];
             <div class="kpi-value"><?= $interessesConcluidos ?? 0 ?></div>
             <div class="kpi-label">Concluídos</div>
         </div>
+        <div class="kpi-card">
+            <div class="kpi-icon"><i class="fas fa-clock" style="color: #f59e0b;"></i></div>
+            <div class="kpi-value"><?= $propostasPendentes ?? 0 ?></div>
+            <div class="kpi-label">Propostas Pendentes</div>
+        </div>
     </div>
 
     <!-- Avaliação -->
