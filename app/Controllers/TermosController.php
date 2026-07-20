@@ -5,9 +5,9 @@ class TermosController
 {
     public function index()
     {
-        $tituloPagina = 'Termos de Uso - RecycleWays';
+        $tituloPagina = 'Termos de Uso e Politica de Privacidade - Aptus';
         $cssPagina = 'termos.css';
         
-        require '../app/Views/termos/termos.php';
+        require '../app/Views/termos/index.php';
     }
 }
