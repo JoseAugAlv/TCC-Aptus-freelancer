@@ -12,7 +12,7 @@ $motivos = $motivos ?? [];
  
 <div class="denuncia-visualizar-container">
     <div class="denuncia-visualizar-header">
-        <h1><i class="fas fa-search"></i> Visualizar Denuncia</h1>
+        <h1>Visualizar Denuncia</h1>
         <p>Analise a denuncia e tome uma decisao</p>
     </div>
 

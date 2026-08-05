@@ -530,3 +530,265 @@
         font-size: 0.85rem;
     }
 }
+
+/* ============================================================
+   VISUALIZAR DENÚNCIA - ESTILOS ESPECÍFICOS
+   ============================================================ */
+
+/* Container principal da visualização */
+.denuncia-visualizar-container {
+    max-width: 900px;
+    margin: 130px auto 40px;
+    padding: 0 20px;
+}
+
+/* Cabeçalho da visualização */
+.denuncia-visualizar-header {
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
+    color: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px var(--cor-sombra);
+}
+
+.denuncia-visualizar-header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    font-family: var(--font-padrao);
+}
+
+.denuncia-visualizar-header h1 i {
+    color: var(--cor-dourado);
+    margin-right: 10px;
+}
+
+.denuncia-visualizar-header p {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin: 0;
+    font-family: var(--font-padrao);
+}
+
+/* Card principal */
+.denuncia-visualizar-card {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 101, 119, 0.06);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Seções dentro do card */
+.denuncia-visualizar-info,
+.denuncia-visualizar-partes,
+.denuncia-visualizar-anuncio,
+.denuncia-visualizar-motivo {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #f0f2f6;
+}
+
+.denuncia-visualizar-info:last-child,
+.denuncia-visualizar-partes:last-child,
+.denuncia-visualizar-anuncio:last-child,
+.denuncia-visualizar-motivo:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.denuncia-visualizar-card h3 {
+    color: var(--cor-primaria);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    font-family: var(--font-padrao);
+}
+
+.denuncia-visualizar-card h4 {
+    color: var(--cor-texto-principal);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.6rem 0;
+    font-family: var(--font-padrao);
+}
+
+.denuncia-visualizar-card p {
+    margin: 4px 0;
+    font-size: 0.95rem;
+    font-family: var(--font-padrao);
+    color: var(--cor-texto-principal);
+}
+
+.denuncia-visualizar-card p strong {
+    color: var(--cor-texto-secundario);
+    font-weight: 600;
+    display: inline-block;
+    min-width: 80px;
+}
+
+/* Grid para denunciante e denunciado */
+.denuncia-visualizar-partes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.parte {
+    background: #f8fafd;
+    padding: 1.2rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #eef1f6;
+}
+
+.parte h4 {
+    color: var(--cor-primaria);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 0.8rem 0;
+}
+
+.parte p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+}
+
+.parte p strong {
+    min-width: 60px;
+    color: var(--cor-texto-secundario);
+}
+
+/* Descrição da denúncia */
+.denuncia-descricao {
+    background: #f8fafd;
+    padding: 1.2rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #eef1f6;
+    margin-top: 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--cor-texto-principal);
+    font-family: var(--font-padrao);
+}
+
+/* Botões de ação */
+.denuncia-visualizar-acoes {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f2f6;
+}
+
+.btn-aprovar,
+.btn-rejeitar,
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 24px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: var(--font-padrao);
+    cursor: pointer;
+    transition: var(--transicao-padrao);
+    text-decoration: none;
+}
+
+.btn-aprovar {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+.btn-aprovar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+}
+
+.btn-rejeitar {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+.btn-rejeitar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+}
+
+.btn-voltar {
+    background: #6b7a8a;
+    color: #fff;
+}
+.btn-voltar:hover {
+    background: #546470;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ========== RESPONSIVO VISUALIZAR ========== */
+@media (max-width: 768px) {
+    .denuncia-visualizar-container {
+        margin-top: 110px;
+        padding: 0 14px;
+    }
+
+    .denuncia-visualizar-header {
+        padding: 1.4rem 1.6rem;
+    }
+    .denuncia-visualizar-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .denuncia-visualizar-card {
+        padding: 1.2rem 1.2rem;
+    }
+
+    .denuncia-visualizar-partes {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .denuncia-visualizar-acoes {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .btn-aprovar,
+    .btn-rejeitar,
+    .btn-voltar {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .denuncia-visualizar-header h1 {
+        font-size: 1.2rem;
+    }
+    .denuncia-visualizar-header p {
+        font-size: 0.9rem;
+    }
+    .denuncia-visualizar-card {
+        padding: 1rem;
+    }
+    .denuncia-visualizar-card p {
+        font-size: 0.85rem;
+    }
+    .parte {
+        padding: 0.8rem 1rem;
+    }
+    .denuncia-descricao {
+        padding: 0.8rem 1rem;
+        font-size: 0.85rem;
+    }
+}
