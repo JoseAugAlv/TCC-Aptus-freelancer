@@ -11,7 +11,7 @@ $denuncias = $denuncias ?? [];
 
 <div class="denuncias-container">
     <div class="denuncias-header">
-        <h1><i class="fas fa-flag"></i> Denúncias</h1>
+        <h1></i> Denúncias</h1>
         <p>Gerencie as denúncias da plataforma</p>
         <?php if (!empty($denuncias)): ?>
             <span class="badge-count"><?= count($denuncias) ?> pendente(s)</span>
@@ -34,7 +34,7 @@ $denuncias = $denuncias ?? [];
             <h3>Nenhuma denúncia pendente</h3>
             <p>Não há denúncias aguardando análise no momento.</p>
             <a href="/Aptus/moderator" class="btn-voltar-empty">
-                <i class="fas fa-arrow-left"></i> Voltar ao Dashboard
+                 Voltar ao Dashboard
             </a>
         </div>
     <?php else: ?>
