@@ -9,7 +9,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 $denuncia = $denuncia ?? [];
 $motivos = $motivos ?? [];
 ?>
-
+ 
 <div class="denuncia-visualizar-container">
     <div class="denuncia-visualizar-header">
         <h1><i class="fas fa-search"></i> Visualizar Denuncia</h1>

@@ -40,8 +40,7 @@ class ModeradorController
         $totalUsuarios = count($this->moderador->getUsuarios());
         $totalCategorias = count($this->moderador->getCategorias());
         
-        $tituloPagina = 'Moderacao - Aptus';
-        $cssPagina = 'moderador.css';
+
         
         require '../app/Views/moderator/index.php';
     }
@@ -66,9 +65,7 @@ class ModeradorController
         }
         
         $anuncios = $this->moderador->getAnunciosPendentes();
-        
-        $tituloPagina = 'Moderar Anuncios - Aptus';
-        $cssPagina = 'moderador.css';
+
         
         require '../app/Views/moderator/anuncios.php';
     }
@@ -224,8 +221,6 @@ class ModeradorController
         
         $denuncias = $this->moderador->getDenunciasPendentes();
         
-        $tituloPagina = 'Denuncias - Aptus';
-        $cssPagina = 'moderador.css';
         
         require '../app/Views/moderator/denuncias.php';
     }
@@ -250,9 +245,7 @@ class ModeradorController
         }
         
         $disputas = $this->moderador->getDisputasPendentes();
-        
-        $tituloPagina = 'Disputas - Aptus';
-        $cssPagina = 'moderador.css';
+
         
         require '../app/Views/moderator/disputas.php';
     }
@@ -277,9 +270,7 @@ class ModeradorController
         }
         
         $usuarios = $this->moderador->getUsuarios();
-        
-        $tituloPagina = 'Usuarios - Aptus';
-        $cssPagina = 'moderador.css';
+
         
         require '../app/Views/moderator/usuarios.php';
     }
@@ -305,8 +296,7 @@ class ModeradorController
         
         $categorias = $this->moderador->getCategorias();
         
-        $tituloPagina = 'Categorias - Aptus';
-        $cssPagina = 'moderador.css';
+   
         
         require '../app/Views/moderator/categorias.php';
     }

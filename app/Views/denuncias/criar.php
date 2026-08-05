@@ -10,7 +10,7 @@ $tipo = $_GET['tipo'] ?? '';
 $id = (int)($_GET['id'] ?? 0);
 $motivos = $motivos ?? [];
 ?>
-
+ 
 <div class="denuncia-container">
     <div class="denuncia-header">
         <h1><i class="fas fa-flag"></i> Denunciar</h1>
