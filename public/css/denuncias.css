@@ -1,0 +1,379 @@
+/* ============================================================
+   DENUNCIAS.CSS - PÁGINA DE DENÚNCIAS DO MODERADOR
+   ============================================================ */
+
+.denuncias-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* HEADER */
+.denuncias-header {
+    background: linear-gradient(135deg, #006577, #004d5c);
+    color: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 30px rgba(0, 101, 119, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.denuncias-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.denuncias-header h1 i {
+    color: #C9A227;
+    margin-right: 10px;
+}
+
+.denuncias-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.badge-count {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 16px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-weight: 600;
+}
+
+/* FLASH MESSAGES */
+.flash-sucesso {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #c3e6cb;
+}
+.flash-erro {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #f5c6cb;
+}
+.flash-aviso {
+    background: #fff3cd;
+    color: #856404;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ffc107;
+}
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.88);
+    border-radius: 20px;
+    border: 2px dashed #d1d5db;
+    margin: 2rem 0;
+}
+
+.empty-state i {
+    font-size: 3.5rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.empty-state h3 {
+    color: #1a1a1a;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-voltar-empty {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 28px;
+    background: #006577;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-voltar-empty:hover {
+    background: #004d5c;
+    transform: translateY(-2px);
+}
+
+/* FILTROS */
+.filtros-denuncias {
+    background: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2rem;
+}
+
+.filtros-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    align-items: flex-end;
+}
+
+.filtro-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 180px;
+}
+
+.filtro-group label {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #4b5563;
+    margin-bottom: 4px;
+}
+
+.filtro-group select,
+.filtro-group input {
+    padding: 8px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #fff;
+    transition: all 0.3s;
+}
+
+.filtro-group select:focus,
+.filtro-group input:focus {
+    border-color: #006577;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.1);
+}
+
+.filtro-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn-filtrar {
+    padding: 8px 20px;
+    background: #006577;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-filtrar:hover {
+    background: #004d5c;
+}
+
+.btn-limpar-filtros {
+    padding: 8px 20px;
+    background: #e2e8f0;
+    color: #1a2f3e;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-limpar-filtros:hover {
+    background: #cbd5e1;
+}
+
+/* TABELA */
+.tabela-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    margin-bottom: 2rem;
+    overflow-x: auto;
+}
+
+.tabela-denuncias {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    min-width: 700px;
+}
+
+.tabela-denuncias thead {
+    background: linear-gradient(135deg, #006577, #004d5c);
+    color: #fff;
+}
+
+.tabela-denuncias thead th {
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.tabela-denuncias thead th i {
+    margin-right: 6px;
+}
+
+.tabela-denuncias tbody td {
+    padding: 12px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.tabela-denuncias tbody tr:hover {
+    background: #f8fafc;
+}
+
+.motivo-truncado {
+    display: block;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* AÇÕES NA TABELA */
+.acoes-cell {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-analisar {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    background: #006577;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-analisar:hover {
+    background: #004d5c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.3);
+}
+
+/* RODAPÉ */
+.denuncias-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.btn-voltar-footer {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 28px;
+    background: #6b7280;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-voltar-footer:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+    .denuncias-container {
+        padding: 0 1rem;
+    }
+
+    .denuncias-header {
+        padding: 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .denuncias-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .filtros-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filtro-group {
+        flex: 1 1 auto;
+    }
+
+    .filtro-actions {
+        justify-content: stretch;
+    }
+
+    .filtro-actions .btn-filtrar,
+    .filtro-actions .btn-limpar-filtros {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tabela-denuncias {
+        font-size: 0.85rem;
+        min-width: 600px;
+    }
+
+    .tabela-denuncias thead th,
+    .tabela-denuncias tbody td {
+        padding: 8px 12px;
+    }
+
+    .acoes-cell {
+        flex-direction: column;
+    }
+
+    .btn-analisar {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .denuncias-header h1 {
+        font-size: 1.2rem;
+    }
+    .tabela-denuncias {
+        font-size: 0.8rem;
+        min-width: 500px;
+    }
+}

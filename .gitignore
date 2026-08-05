@@ -13,6 +13,7 @@ composer.lock
 
 # Uploads de usuário (fotos de perfil, anúncios, portfólio, comprovantes)
 /public/uploads/*
+/codigo_completo.txt
 !/public/uploads/.gitkeep
 
 # Cache / sessões do PHP

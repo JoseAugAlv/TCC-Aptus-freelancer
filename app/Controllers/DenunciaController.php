@@ -37,8 +37,6 @@ class DenunciaController
         $id = (int)($_GET['id'] ?? 0);
         
         $motivos = $this->denuncia->getMotivos();
-        $tituloPagina = 'Denunciar - Aptus';
-        $cssPagina = 'denuncias.css';
         
         require '../app/Views/denuncias/criar.php';
     }
@@ -196,8 +194,6 @@ class DenunciaController
         $denuncias = $this->denuncia->getPendentes();
         $totalPendentes = $this->denuncia->countPendentes();
         
-        $tituloPagina = 'Denuncias - Moderacao';
-        $cssPagina = 'moderador.css';
         
         require '../app/Views/moderator/denuncias.php';
     }
@@ -249,9 +245,7 @@ class DenunciaController
         }
 
         $motivos = $this->denuncia->getMotivos();
-        
-        $tituloPagina = 'Visualizar Denuncia - Aptus';
-        $cssPagina = 'moderador.css';
+
         
         // CORREÇÃO: caminho correto para a pasta denuncias
         require '../app/Views/denuncias/visualizar.php';
