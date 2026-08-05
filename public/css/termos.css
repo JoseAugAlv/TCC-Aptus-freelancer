@@ -1,0 +1,521 @@
+/* ========================================
+   TERMOS.CSS - Estilos da página de termos
+   ======================================== */
+
+/* ----------------------------------------
+   VARIÁVEIS E RESET
+   ---------------------------------------- */
+:root {
+    --primary: #006577;
+    --secondary: #C9A227;
+    --bg-light: #f5f7fa;
+    --bg-white: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-muted: #555555;
+    --shadow: rgba(0, 101, 119, 0.1);
+    --radius: 20px;
+    --transition: 0.3s ease;
+    --nav-height: 70px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--nav-height);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.7;
+    padding-top: var(--nav-height);
+}
+
+/* ----------------------------------------
+   NAVBAR FIXA (sempre visível)
+   ---------------------------------------- */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    height: var(--nav-height);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 101, 119, 0.08);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+#img-logo {
+    height: 40px;
+    width: auto;
+}
+
+/* ----------------------------------------
+   CONTAINER PRINCIPAL
+   ---------------------------------------- */
+.termos-container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* ----------------------------------------
+   HEADER
+   ---------------------------------------- */
+.termos-header {
+    background: linear-gradient(135deg, var(--primary), #004d5c);
+    color: #fff;
+    padding: 3rem 4rem;
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 30px rgba(0, 101, 119, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.termos-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+}
+
+.termos-header h1 i {
+    color: var(--secondary);
+    margin-right: 10px;
+}
+
+.termos-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+    margin-top: 4px;
+}
+
+.termos-data {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 16px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.termos-container hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    margin: 2rem 0;
+    opacity: 0.25;
+}
+
+/* ----------------------------------------
+   CONTEÚDO
+   ---------------------------------------- */
+.termos-content {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(6px);
+    padding: 3rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* ----------------------------------------
+   ÍNDICE
+   ---------------------------------------- */
+.termos-indice {
+    background: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    border-left: 4px solid var(--secondary);
+}
+
+.termos-indice h3 {
+    color: var(--primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.termos-indice h3 i {
+    margin-right: 8px;
+}
+
+.termos-indice ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 2px 20px;
+}
+
+.termos-indice ul li a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.92rem;
+    transition: var(--transition);
+    display: inline-block;
+    padding: 3px 0;
+}
+
+.termos-indice ul li a:hover {
+    color: var(--primary);
+    padding-left: 6px;
+}
+
+.termos-indice ul li a::before {
+    content: '› ';
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+/* ----------------------------------------
+   SEÇÕES
+   ---------------------------------------- */
+.termos-section {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+}
+
+.termos-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.termos-section h2 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-left: 14px;
+    border-left: 4px solid var(--secondary);
+}
+
+.termos-section p {
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-size: 1.02rem;
+}
+
+.termos-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 16px 0;
+}
+
+.termos-section ul li {
+    padding: 5px 0 5px 28px;
+    position: relative;
+    color: var(--text-muted);
+}
+
+.termos-section ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+.termos-section ul li strong {
+    color: var(--primary);
+}
+
+/* ----------------------------------------
+   CONTATO
+   ---------------------------------------- */
+.termos-contato {
+    background: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    border: 1px solid #eef2f6;
+    margin-top: 8px;
+}
+
+.termos-contato p {
+    margin-bottom: 6px;
+}
+
+.termos-contato p:last-child {
+    margin-bottom: 0;
+}
+
+.termos-contato a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.termos-contato a:hover {
+    color: var(--secondary);
+}
+
+.termos-contato i {
+    color: var(--primary);
+    width: 28px;
+}
+
+/* ----------------------------------------
+   BOTÃO VOLTAR
+   ---------------------------------------- */
+.termos-voltar {
+    text-align: center;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 36px;
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: 0 4px 14px rgba(0, 101, 119, 0.2);
+}
+
+.btn-voltar:hover {
+    background: #004d5c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 101, 119, 0.3);
+}
+
+/* ========================================
+   NAVBAR PADRÃO (mesmo estilo do home.css)
+   ======================================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 101, 119, 0.08);
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-height);
+    border-bottom: 1px solid rgba(0, 101, 119, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar:hover {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 30px rgba(0, 101, 119, 0.12);
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+#img-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* ----------------------------------------
+   RESPONSIVO
+   ---------------------------------------- */
+@media (max-width: 768px) {
+    :root {
+        --nav-height: 60px;
+    }
+
+    .navbar {
+        padding: 0 1rem;
+    }
+
+    #img-logo {
+        height: 32px;
+    }
+
+    .termos-container {
+        padding: 0 1rem;
+        margin: 1rem auto;
+    }
+
+    .termos-header {
+        padding: 2rem 1.5rem;
+        border-radius: 16px;
+    }
+
+    .termos-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .termos-content {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+
+    .termos-indice {
+        padding: 1rem 1.2rem;
+    }
+
+    .termos-indice ul {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .termos-section h2 {
+        font-size: 1.3rem;
+    }
+
+    .termos-section p {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --nav-height: 55px;
+    }
+
+    .navbar {
+        padding: 0 0.8rem;
+    }
+
+    #img-logo {
+        height: 28px;
+    }
+
+    .termos-header {
+        padding: 1.5rem 1rem;
+        border-radius: 12px;
+    }
+
+    .termos-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .termos-header p {
+        font-size: 0.9rem;
+    }
+
+    .termos-content {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .termos-indice ul {
+        grid-template-columns: 1fr;
+    }
+
+    .termos-indice ul li a {
+        font-size: 0.88rem;
+    }
+
+    .termos-section h2 {
+        font-size: 1.1rem;
+        padding-left: 10px;
+    }
+
+    .termos-section p {
+        font-size: 0.9rem;
+    }
+
+    .termos-section ul li {
+        font-size: 0.9rem;
+        padding: 4px 0 4px 24px;
+    }
+
+    .termos-contato {
+        padding: 1rem 1.2rem;
+    }
+
+    .btn-voltar {
+        padding: 10px 24px;
+        width: 100%;
+        justify-content: center;
+        font-size: 0.95rem;
+    }
+}
+
+/* ----------------------------------------
+   SCROLLBAR
+   ---------------------------------------- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #004d5c;
+}
+
+/* ----------------------------------------
+   PRINT
+   ---------------------------------------- */
+@media print {
+    .navbar {
+        position: static;
+        background: #fff !important;
+        box-shadow: none !important;
+        border-bottom: 2px solid #ccc;
+    }
+
+    body {
+        padding-top: 0 !important;
+        background: #fff !important;
+    }
+
+    .termos-header {
+        background: #f5f5f5 !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd;
+    }
+
+    .termos-header h1 {
+        color: var(--primary) !important;
+    }
+
+    .termos-content {
+        background: #fff !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .btn-voltar {
+        display: none !important;
+    }
+}
