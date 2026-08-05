@@ -9,7 +9,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 <div class="termos-container">
     <div class="termos-header">
-        <h1><i class="fas fa-file-contract"></i> Termos de Uso e Politica de Privacidade</h1>
+        <h1></i> Termos de Uso e Politica de Privacidade</h1>
         <p>Leia atentamente os termos e condicoes para utilizar a plataforma Aptus</p>
         <p class="termos-data">Ultima atualizacao: <?= date('d/m/Y') ?></p>
     </div>

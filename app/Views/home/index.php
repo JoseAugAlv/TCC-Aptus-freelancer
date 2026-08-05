@@ -13,7 +13,7 @@ $usuario = $_SESSION['usuario'] ?? null;
     <!-- HERO SECTION -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1>Conectando lara</h1>
+            <h1>Conectando Talentos</h1>
             <p>Encontre os melhores profissionais para seus projetos ou publique o que você precisa</p>
 
             <div class="search-section">
