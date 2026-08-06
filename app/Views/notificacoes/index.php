@@ -16,7 +16,7 @@ $notificacoes = $mostrarTodas ? $todas : $naoLidas;
 
 <div class="notificacoes-container">
     <div class="notificacoes-header">
-        <h1><i class="fas fa-bell"></i> Notificações</h1>
+        <h1><i></i> Notificações</h1>
     </div>
 
     <div class="notificacoes-tabs">

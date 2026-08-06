@@ -1,0 +1,710 @@
+/* Garante que o container não fique sob o header/nav */
+.notificacoes-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 100px 1.5rem 2rem; /* Aumentado o padding-top para não ficar sob o header */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1a2f3e;
+    min-height: calc(100vh - 200px);
+}
+
+/* HEADER */
+
+.notificacoes-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(0,101,119,0.12);
+}
+
+.notificacoes-header h1 {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #006577, #C9A227);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.notificacoes-header h1 i {
+    background: linear-gradient(135deg, #006577, #00899e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.8rem;
+}
+
+/* TABS */
+
+.notificacoes-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding: 0.75rem;
+    background: #f8fdfe;
+    border-radius: 16px;
+    border: 1.5px solid #d8edf1;
+    transition: all 0.3s ease;
+}
+
+.notificacoes-tabs:hover {
+    border-color: rgba(0,101,119,0.2);
+}
+
+.tab-btn {
+    padding: 0.6rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555555;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tab-btn:hover {
+    background: rgba(0,101,119,0.06);
+    color: #006577;
+    transform: translateY(-1px);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #006577, #00899e);
+    color: #ffffff;
+    box-shadow: 0 4px 18px rgba(0,101,119,0.25);
+}
+
+.tab-btn.active:hover {
+    box-shadow: 0 6px 24px rgba(0,101,119,0.35);
+    transform: translateY(-2px);
+}
+
+.tab-badge {
+    background: #C9A227;
+    color: #ffffff;
+    padding: 0.1rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active .tab-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+/* BOTÃO MARCAR TODAS */
+
+.btn-marcar-todas {
+    margin-left: auto;
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, #006577, #00899e);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 12px rgba(0,101,119,0.2);
+    white-space: nowrap;
+}
+
+.btn-marcar-todas:hover {
+    background: linear-gradient(135deg, #004d5c, #006b7e);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,101,119,0.3);
+}
+
+.btn-marcar-todas:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ESTADO VAZIO */
+
+.notificacoes-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #f8fdfe;
+    border-radius: 16px;
+    border: 2px dashed #d8edf1;
+    transition: all 0.3s ease;
+}
+
+.notificacoes-empty i {
+    font-size: 3.5rem;
+    background: linear-gradient(135deg, #006577, #C9A227);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+.notificacoes-empty p {
+    font-size: 1.1rem;
+    color: #555555;
+    margin: 0;
+}
+
+/* LISTA DE NOTIFICAÇÕES */
+
+.notificacoes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* ITEM DE NOTIFICAÇÃO */
+
+.notificacao-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1.5px solid #d8edf1;
+    transition: all 0.3s ease;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.notificacao-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.notificacao-item:hover {
+    border-color: rgba(0,101,119,0.25);
+    box-shadow: 0 4px 20px rgba(0,101,119,0.08);
+    transform: translateX(4px);
+}
+
+/* Não lida */
+.notificacao-item.nao-lida {
+    background: #f8fdfe;
+    border-color: rgba(0,101,119,0.15);
+}
+
+.notificacao-item.nao-lida::before {
+    background: linear-gradient(180deg, #006577, #C9A227);
+    width: 5px;
+}
+
+.notificacao-item.nao-lida:hover {
+    border-color: rgba(0,101,119,0.3);
+    box-shadow: 0 4px 24px rgba(0,101,119,0.12);
+}
+
+/* Lida */
+.notificacao-item.lida {
+    opacity: 0.85;
+    border-color: #e8edf0;
+}
+
+.notificacao-item.lida::before {
+    background: #a0b8c4;
+}
+
+.notificacao-item.lida:hover {
+    opacity: 1;
+    border-color: rgba(0,101,119,0.15);
+}
+
+/* CONTEÚDO DA NOTIFICAÇÃO */
+
+.notificacao-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notificacao-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1a2f3e;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.notificacao-item.lida .notificacao-titulo {
+    color: #555555;
+}
+
+.notificacao-badge {
+    background: linear-gradient(135deg, #C9A227, #dbb42c);
+    color: #ffffff;
+    padding: 0.1rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: pulse-badge 2s ease-in-out infinite;
+    box-shadow: 0 2px 8px rgba(201,162,39,0.3);
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(0.95);
+    }
+}
+
+.notificacao-mensagem {
+    font-size: 0.95rem;
+    color: #555555;
+    margin: 0.25rem 0 0.5rem 0;
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.notificacao-item.lida .notificacao-mensagem {
+    color: #666666;
+}
+
+.notificacao-data {
+    font-size: 0.8rem;
+    color: #94a8b4;
+    display: block;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.notificacao-data i {
+    margin-right: 4px;
+    font-size: 0.7rem;
+}
+
+/* AÇÕES DO ITEM */
+
+.notificacao-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    align-items: flex-end;
+    min-width: 130px;
+}
+
+.notificacao-actions .btn-ver,
+.notificacao-actions .btn-marcar-lida {
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Botão Ver */
+.notificacao-actions .btn-ver {
+    background: linear-gradient(135deg, #006577, #00899e);
+    color: #ffffff;
+    box-shadow: 0 2px 12px rgba(0,101,119,0.2);
+}
+
+.notificacao-actions .btn-ver:hover {
+    background: linear-gradient(135deg, #004d5c, #006b7e);
+    transform: translateX(3px);
+    box-shadow: 0 4px 16px rgba(0,101,119,0.3);
+}
+
+.notificacao-actions .btn-ver:active {
+    transform: scale(0.96);
+}
+
+/* Botão Marcar como lida */
+.notificacao-actions .btn-marcar-lida {
+    background: #f8fdfe;
+    color: #006577;
+    border: 1.5px solid #d8edf1;
+}
+
+.notificacao-actions .btn-marcar-lida:hover {
+    background: #006577;
+    color: #ffffff;
+    border-color: #006577;
+    transform: translateX(3px);
+    box-shadow: 0 2px 12px rgba(0,101,119,0.2);
+}
+
+.notificacao-actions .btn-marcar-lida:active {
+    transform: scale(0.96);
+}
+
+/* BOTÃO VOLTAR */
+
+.notificacoes-voltar {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1.5px solid #d8edf1;
+}
+
+.notificacoes-voltar a {
+    color: #555555;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+}
+
+.notificacoes-voltar a:hover {
+    color: #006577;
+    background: rgba(0,101,119,0.06);
+    transform: translateX(-4px);
+}
+
+.notificacoes-voltar a i {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+
+.notificacoes-voltar a:hover i {
+    transform: translateX(-4px);
+}
+
+/* ANIMAÇÕES */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notificacao-item {
+    animation: slideIn 0.4s ease forwards;
+}
+
+.notificacao-item:nth-child(2) { animation-delay: 0.05s; }
+.notificacao-item:nth-child(3) { animation-delay: 0.1s; }
+.notificacao-item:nth-child(4) { animation-delay: 0.15s; }
+.notificacao-item:nth-child(5) { animation-delay: 0.2s; }
+.notificacao-item:nth-child(6) { animation-delay: 0.25s; }
+.notificacao-item:nth-child(7) { animation-delay: 0.3s; }
+.notificacao-item:nth-child(8) { animation-delay: 0.35s; }
+.notificacao-item:nth-child(9) { animation-delay: 0.4s; }
+.notificacao-item:nth-child(10) { animation-delay: 0.45s; }
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 1024px) {
+    .notificacoes-container {
+        padding: 90px 1.5rem 2rem;
+    }
+}
+
+@media (max-width: 868px) {
+    .notificacoes-container {
+        padding: 80px 1rem 2rem;
+        margin: 0;
+    }
+
+    .notificacoes-tabs {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .tab-btn {
+        justify-content: center;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-marcar-todas {
+        margin-left: 0;
+        justify-content: center;
+        padding: 0.6rem;
+        white-space: normal;
+    }
+
+    .notificacao-item {
+        flex-direction: column;
+        padding: 1rem 1.2rem;
+        gap: 0.75rem;
+    }
+
+    .notificacao-item:hover {
+        transform: translateX(0);
+    }
+
+    .notificacao-actions {
+        flex-direction: row;
+        width: 100%;
+        min-width: unset;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .notificacao-actions .btn-ver,
+    .notificacao-actions .btn-marcar-lida {
+        width: auto;
+        flex: 1;
+        min-width: 100px;
+        font-size: 0.75rem;
+        padding: 0.4rem 0.7rem;
+    }
+
+    .notificacao-titulo {
+        font-size: 0.95rem;
+    }
+
+    .notificacao-mensagem {
+        font-size: 0.85rem;
+    }
+
+    .notificacao-badge {
+        font-size: 0.55rem;
+        padding: 0.05rem 0.5rem;
+    }
+
+    .notificacoes-empty {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .notificacoes-empty i {
+        font-size: 2.5rem;
+    }
+
+    .notificacoes-header h1 {
+        font-size: clamp(1.5rem, 4vw, 1.8rem);
+    }
+}
+
+@media (max-width: 600px) {
+    .notificacoes-container {
+        padding: 75px 0.75rem 1.5rem;
+    }
+
+    .notificacoes-tabs {
+        padding: 0.5rem;
+        gap: 0.4rem;
+        border-radius: 12px;
+    }
+
+    .tab-btn {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .tab-badge {
+        font-size: 0.6rem;
+        padding: 0.05rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .notificacoes-container {
+        padding: 70px 0.5rem 1.5rem;
+    }
+
+    .notificacao-item {
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        gap: 0.6rem;
+    }
+
+    .notificacao-actions .btn-ver,
+    .notificacao-actions .btn-marcar-lida {
+        min-width: 80px;
+        font-size: 0.7rem;
+        padding: 0.35rem 0.5rem;
+        border-radius: 6px;
+    }
+
+    .notificacao-titulo {
+        font-size: 0.9rem;
+    }
+
+    .notificacao-mensagem {
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
+
+    .notificacao-data {
+        font-size: 0.7rem;
+    }
+
+    .notificacoes-tabs {
+        padding: 0.5rem;
+        gap: 0.4rem;
+    }
+
+    .tab-btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .tab-badge {
+        font-size: 0.6rem;
+        padding: 0.05rem 0.5rem;
+    }
+
+    .btn-marcar-todas {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+    }
+
+    .notificacoes-empty {
+        padding: 2rem 1rem;
+    }
+
+    .notificacoes-empty i {
+        font-size: 2rem;
+    }
+
+    .notificacoes-empty p {
+        font-size: 0.95rem;
+    }
+
+    .notificacoes-voltar {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+    }
+
+    .notificacoes-voltar a {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .notificacao-actions .btn-ver i,
+    .notificacao-actions .btn-marcar-lida i {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .notificacoes-container {
+        padding: 65px 0.3rem 1rem;
+    }
+
+    .notificacoes-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .notificacao-item {
+        padding: 0.6rem 0.8rem;
+    }
+
+    .notificacao-titulo {
+        font-size: 0.8rem;
+        gap: 0.4rem;
+    }
+
+    .notificacao-mensagem {
+        font-size: 0.75rem;
+    }
+
+    .notificacao-actions .btn-ver,
+    .notificacao-actions .btn-marcar-lida {
+        min-width: 65px;
+        font-size: 0.65rem;
+        padding: 0.25rem 0.4rem;
+        gap: 0.2rem;
+    }
+
+    .tab-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .btn-marcar-todas {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+    }
+
+    .notificacao-badge {
+        font-size: 0.5rem;
+        padding: 0.05rem 0.4rem;
+    }
+}
+
+/* PREFERS-REDUCED-MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .notificacao-item {
+        animation: none !important;
+    }
+
+    .notificacao-badge {
+        animation: none !important;
+    }
+
+    .notificacao-item:hover {
+        transform: none !important;
+    }
+
+    .btn-marcar-todas:hover {
+        transform: none !important;
+    }
+
+    .notificacao-actions .btn-ver:hover,
+    .notificacao-actions .btn-marcar-lida:hover {
+        transform: none !important;
+    }
+
+    .notificacoes-voltar a:hover {
+        transform: none !important;
+    }
+
+    .notificacoes-voltar a:hover i {
+        transform: none !important;
+    }
+}
+
