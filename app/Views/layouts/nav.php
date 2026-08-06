@@ -79,7 +79,7 @@ if ($usuario) {
         <?php if ($usuario): ?>
             <li>
                 <a href="/Aptus/notificacoes" class="nav-notificacao" id="navNotificacao">
-                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-bell"></i>Notificação
                     <span class="badge-notificacao" id="badgeNotificacao" style="display: <?= $totalNotificacoes > 0 ? 'inline-flex' : 'none' ?>;">
                         <?= $totalNotificacoes ?>
                     </span>

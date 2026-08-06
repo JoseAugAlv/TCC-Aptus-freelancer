@@ -61,7 +61,7 @@ $denuncias = $denuncias ?? [];
                 <div class="filtro-actions">
                     <button type="submit" class="btn-filtrar">
                         <i class="fas fa-search"></i> Filtrar
-                    </button>
+                    </button> 
                     <a href="/Aptus/moderator/denuncias" class="btn-limpar-filtros">
                         <i class="fas fa-undo"></i> Limpar
                     </a>

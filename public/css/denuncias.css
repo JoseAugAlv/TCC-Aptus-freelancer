@@ -17,11 +17,26 @@
     --font-padrao: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* ========== EVITA OVERFLOW HORIZONTAL ========== */
+html,
+body {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 /* ========== CONTAINER PRINCIPAL ========== */
 .denuncias-container {
     max-width: 1200px;
     margin: 130px auto 40px;
     padding: 0 20px;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 /* ========== HEADER ========== */
@@ -97,7 +112,7 @@
     font-weight: 500;
     font-family: var(--font-padrao);
     border-left: 4px solid transparent;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     font-size: 0.95rem;
 }
 .flash-sucesso {
@@ -116,7 +131,7 @@
     border-left-color: #ffc107;
 }
 
-/* ========== FILTROS ========== */
+/* ========== FILTROS – ALINHADOS E COM ESPAÇAMENTO ========== */
 .filtros-denuncias {
     background: #fff;
     padding: 1.5rem 2rem;
@@ -124,20 +139,21 @@
     border: 1px solid rgba(0, 101, 119, 0.08);
     margin-bottom: 2rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .filtros-form {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem 1.5rem;
     align-items: flex-end;
+    gap: 1rem 2.5rem; /* ← ESPAÇAMENTO HORIZONTAL (SEPARA DATA INICIAL E FINAL) */
 }
 
 .filtro-group {
     display: flex;
     flex-direction: column;
-    flex: 1 1 170px;
-    min-width: 130px;
+    flex: 0 0 auto;
 }
 
 .filtro-group label {
@@ -149,8 +165,9 @@
     margin-bottom: 4px;
 }
 
-.filtro-group select,
-.filtro-group input {
+.filtro-group input,
+.filtro-group select {
+    width: 180px;
     padding: 8px 12px;
     border: 2px solid #e9edf2;
     border-radius: 10px;
@@ -158,12 +175,12 @@
     font-family: var(--font-padrao);
     background: #fff;
     transition: var(--transicao-padrao);
-    width: 100%;
     color: var(--cor-texto-principal);
+    box-sizing: border-box;
 }
 
-.filtro-group select:focus,
-.filtro-group input:focus {
+.filtro-group input:focus,
+.filtro-group select:focus {
     border-color: var(--cor-primaria);
     outline: none;
     box-shadow: 0 0 0 4px rgba(0, 101, 119, 0.08);
@@ -176,7 +193,7 @@
     align-items: center;
 }
 
-/* ========== BOTÕES - TAMANHO INTERMEDIÁRIO ========== */
+/* ========== BOTÕES ========== */
 .btn-filtrar {
     padding: 9px 24px;
     background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
@@ -222,10 +239,11 @@
     background: #fff;
     border-radius: 16px;
     border: 1px solid rgba(0, 101, 119, 0.06);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     margin-bottom: 2rem;
-    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .tabela-denuncias {
@@ -280,7 +298,7 @@
     color: var(--cor-texto-secundario);
 }
 
-/* ========== BOTÃO ANALISAR (na tabela) - TAMANHO INTERMEDIÁRIO ========== */
+/* ========== BOTÃO ANALISAR ========== */
 .btn-analisar {
     display: inline-flex;
     align-items: center;
@@ -334,7 +352,6 @@
     margin-bottom: 1.5rem;
 }
 
-/* Botão voltar no empty state - TAMANHO INTERMEDIÁRIO */
 .btn-voltar-empty {
     display: inline-flex;
     align-items: center;
@@ -355,7 +372,7 @@
     box-shadow: 0 6px 24px rgba(0, 101, 119, 0.2);
 }
 
-/* ========== RODAPÉ - BOTÃO VOLTAR (TAMANHO INTERMEDIÁRIO) ========== */
+/* ========== RODAPÉ ========== */
 .denuncias-footer {
     text-align: center;
     margin-top: 1.5rem;
@@ -378,7 +395,7 @@
 .btn-voltar-footer:hover {
     background: #546470;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* ========== BADGES DE STATUS ========== */
@@ -408,7 +425,11 @@
     color: #4b5563;
 }
 
-/* ========== RESPONSIVIDADE ========== */
+/* ============================================================
+   RESPONSIVIDADE – TABLETS E CELULARES
+   ============================================================ */
+
+/* Telas médias (Tablets) */
 @media (max-width: 992px) {
     .denuncias-header {
         padding: 1.6rem 2rem;
@@ -416,8 +437,12 @@
     .denuncias-header h1 {
         font-size: 1.6rem;
     }
+    .filtros-form {
+        gap: 0.8rem 1.5rem;
+    }
 }
 
+/* Telas pequenas (Celulares) */
 @media (max-width: 768px) {
     .denuncias-container {
         padding: 0 14px;
@@ -444,25 +469,36 @@
     .filtros-denuncias {
         padding: 1rem 1.2rem;
     }
+
     .filtros-form {
         flex-direction: column;
         align-items: stretch;
-        gap: 0.8rem;
+        gap: 0.8rem; /* empilha os campos */
     }
+
     .filtro-group {
         flex: 1 1 auto;
-        min-width: unset;
+        width: 100%;
     }
+
+    .filtro-group input,
+    .filtro-group select {
+        width: 100%; /* ocupa toda a largura */
+    }
+
     .filtro-actions {
         flex-direction: column;
         gap: 6px;
         margin-top: 4px;
+        width: 100%;
     }
+
     .filtro-actions .btn-filtrar,
     .filtro-actions .btn-limpar-filtros {
         width: 100%;
         justify-content: center;
         text-align: center;
+        box-sizing: border-box;
     }
 
     .tabela-denuncias {
@@ -494,6 +530,7 @@
     }
 }
 
+/* Telas muito pequenas (até 480px) */
 @media (max-width: 480px) {
     .denuncias-header h1 {
         font-size: 1.2rem;
@@ -532,17 +569,17 @@
 }
 
 /* ============================================================
-   VISUALIZAR DENÚNCIA - ESTILOS ESPECÍFICOS
+   VISUALIZAR DENÚNCIA – ESTILOS ESPECÍFICOS
    ============================================================ */
 
-/* Container principal da visualização */
 .denuncia-visualizar-container {
     max-width: 900px;
     margin: 130px auto 40px;
     padding: 0 20px;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
-/* Cabeçalho da visualização */
 .denuncia-visualizar-header {
     background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
     color: #fff;
@@ -571,7 +608,6 @@
     font-family: var(--font-padrao);
 }
 
-/* Card principal */
 .denuncia-visualizar-card {
     background: #fff;
     border-radius: 20px;
@@ -581,7 +617,6 @@
     margin-bottom: 2rem;
 }
 
-/* Seções dentro do card */
 .denuncia-visualizar-info,
 .denuncia-visualizar-partes,
 .denuncia-visualizar-anuncio,
@@ -630,7 +665,6 @@
     min-width: 80px;
 }
 
-/* Grid para denunciante e denunciado */
 .denuncia-visualizar-partes {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -663,7 +697,6 @@
     color: var(--cor-texto-secundario);
 }
 
-/* Descrição da denúncia */
 .denuncia-descricao {
     background: #f8fafd;
     padding: 1.2rem 1.5rem;
@@ -678,7 +711,6 @@
     font-family: var(--font-padrao);
 }
 
-/* Botões de ação */
 .denuncia-visualizar-acoes {
     display: flex;
     gap: 12px;
@@ -732,7 +764,7 @@
 .btn-voltar:hover {
     background: #546470;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* ========== RESPONSIVO VISUALIZAR ========== */
