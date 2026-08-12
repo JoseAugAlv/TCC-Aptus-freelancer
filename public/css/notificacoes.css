@@ -1,14 +1,56 @@
-/* Garante que o container não fique sob o header/nav */
+/* ============================================================
+   NOTIFICACOES.CSS - ESTILOS COMPLETOS
+   ============================================================ */
+
+/* ========== ESTILOS BASE ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #1a1a1a;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ========== VARIÁVEIS ========== */
+:root {
+    --cor-primaria: #006577;
+    --cor-secundaria: #C9A227;
+    --cor-dourado: #C9A227;
+    --cor-hover: #004d5c;
+    --cor-texto-principal: #1a2f3e;
+    --cor-texto-secundario: #555555;
+    --cor-branco: #ffffff;
+    --cor-fundo: #f5f7fa;
+    --cor-sombra: rgba(0, 101, 119, 0.12);
+    --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================ */
+/* ===== CONTAINER PRINCIPAL ===== */
+/* ============================================================ */
+
 .notificacoes-container {
     max-width: 900px;
     margin: 0 auto;
-    padding: 100px 1.5rem 2rem; /* Aumentado o padding-top para não ficar sob o header */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #1a2f3e;
+    padding: 100px 1.5rem 2rem;
+    font-family: var(--font-padrao, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif);
+    color: var(--cor-texto-principal);
     min-height: calc(100vh - 200px);
 }
 
-/* HEADER */
+/* ============================================================ */
+/* ===== HEADER ===== */
+/* ============================================================ */
 
 .notificacoes-header {
     margin-bottom: 2rem;
@@ -19,7 +61,7 @@
 .notificacoes-header h1 {
     font-size: clamp(1.8rem, 5vw, 2.4rem);
     font-weight: 800;
-    background: linear-gradient(135deg, #006577, #C9A227);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -30,14 +72,16 @@
 }
 
 .notificacoes-header h1 i {
-    background: linear-gradient(135deg, #006577, #00899e);
+    background: linear-gradient(135deg, var(--cor-primaria), #00899e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-size: 1.8rem;
 }
 
-/* TABS */
+/* ============================================================ */
+/* ===== TABS ===== */
+/* ============================================================ */
 
 .notificacoes-tabs {
     display: flex;
@@ -49,7 +93,7 @@
     background: #f8fdfe;
     border-radius: 16px;
     border: 1.5px solid #d8edf1;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
 }
 
 .notificacoes-tabs:hover {
@@ -63,9 +107,9 @@
     border-radius: 10px;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #555555;
+    color: var(--cor-texto-secundario);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: var(--transicao-padrao);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -74,13 +118,13 @@
 
 .tab-btn:hover {
     background: rgba(0,101,119,0.06);
-    color: #006577;
+    color: var(--cor-primaria);
     transform: translateY(-1px);
 }
 
 .tab-btn.active {
-    background: linear-gradient(135deg, #006577, #00899e);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--cor-primaria), #00899e);
+    color: var(--cor-branco);
     box-shadow: 0 4px 18px rgba(0,101,119,0.25);
 }
 
@@ -90,34 +134,36 @@
 }
 
 .tab-badge {
-    background: #C9A227;
-    color: #ffffff;
+    background: var(--cor-dourado);
+    color: var(--cor-branco);
     padding: 0.1rem 0.6rem;
     border-radius: 20px;
     font-size: 0.7rem;
     font-weight: 700;
     line-height: 1.6;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
 }
 
 .tab-btn.active .tab-badge {
     background: rgba(255, 255, 255, 0.25);
-    color: #ffffff;
+    color: var(--cor-branco);
 }
 
-/* BOTÃO MARCAR TODAS */
+/* ============================================================ */
+/* ===== BOTÃO MARCAR TODAS ===== */
+/* ============================================================ */
 
 .btn-marcar-todas {
     margin-left: auto;
     padding: 0.6rem 1.2rem;
-    background: linear-gradient(135deg, #006577, #00899e);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--cor-primaria), #00899e);
+    color: var(--cor-branco);
     border: none;
     border-radius: 10px;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -126,7 +172,7 @@
 }
 
 .btn-marcar-todas:hover {
-    background: linear-gradient(135deg, #004d5c, #006b7e);
+    background: linear-gradient(135deg, var(--cor-hover), #006b7e);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,101,119,0.3);
 }
@@ -135,7 +181,9 @@
     transform: translateY(0) scale(0.98);
 }
 
-/* ESTADO VAZIO */
+/* ============================================================ */
+/* ===== ESTADO VAZIO ===== */
+/* ============================================================ */
 
 .notificacoes-empty {
     text-align: center;
@@ -143,12 +191,12 @@
     background: #f8fdfe;
     border-radius: 16px;
     border: 2px dashed #d8edf1;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
 }
 
 .notificacoes-empty i {
     font-size: 3.5rem;
-    background: linear-gradient(135deg, #006577, #C9A227);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -158,11 +206,13 @@
 
 .notificacoes-empty p {
     font-size: 1.1rem;
-    color: #555555;
+    color: var(--cor-texto-secundario);
     margin: 0;
 }
 
-/* LISTA DE NOTIFICAÇÕES */
+/* ============================================================ */
+/* ===== LISTA DE NOTIFICAÇÕES ===== */
+/* ============================================================ */
 
 .notificacoes-list {
     display: flex;
@@ -170,21 +220,33 @@
     gap: 0.75rem;
 }
 
-/* ITEM DE NOTIFICAÇÃO */
-
+/* ===== ITEM DE NOTIFICAÇÃO ===== */
 .notificacao-item {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     padding: 1.25rem 1.5rem;
-    background: #ffffff;
+    background: var(--cor-branco);
     border-radius: 14px;
     border: 1.5px solid #d8edf1;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
     gap: 1.5rem;
     position: relative;
     overflow: hidden;
+    animation: slideIn 0.4s ease forwards;
 }
+
+/* Delay para cada item */
+.notificacao-item:nth-child(1) { animation-delay: 0s; }
+.notificacao-item:nth-child(2) { animation-delay: 0.05s; }
+.notificacao-item:nth-child(3) { animation-delay: 0.1s; }
+.notificacao-item:nth-child(4) { animation-delay: 0.15s; }
+.notificacao-item:nth-child(5) { animation-delay: 0.2s; }
+.notificacao-item:nth-child(6) { animation-delay: 0.25s; }
+.notificacao-item:nth-child(7) { animation-delay: 0.3s; }
+.notificacao-item:nth-child(8) { animation-delay: 0.35s; }
+.notificacao-item:nth-child(9) { animation-delay: 0.4s; }
+.notificacao-item:nth-child(10) { animation-delay: 0.45s; }
 
 .notificacao-item::before {
     content: '';
@@ -194,7 +256,7 @@
     width: 4px;
     height: 100%;
     background: transparent;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
 }
 
 .notificacao-item:hover {
@@ -203,14 +265,14 @@
     transform: translateX(4px);
 }
 
-/* Não lida */
+/* ----- Não lida ----- */
 .notificacao-item.nao-lida {
     background: #f8fdfe;
     border-color: rgba(0,101,119,0.15);
 }
 
 .notificacao-item.nao-lida::before {
-    background: linear-gradient(180deg, #006577, #C9A227);
+    background: linear-gradient(180deg, var(--cor-primaria), var(--cor-dourado));
     width: 5px;
 }
 
@@ -219,7 +281,7 @@
     box-shadow: 0 4px 24px rgba(0,101,119,0.12);
 }
 
-/* Lida */
+/* ----- Lida ----- */
 .notificacao-item.lida {
     opacity: 0.85;
     border-color: #e8edf0;
@@ -234,8 +296,7 @@
     border-color: rgba(0,101,119,0.15);
 }
 
-/* CONTEÚDO DA NOTIFICAÇÃO */
-
+/* ===== CONTEÚDO DA NOTIFICAÇÃO ===== */
 .notificacao-content {
     flex: 1;
     min-width: 0;
@@ -244,7 +305,7 @@
 .notificacao-titulo {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #1a2f3e;
+    color: var(--cor-texto-principal);
     margin-bottom: 0.4rem;
     display: flex;
     align-items: center;
@@ -253,12 +314,12 @@
 }
 
 .notificacao-item.lida .notificacao-titulo {
-    color: #555555;
+    color: var(--cor-texto-secundario);
 }
 
 .notificacao-badge {
-    background: linear-gradient(135deg, #C9A227, #dbb42c);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--cor-dourado), #dbb42c);
+    color: var(--cor-branco);
     padding: 0.1rem 0.7rem;
     border-radius: 20px;
     font-size: 0.6rem;
@@ -270,19 +331,13 @@
 }
 
 @keyframes pulse-badge {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.7;
-        transform: scale(0.95);
-    }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(0.95); }
 }
 
 .notificacao-mensagem {
     font-size: 0.95rem;
-    color: #555555;
+    color: var(--cor-texto-secundario);
     margin: 0.25rem 0 0.5rem 0;
     line-height: 1.6;
     word-wrap: break-word;
@@ -305,8 +360,7 @@
     font-size: 0.7rem;
 }
 
-/* AÇÕES DO ITEM */
-
+/* ===== AÇÕES DO ITEM ===== */
 .notificacao-actions {
     display: flex;
     flex-direction: column;
@@ -324,7 +378,7 @@
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -335,13 +389,13 @@
 
 /* Botão Ver */
 .notificacao-actions .btn-ver {
-    background: linear-gradient(135deg, #006577, #00899e);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--cor-primaria), #00899e);
+    color: var(--cor-branco);
     box-shadow: 0 2px 12px rgba(0,101,119,0.2);
 }
 
 .notificacao-actions .btn-ver:hover {
-    background: linear-gradient(135deg, #004d5c, #006b7e);
+    background: linear-gradient(135deg, var(--cor-hover), #006b7e);
     transform: translateX(3px);
     box-shadow: 0 4px 16px rgba(0,101,119,0.3);
 }
@@ -353,14 +407,14 @@
 /* Botão Marcar como lida */
 .notificacao-actions .btn-marcar-lida {
     background: #f8fdfe;
-    color: #006577;
+    color: var(--cor-primaria);
     border: 1.5px solid #d8edf1;
 }
 
 .notificacao-actions .btn-marcar-lida:hover {
-    background: #006577;
-    color: #ffffff;
-    border-color: #006577;
+    background: var(--cor-primaria);
+    color: var(--cor-branco);
+    border-color: var(--cor-primaria);
     transform: translateX(3px);
     box-shadow: 0 2px 12px rgba(0,101,119,0.2);
 }
@@ -369,7 +423,9 @@
     transform: scale(0.96);
 }
 
-/* BOTÃO VOLTAR */
+/* ============================================================ */
+/* ===== BOTÃO VOLTAR ===== */
+/* ============================================================ */
 
 .notificacoes-voltar {
     margin-top: 2.5rem;
@@ -378,19 +434,19 @@
 }
 
 .notificacoes-voltar a {
-    color: #555555;
+    color: var(--cor-texto-secundario);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
     padding: 0.5rem 1rem;
     border-radius: 8px;
 }
 
 .notificacoes-voltar a:hover {
-    color: #006577;
+    color: var(--cor-primaria);
     background: rgba(0,101,119,0.06);
     transform: translateX(-4px);
 }
@@ -404,34 +460,18 @@
     transform: translateX(-4px);
 }
 
-/* ANIMAÇÕES */
+/* ============================================================ */
+/* ===== ANIMAÇÕES ===== */
+/* ============================================================ */
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-12px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.notificacao-item {
-    animation: slideIn 0.4s ease forwards;
-}
-
-.notificacao-item:nth-child(2) { animation-delay: 0.05s; }
-.notificacao-item:nth-child(3) { animation-delay: 0.1s; }
-.notificacao-item:nth-child(4) { animation-delay: 0.15s; }
-.notificacao-item:nth-child(5) { animation-delay: 0.2s; }
-.notificacao-item:nth-child(6) { animation-delay: 0.25s; }
-.notificacao-item:nth-child(7) { animation-delay: 0.3s; }
-.notificacao-item:nth-child(8) { animation-delay: 0.35s; }
-.notificacao-item:nth-child(9) { animation-delay: 0.4s; }
-.notificacao-item:nth-child(10) { animation-delay: 0.45s; }
-
-/* RESPONSIVIDADE */
+/* ============================================================ */
+/* ===== RESPONSIVIDADE ===== */
+/* ============================================================ */
 
 @media (max-width: 1024px) {
     .notificacoes-container {
@@ -667,7 +707,9 @@
     }
 }
 
-/* PREFERS-REDUCED-MOTION */
+/* ============================================================ */
+/* ===== PREFERS-REDUCED-MOTION ===== */
+/* ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -707,4 +749,3 @@
         transform: none !important;
     }
 }
-

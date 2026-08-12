@@ -1,4 +1,43 @@
-/* public/css/sobre.css */
+/* ============================================================
+   SOBRE.CSS - COMPLETO COM ESTILOS BASE
+   ============================================================ */
+
+/* ========== ESTILOS BASE (copiados do home.css) ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #1a1a1a;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ========== VARIÁVEIS ========== */
+:root {
+    --cor-primaria: #006577;
+    --cor-secundaria: #C9A227;
+    --cor-dourado: #C9A227;
+    --cor-hover: #004d5c;
+    --cor-texto-principal: #1a1a1a;
+    --cor-texto-secundario: #555555;
+    --cor-branco: #ffffff;
+    --cor-fundo: #f5f7fa;
+    --cor-sombra: rgba(0, 101, 119, 0.12);
+    --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   ESTILOS ESPECÍFICOS DA PÁGINA SOBRE
+   ============================================================ */
 
 /* ===== CONTAINER PRINCIPAL ===== */
 .sobre-container {
@@ -18,21 +57,21 @@
 
 .sobre-hero h1 {
     font-size: 3rem;
-    color: #006577;
+    color: var(--cor-primaria);
     margin-bottom: 1rem;
     font-weight: 800;
 }
 
 .sobre-hero .tagline {
     font-size: 1.3rem;
-    color: #C9A227;
+    color: var(--cor-dourado);
     font-weight: 600;
     margin-bottom: 1.5rem;
 }
 
 .sobre-hero p {
     font-size: 1.1rem;
-    color: #555555;
+    color: var(--cor-texto-secundario);
     max-width: 700px;
     margin: 0 auto;
     line-height: 1.6;
@@ -59,23 +98,23 @@
 .mvp-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 101, 119, 0.1);
-    border-color: #C9A227;
+    border-color: var(--cor-dourado);
 }
 
 .mvp-card i {
     font-size: 3rem;
-    color: #006577;
+    color: var(--cor-primaria);
     margin-bottom: 1rem;
 }
 
 .mvp-card h3 {
-    color: #006577;
+    color: var(--cor-primaria);
     margin-bottom: 1rem;
     font-size: 1.5rem;
 }
 
 .mvp-card p {
-    color: #555555;
+    color: var(--cor-texto-secundario);
     line-height: 1.6;
 }
 
@@ -89,7 +128,7 @@
 
 .como-funciona-section h2 {
     text-align: center;
-    color: #006577;
+    color: var(--cor-primaria);
     font-size: 2rem;
     margin-bottom: 2rem;
     position: relative;
@@ -104,7 +143,7 @@
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background: linear-gradient(90deg, #006577, #C9A227);
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-dourado));
     border-radius: 2px;
 }
 
@@ -123,7 +162,7 @@
 .step-number {
     width: 50px;
     height: 50px;
-    background: #006577;
+    background: var(--cor-primaria);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -149,13 +188,13 @@
 }
 
 .step-item h3 {
-    color: #006577;
+    color: var(--cor-primaria);
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
 }
 
 .step-item p {
-    color: #555555;
+    color: var(--cor-texto-secundario);
     font-size: 0.9rem;
     line-height: 1.5;
 }
@@ -169,13 +208,13 @@
 }
 
 .cta-section h2 {
-    color: #006577;
+    color: var(--cor-primaria);
     font-size: 1.8rem;
     margin-bottom: 1rem;
 }
 
 .cta-section p {
-    color: #555555;
+    color: var(--cor-texto-secundario);
     margin-bottom: 2rem;
     font-size: 1.1rem;
 }
@@ -197,33 +236,30 @@
 }
 
 .btn-primario {
-    background: #006577;
+    background: var(--cor-primaria);
     color: white;
     box-shadow: 0 4px 15px rgba(0, 101, 119, 0.2);
 }
 
 .btn-primario:hover {
-    background: #004d5c;
+    background: var(--cor-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 101, 119, 0.3);
 }
 
 .btn-secundario {
     background: transparent;
-    color: #006577;
-    border: 2px solid #006577;
+    color: var(--cor-primaria);
+    border: 2px solid var(--cor-primaria);
 }
 
 .btn-secundario:hover {
-    background: #006577;
+    background: var(--cor-primaria);
     color: white;
     transform: translateY(-2px);
 }
 
-/* ============================================================ */
 /* ===== ANIMAÇÕES ===== */
-/* ============================================================ */
-
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -267,10 +303,7 @@
     animation-delay: 0.8s;
 }
 
-/* ============================================================ */
 /* ===== RESPONSIVIDADE ===== */
-/* ============================================================ */
-
 @media (max-width: 992px) {
     .mvp-section,
     .steps-grid {

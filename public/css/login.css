@@ -2,7 +2,43 @@
    LOGIN.CSS - ESTILOS COMPLETOS
    ============================================================ */
 
+/* ========== ESTILOS BASE ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #1a1a1a;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ========== VARIÁVEIS ========== */
+:root {
+    --cor-primaria: #006577;
+    --cor-secundaria: #C9A227;
+    --cor-dourado: #C9A227;
+    --cor-hover: #004d5c;
+    --cor-texto-principal: #1a2f3e;
+    --cor-texto-secundario: #6b7280;
+    --cor-branco: #ffffff;
+    --cor-fundo: #f5f7fa;
+    --cor-sombra: rgba(0, 101, 119, 0.12);
+    --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================ */
 /* ===== LAYOUT PRINCIPAL ===== */
+/* ============================================================ */
+
 .auth-section {
     display: flex;
     justify-content: center;
@@ -19,19 +55,22 @@
 }
 
 .auth-card {
-    background: #ffffff;
+    background: var(--cor-branco);
     padding: 40px 36px;
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(0, 101, 119, 0.08);
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
 }
 
 .auth-card:hover {
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
 }
 
+/* ============================================================ */
 /* ===== HEADER ===== */
+/* ============================================================ */
+
 .auth-header {
     text-align: center;
     margin-bottom: 32px;
@@ -40,7 +79,7 @@
 .auth-header h2 {
     font-size: 28px;
     font-weight: 800;
-    color: #006577;
+    color: var(--cor-primaria);
     margin-bottom: 6px;
     letter-spacing: -0.5px;
 }
@@ -50,19 +89,22 @@
     display: block;
     width: 50px;
     height: 4px;
-    background: linear-gradient(90deg, #006577, #C9A227);
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-dourado));
     margin: 10px auto 0;
     border-radius: 4px;
 }
 
 .auth-header p {
-    color: #6b7280;
+    color: var(--cor-texto-secundario);
     font-size: 15px;
     margin-top: 10px;
     font-weight: 400;
 }
 
+/* ============================================================ */
 /* ===== FLASH MESSAGES ===== */
+/* ============================================================ */
+
 .flash-message,
 .flash-sucesso,
 .flash-erro,
@@ -79,14 +121,8 @@
 }
 
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .flash-sucesso {
@@ -94,7 +130,6 @@
     color: #065f46;
     border: 1px solid #a7f3d0;
 }
-
 .flash-sucesso i {
     color: #10b981;
 }
@@ -104,7 +139,6 @@
     color: #991b1b;
     border: 1px solid #fecaca;
 }
-
 .flash-erro i {
     color: #ef4444;
 }
@@ -114,12 +148,14 @@
     color: #92400e;
     border: 1px solid #fde68a;
 }
-
 .flash-aviso i {
     color: #f59e0b;
 }
 
-/* ===== FORMULARIOS ===== */
+/* ============================================================ */
+/* ===== FORMULÁRIOS ===== */
+/* ============================================================ */
+
 .auth-form {
     display: flex;
     flex-direction: column;
@@ -135,7 +171,7 @@
 .form-group label {
     font-weight: 600;
     font-size: 14px;
-    color: #1a2f3e;
+    color: var(--cor-texto-principal);
     letter-spacing: 0.3px;
 }
 
@@ -150,16 +186,16 @@
     border: 2px solid #e2e8f0;
     border-radius: 10px;
     font-size: 15px;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
     background: #f8fafc;
     box-sizing: border-box;
-    color: #1a2f3e;
+    color: var(--cor-texto-principal);
 }
 
 .form-control:focus {
     outline: none;
-    border-color: #006577;
-    background: #ffffff;
+    border-color: var(--cor-primaria);
+    background: var(--cor-branco);
     box-shadow: 0 0 0 4px rgba(0, 101, 119, 0.08);
 }
 
@@ -172,7 +208,6 @@
     border-color: #ef4444;
     background: #fef2f2;
 }
-
 .form-control.error:focus {
     box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08);
 }
@@ -208,7 +243,10 @@
     font-weight: 500;
 }
 
-/* ===== BOTOES ===== */
+/* ============================================================ */
+/* ===== BOTÕES ===== */
+/* ============================================================ */
+
 .btn {
     display: inline-flex;
     align-items: center;
@@ -220,13 +258,13 @@
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
     text-decoration: none;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #006577, #004d5c);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
+    color: var(--cor-branco);
     box-shadow: 0 4px 15px rgba(0, 101, 119, 0.25);
 }
 
@@ -261,13 +299,13 @@
     gap: 6px;
     padding: 8px 18px;
     background: #f1f5f9;
-    color: #006577;
+    color: var(--cor-primaria);
     border: 2px solid #e2e8f0;
     border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
 }
 
 .btn-reenviar:hover {
@@ -279,7 +317,10 @@
     font-size: 0.9rem;
 }
 
+/* ============================================================ */
 /* ===== LINKS ===== */
+/* ============================================================ */
+
 .auth-links {
     display: flex;
     flex-direction: column;
@@ -289,19 +330,22 @@
 }
 
 .auth-links a {
-    color: #006577;
+    color: var(--cor-primaria);
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
 }
 
 .auth-links a:hover {
-    color: #C9A227;
+    color: var(--cor-dourado);
     text-decoration: underline;
 }
 
+/* ============================================================ */
 /* ===== FOOTER ===== */
+/* ============================================================ */
+
 .auth-footer {
     text-align: center;
     margin-top: 24px;
@@ -310,24 +354,27 @@
 }
 
 .auth-footer p {
-    color: #6b7280;
+    color: var(--cor-texto-secundario);
     font-size: 14px;
     margin: 4px 0;
 }
 
 .auth-footer a {
-    color: #006577;
+    color: var(--cor-primaria);
     text-decoration: none;
     font-weight: 700;
-    transition: all 0.3s ease;
+    transition: var(--transicao-padrao);
 }
 
 .auth-footer a:hover {
-    color: #C9A227;
+    color: var(--cor-dourado);
     text-decoration: underline;
 }
 
-/* ===== AREA DEV (LOGIN RAPIDO) ===== */
+/* ============================================================ */
+/* ===== ÁREA DEV (LOGIN RÁPIDO) ===== */
+/* ============================================================ */
+
 .auth-dev {
     margin-top: 24px;
     padding-top: 20px;
@@ -340,7 +387,7 @@
 
 .auth-dev h3 {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--cor-texto-secundario);
     margin-bottom: 10px;
     font-weight: 600;
     text-transform: uppercase;
@@ -360,8 +407,8 @@
     cursor: pointer;
     font-weight: 600;
     font-size: 11px;
-    transition: all 0.3s ease;
-    color: #ffffff;
+    transition: var(--transicao-padrao);
+    color: var(--cor-branco);
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -382,23 +429,23 @@
     font-weight: 400;
 }
 
-/* ===== ANIMACOES ===== */
+/* ============================================================ */
+/* ===== ANIMAÇÕES ===== */
+/* ============================================================ */
+
 .animate-in {
     animation: fadeInUp 0.5s ease backwards;
 }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== RESPONSIVO ===== */
+/* ============================================================ */
+/* ===== RESPONSIVIDADE ===== */
+/* ============================================================ */
+
 @media (max-width: 480px) {
     .auth-card {
         padding: 28px 20px;
@@ -446,5 +493,42 @@
     .dev-buttons .btn-dev {
         font-size: 9px;
         padding: 3px 8px;
+    }
+}
+
+/* ============================================================ */
+/* ===== PREFERS-REDUCED-MOTION ===== */
+/* ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .flash-message,
+    .flash-sucesso,
+    .flash-erro,
+    .flash-aviso {
+        animation: none !important;
+    }
+
+    .animate-in {
+        animation: none !important;
+    }
+
+    .btn-primary:hover:not(:disabled),
+    .btn-reenviar:hover,
+    .auth-links a:hover,
+    .auth-footer a:hover,
+    .dev-buttons .btn-dev:hover {
+        transform: none !important;
+    }
+
+    .auth-card:hover {
+        box-shadow: none !important;
     }
 }
