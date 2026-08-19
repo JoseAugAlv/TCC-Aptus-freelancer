@@ -29,7 +29,7 @@ if ($usuario) {
 
     <ul class="navbar-links">
         <li><a href="/Aptus/"><i class="fas fa-home"></i> Inicio</a></li>
-        <li><a href="/Aptus/anuncios"><i class="fas fa-tools"></i> Servicos</a></li>
+        <li><a href="/Aptus/anuncios"><i class="fas fa-tools"></i> Serviços</a></li>
         <li><a href="/Aptus/sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>
         <li><a href="/Aptus/contato"><i class="fas fa-envelope"></i> Contato</a></li>
         
@@ -56,11 +56,11 @@ if ($usuario) {
                     <?php endif; ?>
                     
                     <?php if ($role == 1 || $role == 2): ?>
-                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderacao</a></li>
+                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderação</a></li>
                     <?php endif; ?>
                     
                     <?php if ($role == 1 || $role == 4): ?>
-                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configuracoes</a></li>
+                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configurações</a></li>
                     <?php endif; ?>
                     
                     <!-- RELATORIOS - ADICIONADO AQUI -->

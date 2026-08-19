@@ -1,8 +1,11 @@
 /* ============================================================
-   ANUNCIOS.CSS - ESTILOS COMPLETOS (Criar, Editar, Meus Anúncios)
+   ANUNCIOS.CSS - ESTILOS COMPLETOS
+   (Listagem, Criar, Editar, Meus Anúncios)
    ============================================================ */
 
-/* ========== ESTILOS BASE (copiados do home.css) ========== */
+/* ============================================================
+   1. RESET E BASE
+   ============================================================ */
 * {
     margin: 0;
     padding: 0;
@@ -19,9 +22,12 @@ body {
     color: #1a1a1a;
     line-height: 1.6;
     overflow-x: hidden;
+    padding-top: 70px; /* Compensa o nav fixo */
 }
 
-/* ========== VARIÁVEIS ========== */
+/* ============================================================
+   2. VARIÁVEIS
+   ============================================================ */
 :root {
     --cor-primaria: #006577;
     --cor-secundaria: #C9A227;
@@ -36,22 +42,288 @@ body {
 }
 
 /* ============================================================
-   ESTILOS GERAIS DA PÁGINA
+   3. HEADER DA PÁGINA (servicos-header)
+   ============================================================ */
+.servicos-header {
+    text-align: center;
+    padding: 3.7rem 1.5rem 3rem;
+    background: linear-gradient(135deg, rgba(0,101,119,.06) 0%, rgba(201,162,39,.06) 100%);
+    border-bottom: 1px solid rgba(0, 101, 119, 0.06);
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.servicos-header h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: .75rem;
+    position: relative;
+    z-index: 1;
+    padding: 0 1rem;
+}
+.servicos-header h1 i {
+    color: var(--cor-dourado);
+    font-size: 2.2rem;
+}
+.servicos-header h1 span {
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.servicos-header p {
+    font-size: 1.15rem;
+    color: var(--cor-texto-secundario);
+    max-width: 600px;
+    margin: 0.5rem auto 0;
+    padding: 0 1rem;
+}
+
+/* ============================================================
+   4. CONTAINER PRINCIPAL
+   ============================================================ */
+.servicos-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 3rem;
+}
+
+/* ============================================================
+   5. STATS INFO
+   ============================================================ */
+.stats-info {
+    text-align: center;
+    margin: 1rem 0 1.5rem;
+    font-size: 1.05rem;
+    color: var(--cor-texto-secundario);
+}
+.stats-info strong {
+    color: var(--cor-primaria);
+    font-size: 1.3rem;
+    background: rgba(0, 101, 119, 0.08);
+    padding: 0.2rem 0.8rem;
+    border-radius: 30px;
+    display: inline-block;
+}
+
+/* ============================================================
+   6. BARRA DE FILTROS
+   ============================================================ */
+.filtro-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 1.5rem 0 2.5rem;
+    padding: 0.5rem 0;
+}
+
+.filtro-btn {
+    padding: 0.6rem 1.5rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(4px);
+    border: 1.5px solid #e2e8f0;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--cor-texto-secundario);
+    cursor: pointer;
+    transition: var(--transicao-padrao);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+.filtro-btn:hover {
+    background: rgba(0, 101, 119, 0.06);
+    border-color: var(--cor-primaria);
+    color: var(--cor-primaria);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.08);
+}
+.filtro-btn.ativo {
+    background: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0, 101, 119, 0.25);
+}
+.filtro-btn.ativo:hover {
+    background: var(--cor-hover);
+    border-color: var(--cor-hover);
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   7. GRID DE CARDS (profissionais-grid)
+   ============================================================ */
+.profissionais-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.profissional-card {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 101, 119, 0.06);
+    transition: var(--transicao-padrao);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid rgba(0, 101, 119, 0.06);
+    position: relative;
+}
+.profissional-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 101, 119, 0.12);
+    border-color: rgba(0, 101, 119, 0.12);
+}
+.profissional-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-dourado));
+}
+
+.categoria-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0, 101, 119, 0.08);
+    color: var(--cor-primaria);
+    padding: 0.4rem 1rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 1.5rem 1.5rem 0.5rem 1.5rem;
+    width: fit-content;
+}
+.categoria-tag i {
+    font-size: 0.9rem;
+}
+
+.profissional-card h3 {
+    color: var(--cor-texto-principal);
+    font-size: 1.25rem;
+    margin: 0 1.5rem 0.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.profissional-card .descricao {
+    color: var(--cor-texto-secundario);
+    font-size: 0.95rem;
+    margin: 0 1.5rem;
+    flex-grow: 1;
+    line-height: 1.6;
+}
+
+.info-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 1.5rem 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f4f6;
+}
+.info-footer .autor {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--cor-texto-secundario);
+    font-size: 0.9rem;
+}
+.info-footer .autor i {
+    color: var(--cor-primaria);
+}
+.info-footer .preco {
+    font-weight: 700;
+    color: var(--cor-dourado);
+    font-size: 1.1rem;
+}
+.info-footer .preco i {
+    color: var(--cor-primaria);
+    font-size: 0.9rem;
+    margin-right: 0.2rem;
+}
+
+.btn-perfil {
+    background: linear-gradient(135deg, var(--cor-primaria), #00899e);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transicao-padrao);
+    text-align: center;
+    margin: 0.5rem 1.5rem 1.5rem;
+    display: inline-block;
+    width: calc(100% - 3rem);
+    box-shadow: 0 2px 12px rgba(0, 101, 119, 0.15);
+}
+.btn-perfil:hover {
+    background: linear-gradient(135deg, var(--cor-hover), #006b7e);
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 101, 119, 0.25);
+}
+.btn-perfil i {
+    margin-right: 0.4rem;
+}
+
+/* ============================================================
+   8. MENSAGEM VAZIA
+   ============================================================ */
+.msg-vazia {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    border: 2px dashed #d1d9e0;
+}
+.msg-vazia i {
+    font-size: 3.5rem;
+    color: #b0c4d0;
+    margin-bottom: 1rem;
+}
+.msg-vazia h3 {
+    color: var(--cor-texto-principal);
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+.msg-vazia p {
+    color: var(--cor-texto-secundario);
+}
+.msg-vazia .btn-perfil {
+    width: auto;
+    display: inline-block;
+    margin-top: 1.5rem;
+}
+
+/* ============================================================
+   9. ESTILOS PARA AS DEMAIS PÁGINAS (Criar, Editar, Meus Anúncios)
    ============================================================ */
 
 .anuncio-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 100px 1.5rem 2rem;
+    padding: 2rem 1.5rem 2rem;
     color: var(--cor-texto-principal);
     min-height: calc(100vh - 200px);
 }
 
-/* ========== HEADER ========== */
 .anuncio-header {
     margin-bottom: 1.5rem;
 }
-
 .anuncio-header h1 {
     font-size: clamp(1.8rem, 5vw, 2.4rem);
     font-weight: 800;
@@ -61,7 +333,6 @@ body {
     background-clip: text;
     margin: 0 0 0.25rem 0;
 }
-
 .anuncio-header p {
     font-size: 1rem;
     color: var(--cor-texto-secundario);
@@ -76,7 +347,7 @@ body {
     opacity: 0.3;
 }
 
-/* ========== FLASH MESSAGES ========== */
+/* Flash messages */
 .flash-sucesso,
 .flash-erro,
 .flash-aviso {
@@ -89,7 +360,6 @@ body {
     font-size: 0.95rem;
     animation: slideInDown 0.4s ease;
 }
-
 .flash-sucesso {
     background: #e8f8f0;
     border: 1px solid #82d9a8;
@@ -102,7 +372,6 @@ body {
     font-size: 1.2rem;
     color: #10b981;
 }
-
 .flash-erro {
     background: #fff0f0;
     border: 1px solid #f5a8a8;
@@ -115,7 +384,6 @@ body {
     font-size: 1.2rem;
     color: #e74c3c;
 }
-
 .flash-aviso {
     background: #fff8e8;
     border: 1px solid #f5d6a8;
@@ -128,13 +396,12 @@ body {
     font-size: 1.2rem;
     color: #f39c12;
 }
-
 @keyframes slideInDown {
     from { opacity: 0; transform: translateY(-12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ========== CARD DO FORMULÁRIO (criar/editar) ========== */
+/* Card do formulário */
 .anuncio-card {
     background: #ffffff;
     border-radius: 20px;
@@ -143,17 +410,15 @@ body {
     border: 1.5px solid #d8edf1;
     transition: var(--transicao-padrao);
 }
-
 .anuncio-card:hover {
     box-shadow: 0 8px 40px rgba(0,101,119,0.12);
     border-color: rgba(0,101,119,0.2);
 }
 
-/* ========== CAMPOS DO FORMULÁRIO ========== */
+/* Campos do formulário */
 .form-group {
     margin-bottom: 1.5rem;
 }
-
 .form-group label {
     display: block;
     font-size: 0.9rem;
@@ -161,12 +426,10 @@ body {
     color: var(--cor-texto-principal);
     margin-bottom: 0.45rem;
 }
-
 .form-group label .obrigatorio {
     color: var(--cor-dourado);
     margin-left: 2px;
 }
-
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -183,7 +446,6 @@ body {
     -webkit-appearance: none;
     appearance: none;
 }
-
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -191,17 +453,14 @@ body {
     background: #ffffff;
     box-shadow: 0 0 0 4px rgba(0,101,119,0.08);
 }
-
 .form-group input::placeholder,
 .form-group textarea::placeholder {
     color: #a0b8c4;
 }
-
 .form-group textarea {
     resize: vertical;
     min-height: 140px;
 }
-
 .form-group select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23006577'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -210,11 +469,9 @@ body {
     padding-right: 40px;
     cursor: pointer;
 }
-
 .form-group select option {
     padding: 8px;
 }
-
 .form-group select:invalid {
     color: #a0b8c4;
 }
@@ -222,11 +479,10 @@ body {
     color: var(--cor-texto-principal);
 }
 
-/* ========== FOTO / CAPA ========== */
+/* Foto / capa */
 .foto-capa-group {
     margin-bottom: 2rem;
 }
-
 .foto-preview-container {
     display: flex;
     gap: 1.5rem;
@@ -238,12 +494,10 @@ body {
     border: 1.5px dashed #d8edf1;
     transition: var(--transicao-padrao);
 }
-
 .foto-preview-container:hover {
     border-color: rgba(0,101,119,0.3);
     background: #f0fafc;
 }
-
 .foto-preview {
     width: 150px;
     height: 150px;
@@ -256,19 +510,16 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 .foto-preview img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-
 .foto-preview img[src*="no-image"] {
     object-fit: contain;
     padding: 1.5rem;
     opacity: 0.5;
 }
-
 .foto-upload {
     flex: 1;
     min-width: 200px;
@@ -276,7 +527,6 @@ body {
     flex-direction: column;
     gap: 0.5rem;
 }
-
 .btn-upload {
     display: inline-flex;
     align-items: center;
@@ -293,24 +543,21 @@ body {
     box-shadow: 0 2px 12px rgba(0,101,119,0.2);
     width: fit-content;
 }
-
 .btn-upload:hover {
     background: linear-gradient(135deg, var(--cor-hover), #006b7e);
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0,101,119,0.3);
 }
-
 .btn-upload:active {
     transform: translateY(0) scale(0.98);
 }
-
 .foto-helper {
     font-size: 0.8rem;
     color: #94a8b4;
     margin: 0;
 }
 
-/* ========== FOTO ATUAL (editar) ========== */
+/* Foto atual (editar) */
 .foto-atual {
     margin-top: 0.5rem;
     padding: 0.75rem 1rem;
@@ -322,18 +569,15 @@ body {
     gap: 0.75rem;
     flex-wrap: wrap;
 }
-
 .foto-atual i {
     color: var(--cor-primaria);
     font-size: 1.1rem;
 }
-
 .foto-atual span {
     font-size: 0.9rem;
     color: var(--cor-texto-secundario);
     word-break: break-all;
 }
-
 .foto-atual .badge-atual {
     background: var(--cor-primaria);
     color: #ffffff;
@@ -345,14 +589,13 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* ========== BOTÕES DE AÇÃO (criar/editar) ========== */
+/* Botões de ação */
 .form-actions {
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
     flex-wrap: wrap;
 }
-
 .btn-salvar,
 .btn-cancelar,
 .btn-excluir {
@@ -371,7 +614,6 @@ body {
     flex: 1;
     min-width: 180px;
 }
-
 .btn-salvar {
     background: linear-gradient(135deg, var(--cor-primaria), #00899e);
     color: #ffffff;
@@ -385,10 +627,6 @@ body {
 .btn-salvar:active {
     transform: translateY(0) scale(0.98);
 }
-.btn-salvar i {
-    font-size: 1.1rem;
-}
-
 .btn-cancelar {
     background: #f8fdfe;
     color: var(--cor-texto-secundario);
@@ -404,10 +642,6 @@ body {
 .btn-cancelar:active {
     transform: translateY(0) scale(0.98);
 }
-.btn-cancelar i {
-    font-size: 1.1rem;
-}
-
 .btn-excluir {
     background: #e74c3c;
     color: #ffffff;
@@ -421,15 +655,11 @@ body {
 .btn-excluir:active {
     transform: translateY(0) scale(0.98);
 }
-.btn-excluir i {
-    font-size: 1.1rem;
-}
 
-/* ========== BOTÃO CRIAR NOVO (meus anúncios) ========== */
+/* Meus anúncios - botão criar */
 .btn-criar-container {
     margin-bottom: 1.5rem;
 }
-
 .btn-criar {
     display: inline-flex;
     align-items: center;
@@ -456,7 +686,6 @@ body {
 .btn-criar i {
     font-size: 1.1rem;
 }
-
 .btn-criar-sm {
     display: inline-flex;
     align-items: center;
@@ -484,7 +713,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* ========== ESTADO VAZIO (meus anúncios) ========== */
+/* Estado vazio (meus anúncios) */
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
@@ -511,7 +740,7 @@ body {
     margin-top: 1rem;
 }
 
-/* ========== TABELA (meus anúncios) ========== */
+/* Tabela (meus anúncios) */
 .table-wrapper {
     overflow-x: auto;
     margin: 1.5rem 0;
@@ -520,19 +749,16 @@ body {
     background: #ffffff;
     box-shadow: 0 2px 12px rgba(0,101,119,0.05);
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
     min-width: 700px;
 }
-
 table thead {
     background: linear-gradient(135deg, #f8fdfe, #eaf6f9);
     border-bottom: 2px solid #d8edf1;
 }
-
 table thead th {
     padding: 1rem 1.2rem;
     text-align: left;
@@ -542,27 +768,23 @@ table thead th {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-
 table tbody tr {
     border-bottom: 1px solid #f0f4f6;
     transition: background 0.2s ease;
 }
-
 table tbody tr:hover {
     background: #f8fdfe;
 }
-
 table tbody tr:last-child {
     border-bottom: none;
 }
-
 table tbody td {
     padding: 1rem 1.2rem;
     vertical-align: middle;
     color: var(--cor-texto-principal);
 }
 
-/* ========== BADGES DE STATUS ========== */
+/* Badges de status */
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -573,7 +795,6 @@ table tbody td {
     font-weight: 600;
     text-transform: capitalize;
 }
-
 .status-badge.ativo {
     background: #e8f8f0;
     color: #1a7a47;
@@ -585,7 +806,6 @@ table tbody td {
     border-radius: 50%;
     background: #10b981;
 }
-
 .status-badge.pausado {
     background: #fff8e8;
     color: #8a6d1a;
@@ -597,7 +817,6 @@ table tbody td {
     border-radius: 50%;
     background: #f39c12;
 }
-
 .status-badge.excluido {
     background: #fff0f0;
     color: #c0392b;
@@ -609,7 +828,6 @@ table tbody td {
     border-radius: 50%;
     background: #e74c3c;
 }
-
 .status-badge.pendente {
     background: #fff8e8;
     color: #8a6d1a;
@@ -622,18 +840,16 @@ table tbody td {
     background: #f39c12;
     animation: pulse-dot 1.5s ease-in-out infinite;
 }
-
 @keyframes pulse-dot {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.4; transform: scale(0.8); }
 }
 
-/* ========== PREÇO E INTERESSES ========== */
+/* Preço e interesses */
 .preco {
     font-weight: 700;
     color: var(--cor-primaria);
 }
-
 .interesses {
     display: inline-flex;
     align-items: center;
@@ -649,19 +865,17 @@ table tbody td {
     margin-right: 0.3rem;
     font-size: 0.8rem;
 }
-
 .data {
     font-size: 0.85rem;
     color: #94a8b4;
 }
 
-/* ========== AÇÕES DA TABELA ========== */
+/* Ações da tabela */
 .acoes {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
 }
-
 .btn-acao {
     display: inline-flex;
     align-items: center;
@@ -678,15 +892,12 @@ table tbody td {
     color: var(--cor-texto-secundario);
     border: 1px solid #d8edf1;
 }
-
 .btn-acao:hover {
     transform: translateY(-1px);
 }
-
 .btn-acao i {
     font-size: 0.7rem;
 }
-
 .btn-acao.ver {
     background: #e8f4f8;
     border-color: #b8d8e8;
@@ -696,7 +907,6 @@ table tbody td {
     background: #d0e8f0;
     box-shadow: 0 2px 8px rgba(0,101,119,0.15);
 }
-
 .btn-acao.editar {
     background: #e8f0f8;
     border-color: #b8c8e8;
@@ -706,7 +916,6 @@ table tbody td {
     background: #d0e0f0;
     box-shadow: 0 2px 8px rgba(43, 108, 176, 0.15);
 }
-
 .btn-acao.ativar {
     background: #e8f8f0;
     border-color: #82d9a8;
@@ -716,7 +925,6 @@ table tbody td {
     background: #d0f0e0;
     box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
 }
-
 .btn-acao.pausar {
     background: #fff8e8;
     border-color: #f5d6a8;
@@ -726,7 +934,6 @@ table tbody td {
     background: #fff0d0;
     box-shadow: 0 2px 8px rgba(243, 156, 18, 0.15);
 }
-
 .btn-acao.excluir {
     background: #fff0f0;
     border-color: #f5a8a8;
@@ -736,18 +943,16 @@ table tbody td {
     background: #ffe0e0;
     box-shadow: 0 2px 8px rgba(231, 76, 60, 0.15);
 }
-
 .acoes form {
     display: inline;
 }
 
-/* ========== BOTÃO VOLTAR ========== */
+/* Voltar */
 .anuncio-voltar {
     margin-top: 2rem;
     padding-top: 1.5rem;
     border-top: 1.5px solid #d8edf1;
 }
-
 .anuncio-voltar a {
     color: var(--cor-texto-secundario);
     text-decoration: none;
@@ -759,115 +964,123 @@ table tbody td {
     padding: 0.5rem 1rem;
     border-radius: 8px;
 }
-
 .anuncio-voltar a:hover {
     color: var(--cor-primaria);
     background: rgba(0,101,119,0.06);
     transform: translateX(-4px);
 }
-
 .anuncio-voltar a i {
     font-size: 0.9rem;
     transition: transform 0.3s ease;
 }
-
 .anuncio-voltar a:hover i {
     transform: translateX(-4px);
 }
 
 /* ============================================================
-   RESPONSIVIDADE
+   10. RESPONSIVIDADE GERAL
    ============================================================ */
 
 @media (max-width: 1024px) {
     .anuncio-container {
-        padding: 90px 1.5rem 2rem;
+        padding: 2rem 1.5rem 2rem;
     }
 }
 
 @media (max-width: 868px) {
     .anuncio-container {
-        padding: 80px 1rem 2rem;
+        padding: 1.5rem 1rem 2rem;
     }
-
     .anuncio-card {
         padding: 1.5rem 1.5rem;
     }
-
     .foto-preview-container {
         flex-direction: column;
         align-items: center;
         padding: 1rem;
     }
-
     .foto-preview {
         width: 120px;
         height: 120px;
     }
-
     .foto-upload {
         align-items: center;
         text-align: center;
     }
-
     .btn-upload {
         width: 100%;
         justify-content: center;
     }
-
     .form-actions {
         flex-direction: column;
     }
-
     .btn-salvar,
     .btn-cancelar,
     .btn-excluir {
         min-width: unset;
         width: 100%;
     }
-
     .table-wrapper {
         border-radius: 12px;
     }
-
     table {
         font-size: 0.85rem;
         min-width: 600px;
     }
-
     table thead th,
     table tbody td {
         padding: 0.7rem 0.8rem;
     }
-
     .acoes {
         gap: 0.3rem;
     }
-
     .btn-acao {
         font-size: 0.7rem;
         padding: 0.2rem 0.5rem;
     }
-
     .btn-acao span {
         display: none;
     }
-
     .btn-acao i {
         font-size: 0.9rem;
     }
 }
 
+@media (max-width: 768px) {
+    .servicos-header {
+        padding: 1.5rem 1rem 1rem;
+    }
+    .servicos-header h1 {
+        font-size: 1.8rem;
+    }
+    .servicos-container {
+        padding: 1rem 1rem 2rem;
+    }
+    .filtro-bar {
+        gap: 0.4rem;
+    }
+    .filtro-btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
+    }
+    .profissionais-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .info-footer {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
 @media (max-width: 600px) {
     .anuncio-container {
-        padding: 75px 0.75rem 1.5rem;
+        padding: 1rem 0.75rem 1.5rem;
     }
-
     .anuncio-card {
         padding: 1.25rem 1rem;
         border-radius: 16px;
     }
-
     .form-group input,
     .form-group select,
     .form-group textarea {
@@ -875,21 +1088,17 @@ table tbody td {
         font-size: 0.9rem;
         border-radius: 10px;
     }
-
     .form-group textarea {
         min-height: 120px;
     }
-
     .foto-preview {
         width: 100px;
         height: 100px;
     }
-
     .foto-atual {
         padding: 0.6rem 0.8rem;
         font-size: 0.85rem;
     }
-
     .btn-salvar,
     .btn-cancelar,
     .btn-excluir {
@@ -897,61 +1106,48 @@ table tbody td {
         font-size: 0.9rem;
         border-radius: 10px;
     }
-
     .table-wrapper {
         border-radius: 10px;
         margin: 1rem 0;
     }
-
     table {
         font-size: 0.8rem;
         min-width: 500px;
     }
-
     table thead th,
     table tbody td {
         padding: 0.6rem 0.6rem;
     }
-
     .status-badge {
         font-size: 0.7rem;
         padding: 0.15rem 0.6rem;
     }
-
     .preco {
         font-size: 0.85rem;
     }
-
     .data {
         font-size: 0.75rem;
     }
-
     .btn-acao {
         padding: 0.2rem 0.4rem;
         font-size: 0.65rem;
     }
-
     .btn-acao i {
         font-size: 0.8rem;
     }
-
     .empty-state {
         padding: 2.5rem 1.5rem;
     }
-
     .empty-state i {
         font-size: 3rem;
     }
-
     .empty-state p {
         font-size: 0.95rem;
     }
-
     .btn-criar {
         padding: 0.6rem 1.2rem;
         font-size: 0.85rem;
     }
-
     .flash-sucesso,
     .flash-erro,
     .flash-aviso {
@@ -961,31 +1157,49 @@ table tbody td {
 }
 
 @media (max-width: 480px) {
-    .anuncio-container {
-        padding: 70px 0.5rem 1.5rem;
+    .servicos-header h1 {
+        font-size: 1.5rem;
+    }
+    .servicos-header p {
+        font-size: 0.95rem;
+    }
+    .filtro-btn {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.8rem;
+    }
+    .profissional-card h3 {
+        font-size: 1.1rem;
+    }
+    .profissional-card .descricao {
+        font-size: 0.85rem;
+    }
+    .info-footer .preco {
+        font-size: 1rem;
+    }
+    .btn-perfil {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
     }
 
+    .anuncio-container {
+        padding: 1rem 0.5rem 1.5rem;
+    }
     .anuncio-header h1 {
         font-size: 1.5rem;
     }
-
     .anuncio-header p {
         font-size: 0.9rem;
     }
-
     .anuncio-card {
         padding: 1rem 0.8rem;
         border-radius: 14px;
     }
-
     .form-group {
         margin-bottom: 1rem;
     }
-
     .form-group label {
         font-size: 0.85rem;
     }
-
     .form-group input,
     .form-group select,
     .form-group textarea {
@@ -993,39 +1207,31 @@ table tbody td {
         font-size: 0.85rem;
         border-radius: 8px;
     }
-
     .form-group textarea {
         min-height: 100px;
     }
-
     .foto-preview-container {
         padding: 0.75rem;
     }
-
     .foto-preview {
         width: 80px;
         height: 80px;
     }
-
     .btn-upload {
         padding: 0.5rem 1rem;
         font-size: 0.8rem;
         border-radius: 8px;
     }
-
     .foto-helper {
         font-size: 0.7rem;
     }
-
     .foto-atual {
         font-size: 0.8rem;
         padding: 0.5rem 0.7rem;
     }
-
     .foto-atual .badge-atual {
         font-size: 0.6rem;
     }
-
     .btn-salvar,
     .btn-cancelar,
     .btn-excluir {
@@ -1033,86 +1239,69 @@ table tbody td {
         font-size: 0.85rem;
         border-radius: 8px;
     }
-
     .btn-salvar i,
     .btn-cancelar i,
     .btn-excluir i {
         font-size: 0.9rem;
     }
-
     table {
         font-size: 0.75rem;
         min-width: 400px;
     }
-
     table thead th,
     table tbody td {
         padding: 0.4rem 0.4rem;
     }
-
     table thead th {
         font-size: 0.7rem;
     }
-
     .status-badge {
         font-size: 0.6rem;
         padding: 0.1rem 0.4rem;
     }
-
     .interesses {
         font-size: 0.75rem;
         min-width: 24px;
         padding: 0.1rem 0.4rem;
     }
-
     .btn-acao {
         padding: 0.15rem 0.3rem;
         font-size: 0.6rem;
         border-radius: 4px;
     }
-
     .btn-acao i {
         font-size: 0.7rem;
     }
-
     .empty-state {
         padding: 2rem 1rem;
     }
-
     .empty-state i {
         font-size: 2.5rem;
     }
-
     .empty-state p {
         font-size: 0.85rem;
     }
-
     .btn-criar {
         padding: 0.5rem 1rem;
         font-size: 0.8rem;
         border-radius: 8px;
     }
-
     .btn-criar-sm {
         padding: 0.3rem 0.8rem;
         font-size: 0.75rem;
         border-radius: 6px;
     }
-
     .btn-criar-sm i {
         font-size: 0.7rem;
     }
-
     .anuncio-voltar {
         margin-top: 1.5rem;
         padding-top: 1rem;
     }
-
     .anuncio-voltar a {
         font-size: 0.85rem;
         padding: 0.4rem 0.8rem;
     }
-
     .flash-sucesso,
     .flash-erro,
     .flash-aviso {
@@ -1124,51 +1313,42 @@ table tbody td {
 
 @media (max-width: 360px) {
     .anuncio-container {
-        padding: 65px 0.3rem 1rem;
+        padding: 0.8rem 0.3rem 1rem;
     }
-
     .anuncio-card {
         padding: 0.8rem 0.5rem;
     }
-
     .form-group input,
     .form-group select,
     .form-group textarea {
         padding: 0.5rem 0.6rem;
         font-size: 0.8rem;
     }
-
     .btn-salvar,
     .btn-cancelar,
     .btn-excluir {
         font-size: 0.8rem;
         padding: 0.5rem 0.8rem;
     }
-
     .foto-preview {
         width: 70px;
         height: 70px;
     }
-
     table {
         font-size: 0.7rem;
         min-width: 340px;
     }
-
     table thead th,
     table tbody td {
         padding: 0.3rem 0.3rem;
     }
-
     .btn-acao {
         padding: 0.1rem 0.25rem;
         font-size: 0.55rem;
     }
-
     .btn-acao i {
         font-size: 0.6rem;
     }
-
     .status-badge {
         font-size: 0.55rem;
         padding: 0.05rem 0.3rem;
@@ -1176,7 +1356,7 @@ table tbody td {
 }
 
 /* ============================================================
-   PREFERS-REDUCED-MOTION
+   11. PREFERS-REDUCED-MOTION
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -1186,27 +1366,26 @@ table tbody td {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-
     .flash-sucesso,
     .flash-erro,
     .flash-aviso {
         animation: none !important;
     }
-
     .status-badge.pendente::before {
         animation: none !important;
     }
-
     .btn-criar:hover,
     .btn-criar-sm:hover,
     .btn-acao:hover,
     .btn-salvar:hover,
     .btn-cancelar:hover,
     .btn-excluir:hover,
-    .btn-upload:hover {
+    .btn-upload:hover,
+    .btn-perfil:hover,
+    .filtro-btn:hover,
+    .profissional-card:hover {
         transform: none !important;
     }
-
     .btn-criar:active,
     .btn-criar-sm:active,
     .btn-acao:active,
@@ -1216,7 +1395,6 @@ table tbody td {
     .btn-upload:active {
         transform: none !important;
     }
-
     .anuncio-card:hover {
         box-shadow: none !important;
     }
