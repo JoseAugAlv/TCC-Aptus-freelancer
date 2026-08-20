@@ -1,0 +1,577 @@
+.favoritos-container {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+/* ===== HEADER ===== */
+.favoritos-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.favoritos-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #006577, #C9A227);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+.favoritos-header h1 i {
+    display: none; /* REMOVE O CORAÇÃO */
+}
+
+.favoritos-header p {
+    color: #555555;
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.favoritos-header hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, #006577, #C9A227, transparent);
+    margin: 20px auto;
+    max-width: 200px;
+}
+
+/* ===== FLASH MESSAGES ===== */
+.flash-sucesso {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #10b981;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.flash-erro {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #ef4444;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.flash-aviso {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #f59e0b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.flash-sucesso::before,
+.flash-erro::before,
+.flash-aviso::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 1.2rem;
+}
+
+.flash-sucesso::before { content: "\f058"; }
+.flash-erro::before { content: "\f06a"; }
+.flash-aviso::before { content: "\f071"; }
+
+/* ===== MENSAGEM VAZIA ===== */
+.favoritos-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 16px;
+    border: 2px dashed #d1d5db;
+    margin: 20px 0;
+}
+
+.favoritos-empty i {
+    display: block;
+    font-size: 4rem;
+    color: #006577;
+    opacity: 0.4;
+    margin-bottom: 1rem;
+}
+
+.favoritos-empty h3 {
+    color: #333;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.favoritos-empty p {
+    color: #888;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-explorar {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #006577, #004d5c);
+    color: #ffffff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 101, 119, 0.2);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-explorar:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 101, 119, 0.35);
+    color: #ffffff;
+}
+
+.btn-explorar i {
+    font-size: 1.1rem;
+}
+
+/* ===== GRID DE FAVORITOS ===== */
+.favoritos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+    margin: 20px 0;
+}
+
+/* ===== CARD DO FAVORITO ===== */
+.favorito-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eef2f6;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.favorito-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 101, 119, 0.12);
+    border-color: #006577;
+}
+
+/* ===== IMAGEM DO FAVORITO ===== */
+.favorito-imagem {
+    position: relative;
+    height: 200px;
+    background: #f8fafc;
+    overflow: hidden;
+}
+
+.favorito-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.favorito-card:hover .favorito-imagem img {
+    transform: scale(1.05);
+}
+
+.favorito-sem-imagem {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f7ff, #e8f0fe);
+    color: #006577;
+    font-size: 4rem;
+}
+
+/* ===== BOTÃO REMOVER (X) ===== */
+.btn-remover-favorito {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-remover-favorito:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+.btn-remover-favorito i {
+    font-size: 0.9rem;
+}
+
+/* ===== ESCONDER BOTÃO REMOVER COM CORAÇÃO PARTIDO ===== */
+.btn-remover-favorito-texto {
+    display: none !important;
+}
+
+/* ===== INFORMAÇÕES DO FAVORITO ===== */
+.favorito-info {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.favorito-categoria {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 101, 119, 0.08);
+    color: #006577;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+.favorito-categoria i {
+    font-size: 0.7rem;
+}
+
+.favorito-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.3;
+}
+
+.favorito-info h3 a {
+    color: #1a2f3e;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.favorito-info h3 a:hover {
+    color: #006577;
+}
+
+.favorito-descricao {
+    color: #555555;
+    font-size: 0.95rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+    flex: 1;
+    font-weight: 400;
+}
+
+/* ===== FOOTER DO CARD ===== */
+.favorito-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+    margin-bottom: 10px;
+}
+
+.favorito-freelancer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #555555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.favorito-freelancer .avatar-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+}
+
+.favorito-freelancer i {
+    font-size: 1.5rem;
+    color: #006577;
+}
+
+.favorito-preco {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #C9A227;
+}
+
+/* ===== STATS ===== */
+.favorito-stats {
+    display: flex;
+    gap: 16px;
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    font-weight: 400;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.favorito-stats span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.favorito-stats i {
+    font-size: 0.8rem;
+}
+
+/* ===== AÇÕES ===== */
+.favorito-acoes {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.favorito-acoes .btn-ver {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #006577, #004d5c);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.favorito-acoes .btn-ver:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 101, 119, 0.3);
+}
+
+/* ===== BOTÃO VOLTAR ===== */
+.favoritos-voltar {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.favoritos-voltar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #006577;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+.favoritos-voltar a:hover {
+    color: #C9A227;
+    background: rgba(201, 162, 39, 0.08);
+    transform: translateX(-5px);
+}
+
+.favoritos-voltar a i {
+    font-size: 0.9rem;
+}
+
+/* ============================================================ */
+/* ===== ANIMAÇÕES ===== */
+/* ============================================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.favorito-card {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.favorito-card:nth-child(1) { animation-delay: 0.05s; }
+.favorito-card:nth-child(2) { animation-delay: 0.10s; }
+.favorito-card:nth-child(3) { animation-delay: 0.15s; }
+.favorito-card:nth-child(4) { animation-delay: 0.20s; }
+.favorito-card:nth-child(5) { animation-delay: 0.25s; }
+.favorito-card:nth-child(6) { animation-delay: 0.30s; }
+
+/* ============================================================ */
+/* ===== RESPONSIVIDADE ===== */
+/* ============================================================ */
+
+@media (max-width: 1024px) {
+    .favoritos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .favoritos-container {
+        margin-top: 80px;
+        padding: 0 16px;
+    }
+
+    .favoritos-header h1 {
+        font-size: 1.7rem;
+    }
+
+    .favoritos-header p {
+        font-size: 1rem;
+    }
+
+    .favoritos-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .favorito-imagem {
+        height: 180px;
+    }
+
+    .favorito-info {
+        padding: 1.2rem;
+    }
+
+    .favorito-info h3 {
+        font-size: 1rem;
+    }
+
+    .favorito-acoes {
+        flex-direction: column;
+    }
+
+    .favorito-acoes .btn-ver {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .favorito-stats {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .favoritos-empty {
+        padding: 2rem 1.5rem;
+    }
+
+    .btn-explorar {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .favoritos-container {
+        margin-top: 70px;
+        padding: 0 12px;
+    }
+
+    .favoritos-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .favoritos-header p {
+        font-size: 0.9rem;
+    }
+
+    .favorito-imagem {
+        height: 150px;
+    }
+
+    .favorito-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .favorito-preco {
+        font-size: 1rem;
+    }
+
+    .btn-remover-favorito {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+        top: 8px;
+        right: 8px;
+    }
+
+    .favoritos-empty i {
+        font-size: 3rem;
+    }
+
+    .favoritos-empty h3 {
+        font-size: 1.1rem;
+    }
+
+    .favoritos-empty p {
+        font-size: 0.9rem;
+    }
+
+    .btn-explorar {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        width: 100%;
+        justify-content: center;
+    }
+}

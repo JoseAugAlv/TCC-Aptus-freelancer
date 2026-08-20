@@ -2,7 +2,7 @@
 // app/Views/anuncios/show.php
 
 $tituloPagina = $tituloPagina ?? 'Detalhes do Servico - Aptus';
-$cssPagina = $cssPagina ?? 'anuncios.css';
+$cssPagina = 'show.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
@@ -28,8 +28,6 @@ $totalFavoritos = $totalFavoritos ?? 0;
 <div class="detalhes-container">
     <div class="detalhes-imagem">
         <?php if (!empty($anuncio['foto_capa'])): ?>
-            <img src="/Aptus/public/uploads/anuncios/<?= htmlspecialchars($anuncio['foto_capa']) ?>" 
-                 alt="<?= htmlspecialchars($anuncio['titulo']) ?>">
         <?php else: ?>
             <i class="fas fa-briefcase"></i>
         <?php endif; ?>

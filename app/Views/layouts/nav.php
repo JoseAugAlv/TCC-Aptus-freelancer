@@ -56,11 +56,11 @@ if ($usuario) {
                     <?php endif; ?>
                     
                     <?php if ($role == 1 || $role == 2): ?>
-                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderação</a></li>
+                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderacao</a></li>
                     <?php endif; ?>
                     
                     <?php if ($role == 1 || $role == 4): ?>
-                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configurações</a></li>
+                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configuracoes</a></li>
                     <?php endif; ?>
                     
                     <!-- RELATORIOS - ADICIONADO AQUI -->
@@ -79,7 +79,7 @@ if ($usuario) {
         <?php if ($usuario): ?>
             <li>
                 <a href="/Aptus/notificacoes" class="nav-notificacao" id="navNotificacao">
-                    <i class="fas fa-bell"></i>Notificação
+                    <i class="fas fa-bell"></i>
                     <span class="badge-notificacao" id="badgeNotificacao" style="display: <?= $totalNotificacoes > 0 ? 'inline-flex' : 'none' ?>;">
                         <?= $totalNotificacoes ?>
                     </span>
