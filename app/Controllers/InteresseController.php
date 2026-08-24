@@ -343,7 +343,7 @@ class InteresseController
         }
         
         $tituloPagina = 'Serviços Ativos - Aptus';
-        $cssPagina = 'interesses.css';
+        $cssPagina = 'ativos.css';
         
         require '../app/Views/interesses/ativos.php';
     }
@@ -440,14 +440,14 @@ class InteresseController
         if ($interesse['id_contratante'] != $usuarioId && $interesse['id_freelancer'] != $usuarioId) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
-                'mensagem' => 'Voce nao tem permissao para ver este interesse.'
+                'mensagem' => 'Você não tem permissão para ver este interesse.'
             ];
             header('Location: /Aptus/interesses/meus');
             exit;
         }
         
         $tituloPagina = 'Detalhes do Interesse - Aptus';
-        $cssPagina = 'interesses.css';
+        $cssPagina = 'detalhes.css';
         
         require '../app/Views/interesses/detalhes.php';
     }

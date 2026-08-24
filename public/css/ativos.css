@@ -1,0 +1,567 @@
+/* ============================================================
+   PÁGINA: SERVIÇOS ATIVOS (ativos.php)
+   Baseado EXATAMENTE no interesses.css
+   ============================================================ */
+
+/* ----- VARIÁVEIS (mesmas do interesses.css) ----- */
+:root {
+    --cor-primaria: #006577;
+    --cor-secundaria: #C9A227;
+    --cor-dourado: #C9A227;
+    --cor-hover: #004d5c;
+    --cor-texto-principal: #1a2f3e;
+    --cor-texto-secundario: #555555;
+    --cor-branco: #ffffff;
+    --cor-fundo: #f5f7fa;
+    --cor-sombra: rgba(0, 101, 119, 0.12);
+    --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: var(--cor-texto-principal);
+}
+
+/* ----- CONTAINER PRINCIPAL (com padding para nav fixo) ----- */
+.interesses-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 90px 1.5rem 2rem; /* ← ajuste conforme altura do nav */
+    background: #f8fafc;
+    min-height: 80vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ----- CABEÇALHO DA PÁGINA (igual ao interesses) ----- */
+.interesses-header {
+    text-align: center;
+    padding: 1rem 1.5rem 2rem;
+    border-bottom: 1px solid rgba(0, 101, 119, 0.06);
+}
+
+.interesses-header h1 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.interesses-header p {
+    font-size: 1.15rem;
+    color: var(--cor-texto-secundario);
+    margin: 0;
+}
+
+.interesses-container hr {
+    border: none;
+    border-top: 2px solid #e2e8f0;
+    margin: 0.5rem 0 2rem 0;
+}
+
+/* ----- FLASH MESSAGES (igual ao interesses) ----- */
+.flash-sucesso,
+.flash-erro,
+.flash-aviso {
+    padding: 0.9rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-left: 5px solid;
+}
+
+.flash-sucesso {
+    background: #d1fae5;
+    border-left-color: #10b981;
+    color: #065f46;
+}
+
+.flash-erro {
+    background: #fee2e2;
+    border-left-color: #ef4444;
+    color: #991b1b;
+}
+
+.flash-aviso {
+    background: #fef3c7;
+    border-left-color: #f59e0b;
+    color: #92400e;
+}
+
+/* ----- ESTADO VAZIO (igual ao interesses) ----- */
+.interesses-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    margin: 2rem 0;
+}
+
+.interesses-empty p {
+    color: #64748b;
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    background: var(--cor-primaria);
+    color: #fff;
+    padding: 0.7rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transicao-padrao);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: var(--cor-hover);
+    transform: scale(1.02);
+}
+
+/* ----- TÍTULOS DAS SEÇÕES (Em Andamento / Concluídos) ----- */
+.interesses-container h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--cor-primaria);
+    margin: 2rem 0 1.2rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(0, 101, 119, 0.1);
+}
+
+/* ----- GRID DE CARDS (vertical, como no ativos.php) ----- */
+.interesses-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* ----- CARD INDIVIDUAL (igual ao interesses) ----- */
+.interesse-card {
+    background: var(--cor-branco);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    padding: 1.5rem 1.8rem;
+    transition: var(--transicao-padrao);
+    border: 1px solid #f1f5f9;
+}
+
+.interesse-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 101, 119, 0.08);
+    transform: translateY(-2px);
+}
+
+.interesse-card.concluido {
+    border-left: 4px solid #10b981;
+}
+
+/* --- HEADER DO CARD (igual ao interesses) --- */
+.interesse-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.interesse-cliente {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.interesse-cliente i {
+    font-size: 2rem;
+    color: #94a3b8;
+}
+
+.interesse-cliente div {
+    display: flex;
+    flex-direction: column;
+}
+
+.interesse-cliente strong {
+    font-size: 1rem;
+    color: #0f172a;
+}
+
+.interesse-data {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 0.1rem;
+}
+
+/* --- STATUS (ativo / concluído / divergente) --- */
+.interesse-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.8rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+
+.interesse-status.ativo {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.interesse-status.concluido {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.interesse-status.divergente {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* --- CORPO DO CARD (igual ao interesses) --- */
+.interesse-body {
+    flex: 1;
+    margin: 0.5rem 0 0.8rem 0;
+}
+
+.interesse-body h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--cor-primaria);
+    margin: 0 0 0.2rem 0;
+}
+
+.interesse-preco {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cor-dourado);
+    margin: 0.2rem 0;
+}
+
+.interesse-status-confirmacao {
+    font-size: 0.9rem;
+    margin: 0.3rem 0;
+}
+
+.interesse-confirmado {
+    color: #10b981;
+    font-size: 0.85rem;
+    margin: 0.2rem 0;
+}
+
+.interesse-pagamento-divergente {
+    color: #dc2626;
+    font-size: 0.85rem;
+    margin: 0.2rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* ============================================================
+   FORMULÁRIO DE AVALIAÇÃO (com correção do textarea)
+   ============================================================ */
+.avaliacao-form-container {
+    background: #f8fafc;
+    padding: 1.2rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin: 1rem 0 1.2rem 0;
+}
+
+.avaliacao-form-container h4 {
+    color: var(--cor-primaria);
+    font-size: 1.1rem;
+    margin: 0 0 0.2rem 0;
+}
+
+.avaliacao-form-container p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0 0 1rem 0;
+}
+
+.avaliacao-form .avaliacao-estrelas {
+    margin-bottom: 1rem;
+}
+
+.avaliacao-form .avaliacao-estrelas label {
+    display: block;
+    font-weight: 600;
+    color: #1a2f3e;
+    margin-bottom: 0.3rem;
+}
+
+.avaliacao-form .estrelas {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.3rem;
+}
+
+.avaliacao-form .estrelas input {
+    display: none;
+}
+
+.avaliacao-form .estrelas label {
+    font-size: 1.8rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: var(--transicao-padrao);
+    padding: 0 2px;
+}
+
+.avaliacao-form .estrelas label:hover,
+.avaliacao-form .estrelas label:hover ~ label,
+.avaliacao-form .estrelas input:checked ~ label {
+    color: #f59e0b;
+}
+
+/* ----- CORREÇÃO DO TEXTAREA (não ultrapassar a largura) ----- */
+.avaliacao-form .avaliacao-comentario {
+    margin-bottom: 1rem;
+}
+
+.avaliacao-form .avaliacao-comentario label {
+    display: block;
+    font-weight: 600;
+    color: #1a2f3e;
+    margin-bottom: 0.3rem;
+}
+
+.avaliacao-form .avaliacao-comentario textarea {
+    width: 100%;
+    max-width: 100%; /* ← GARANTE QUE NÃO ULTRAPASSA */
+    padding: 0.6rem 0.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box; /* ← ESSENCIAL PARA NÃO ULTRAPASSAR */
+    transition: var(--transicao-padrao);
+}
+
+.avaliacao-form .avaliacao-comentario textarea:focus {
+    border-color: var(--cor-primaria);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.1);
+}
+
+.btn-enviar-avaliacao {
+    padding: 0.6rem 1.8rem;
+    background: var(--cor-primaria);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transicao-padrao);
+}
+
+.btn-enviar-avaliacao:hover {
+    background: var(--cor-hover);
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.3);
+}
+
+/* --- AVALIAÇÃO JÁ FEITA --- */
+.avaliacao-ja-feita {
+    background: #f0fdf4;
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    border: 1px solid #10b981;
+    margin: 1rem 0 1.2rem 0;
+}
+
+.avaliacao-ja-feita p {
+    color: #065f46;
+    margin: 0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ============================================================
+   AÇÕES (BOTÕES) – IGUAL AO INTERESSES.CSS
+   ============================================================ */
+.interesse-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.interesse-acoes a,
+.interesse-acoes button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: var(--transicao-padrao);
+    background: transparent;
+}
+
+.interesse-acoes a i,
+.interesse-acoes button i {
+    font-size: 0.9rem;
+}
+
+/* ===== BOTÃO CHAT – AZUL (corrigido) ===== */
+.btn-chat {
+    background: var(--cor-dourado) !important;
+    color: #ffffff !important;
+}
+
+.btn-chat:hover {
+    background: #cccc58 !important;
+    transform: scale(1.03);
+}
+
+/* ===== BOTÃO DETALHES ===== */
+.btn-detalhes {
+    background: #6b7280 !important;
+    color: #ffffff !important;
+}
+
+.btn-detalhes:hover {
+    background: #4b5563 !important;
+    transform: scale(1.03);
+}
+
+/* ===== BOTÃO CONFIRMAR ===== */
+.btn-confirmar {
+    background: #10b981 !important;
+    color: #ffffff !important;
+}
+
+.btn-confirmar:hover {
+    background: #059669 !important;
+    transform: scale(1.03);
+}
+
+/* ===== BOTÃO DISPUTA ===== */
+.btn-disputa {
+    background: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+.btn-disputa:hover {
+    background: #b91c1c !important;
+    transform: scale(1.03);
+}
+
+/* ----- LINKS RODAPÉ (navegação extra) ----- */
+.interesses-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem 2rem;
+    margin: 2.5rem 0 1rem 0;
+    padding: 1.2rem 0;
+    border-top: 1px solid #e2e8f0;
+}
+
+.interesses-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: var(--transicao-padrao);
+    padding: 0.3rem 0.6rem;
+    border-radius: 30px;
+}
+
+.interesses-links a:hover {
+    color: var(--cor-primaria);
+    background: #f1f5f9;
+}
+
+/* ============================================================
+   RESPONSIVIDADE (igual ao interesses.css)
+   ============================================================ */
+@media (max-width: 768px) {
+    .interesses-container {
+        padding: 80px 1rem 1.5rem;
+    }
+
+    .interesses-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .interesse-card {
+        padding: 1.2rem;
+    }
+
+    .interesse-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .interesse-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .interesse-acoes a,
+    .interesse-acoes button {
+        justify-content: center;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .avaliacao-form-container {
+        padding: 1rem;
+    }
+
+    .avaliacao-form .estrelas label {
+        font-size: 1.5rem;
+    }
+
+    .interesses-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .interesses-container {
+        padding: 70px 0.8rem 1rem;
+    }
+
+    .interesse-body h3 {
+        font-size: 1rem;
+    }
+
+    .interesse-preco {
+        font-size: 0.95rem;
+    }
+
+    .btn-enviar-avaliacao {
+        width: 100%;
+        justify-content: center;
+    }
+}

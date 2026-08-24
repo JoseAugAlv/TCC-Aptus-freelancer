@@ -2,7 +2,7 @@
 // app/Views/interesses/detalhes.php
 
 $tituloPagina = $tituloPagina ?? 'Detalhes do Interesse - Aptus';
-$cssPagina = $cssPagina ?? 'interesses.css';
+$cssPagina = $cssPagina ?? 'detalhes.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
@@ -128,15 +128,5 @@ if ($interesse && isset($interesse['situacao']) && $interesse['situacao'] == 'co
     </div>
 </div>
 
-<style>
-.detalhes-container {
-    max-width: 700px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 24px;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-}
-</style>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

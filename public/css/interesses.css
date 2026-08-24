@@ -1,0 +1,483 @@
+:root {
+    --cor-primaria: #006577;
+    --cor-secundaria: #C9A227;
+    --cor-dourado: #C9A227;
+    --cor-hover: #004d5c;
+    --cor-texto-principal: #1a2f3e;
+    --cor-texto-secundario: #555555;
+    --cor-branco: #ffffff;
+    --cor-fundo: #f5f7fa;
+    --cor-sombra: rgba(0, 101, 119, 0.12);
+    --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interesses-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 1.5rem 2rem;
+    background: #f8fafc;
+    min-height: 80vh;
+    font-family: inherit;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: var(--cor-texto-principal);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ----- CABEÇALHO DA PÁGINA ----- */
+.interesses-header {
+    text-align: center;
+    padding: 1.7rem 1.5rem 3rem;
+    border-bottom: 1px solid rgba(0, 101, 119, 0.06);
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.interesses-header h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: .75rem;
+    position: relative;
+    z-index: 1;
+    padding: 0 1rem;
+}
+
+.interesses-header h1 i {
+    color: var(--cor-dourado);
+    font-size: 2.2rem;
+}
+
+.interesses-header p {
+    font-size: 1.15rem;
+    color: var(--cor-texto-secundario);
+    max-width: 600px;
+    margin: 0.5rem auto 0;
+    padding: 0 1rem;
+}
+
+.interesses-container hr {
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ----- FLASH MESSAGES ----- */
+.flash-sucesso,
+.flash-erro,
+.flash-aviso {
+    padding: 0.9rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-left: 5px solid;
+}
+
+.flash-sucesso {
+    background: #d1fae5;
+    border-left-color: #10b981;
+    color: #065f46;
+}
+
+.flash-erro {
+    background: #fee2e2;
+    border-left-color: #ef4444;
+    color: #991b1b;
+}
+
+.flash-aviso {
+    background: #fef3c7;
+    border-left-color: #f59e0b;
+    color: #92400e;
+}
+
+/* ----- ESTADO VAZIO ----- */
+.interesses-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    margin: 2rem 0;
+}
+
+.interesses-empty i {
+    font-size: 4rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+.interesses-empty h3 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin: 0.5rem 0;
+}
+
+.interesses-empty p {
+    color: #64748b;
+    font-size: 1.05rem;
+    margin-bottom: 1.8rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    background: #3b82f6;
+    color: #fff;
+    padding: 0.7rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s, transform 0.1s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+    transform: scale(1.02);
+}
+
+/* ----- GRID DE CARDS ----- */
+.interesses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.8rem;
+    margin: 2rem 0;
+}
+
+/* ----- CARD INDIVIDUAL ----- */
+.interesse-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem 1.5rem 1.2rem;
+    transition: box-shadow 0.25s, transform 0.2s;
+    border: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+}
+
+.interesse-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transform: translateY(-4px);
+}
+
+/* --- HEADER DO CARD --- */
+.interesse-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.interesse-cliente {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.interesse-cliente img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+    background: #f1f5f9;
+}
+
+.interesse-cliente i.fa-user-circle {
+    font-size: 2.4rem;
+    color: #94a3b8;
+}
+
+.interesse-cliente div {
+    display: flex;
+    flex-direction: column;
+}
+
+.interesse-cliente strong {
+    font-size: 0.95rem;
+    color: #0f172a;
+}
+
+.interesse-data {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 0.1rem;
+}
+
+/* --- STATUS --- */
+.interesse-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.8rem;
+    border-radius: 50px;
+    background: #f1f5f9;
+    color: #475569;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* --- CORPO DO CARD --- */
+.interesse-body {
+    flex: 1;
+    margin: 0.5rem 0 1rem 0;
+}
+
+.interesse-body h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 0.4rem 0;
+    line-height: 1.3;
+}
+
+.interesse-mensagem {
+    color: #334155;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0.8rem 0;
+    background: #f8fafc;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    border-left: 3px solid #e2e8f0;
+    word-break: break-word;
+}
+
+.interesse-preco {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0.4rem 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.interesse-preco i {
+    color: #f59e0b;
+    font-size: 1rem;
+}
+
+/* ----- AÇÕES (BOTÕES) ----- */
+.interesse-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.interesse-acoes a,
+.interesse-acoes button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+    background: transparent;
+}
+
+.interesse-acoes a i,
+.interesse-acoes button i {
+    font-size: 0.9rem;
+}
+
+/* ===== CORREÇÃO: BOTÃO CHAT – SEM ROXO APÓS CLICAR ===== */
+.btn-chat {
+    background: #82b0fc;
+}
+
+.btn-chat:hover {
+    background: #2563eb;
+    transform: scale(1.03);
+}
+
+.btn-chat:visited,
+.btn-chat:active {
+    background: #82b0fc !important;
+    color: #2563eb !important;
+}
+
+/* ===== DEMAIS BOTÕES ===== */
+.interesse-acoes .acoes-principais {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    flex: 1 1 100%;
+}
+
+.btn-cancelar-wrapper {
+    flex: 1 1 100%;
+    margin-top: 0.3rem;
+}
+
+.btn-cancelar {
+    background: #fee2e2;
+    color: #b91c1c !important;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-cancelar:hover {
+    background: #fecaca;
+    transform: scale(1.02);
+}
+
+.btn-detalhes {
+    background: #e2e8f0;
+    color: #1e293b !important;
+}
+
+.btn-detalhes:hover {
+    background: #cbd5e1;
+    transform: scale(1.03);
+}
+
+.btn-aguardando {
+    background: #fef3c7;
+    color: #b45309 !important;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.btn-ativo {
+    background: #10b981;
+    color: #064f03 !important;
+}
+
+.btn-ativo:hover {
+    background: #6fee85;
+    transform: scale(1.03);
+}
+
+/* ----- LINKS RODAPÉ ----- */
+.interesses-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem 2rem;
+    margin: 2.5rem 0 1rem 0;
+    padding: 1.2rem 0;
+    border-top: 1px solid #e2e8f0;
+}
+
+.interesses-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+    padding: 0.3rem 0.6rem;
+    border-radius: 30px;
+}
+
+.interesses-links a i {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+.interesses-links a:hover {
+    color: #0f172a;
+    background: #f1f5f9;
+}
+
+.interesses-links a:hover i {
+    color: #3b82f6;
+}
+
+/* ----- RESPONSIVIDADE ----- */
+@media (max-width: 768px) {
+    .interesses-container {
+        padding: 70px 1rem 1.5rem;
+    }
+
+    .interesses-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .interesses-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .interesses-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+
+    .interesse-card {
+        padding: 1.2rem;
+    }
+
+    .interesse-header {
+        flex-wrap: wrap;
+    }
+
+    .interesse-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .interesse-acoes a,
+    .interesse-acoes button {
+        justify-content: center;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .interesse-acoes .acoes-principais {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .btn-cancelar-wrapper {
+        margin-top: 0.2rem;
+    }
+
+    .interesses-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .interesse-cliente img {
+        width: 34px;
+        height: 34px;
+    }
+
+    .interesse-body h3 {
+        font-size: 1rem;
+    }
+
+    .interesse-preco {
+        font-size: 0.95rem;
+    }
+}

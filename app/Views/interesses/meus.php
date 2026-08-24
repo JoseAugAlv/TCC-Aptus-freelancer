@@ -12,7 +12,7 @@ $interesses = $interesses ?? [];
 <div class="interesses-container">
     <div class="interesses-header">
         <h1><i class="fas fa-paper-plane"></i> Meus Interesses</h1>
-        <p>Interesses que voce enviou</p>
+        <p>Interesses que você enviou</p>
     </div>
 
     <hr>
@@ -29,7 +29,7 @@ $interesses = $interesses ?? [];
             <i class="fas fa-inbox"></i>
             <h3>Nenhum interesse enviado</h3>
             <p>Voce ainda nao enviou nenhum interesse.</p>
-            <a href="/Aptus/anuncios" class="btn-primary">Explorar Servicos</a>
+            <a href="/Aptus/anuncios" class="btn-primary">Explorar Serviços</a>
         </div>
     <?php else: ?>
         <div class="interesses-grid">
@@ -95,7 +95,7 @@ $interesses = $interesses ?? [];
                         <?php endif; ?>
                         <?php if ($interesse['situacao'] == 'ativo'): ?>
                             <a href="/Aptus/interesses/ativos" class="btn-ativo">
-                                <i class="fas fa-check-circle"></i> Servico Ativo
+                                <i class="fas fa-check-circle"></i> Serviço Ativo
                             </a>
                         <?php endif; ?>
                         <?php if ($interesse['situacao'] == 'pendente' || $interesse['situacao'] == 'ativo'): ?>
