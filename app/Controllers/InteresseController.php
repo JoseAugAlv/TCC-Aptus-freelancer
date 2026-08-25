@@ -291,7 +291,7 @@ class InteresseController
         $interesses = $interesseModel->getPendentesByFreelancer($usuarioId);
         
         $tituloPagina = 'Propostas Pendentes - Aptus';
-        $cssPagina = 'interesses.css';
+        $cssPagina = 'pendentes.css';
         
         require '../app/Views/interesses/pendentes.php';
     }

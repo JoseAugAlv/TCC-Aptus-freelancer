@@ -1,0 +1,603 @@
+/* ================================================================
+   public/css/pendentes.css - Propostas Pendentes (Freelancer)
+   ================================================================ */
+
+/* --------------------------------------------
+   VARIÁVEIS (mesmo padrão do sistema)
+   -------------------------------------------- */
+:root {
+    --color-primary: #006577;
+    --color-primary-dark: #004d5c;
+    --color-primary-light: #e6f3f5;
+    --color-primary-gradient: linear-gradient(135deg, #006577, #004d5c);
+    --color-gold: #C9A227;
+
+    --color-success: #10b981;
+    --color-success-bg: #d1fae5;
+    --color-success-text: #065f46;
+    --color-danger: #ef4444;
+    --color-danger-bg: #fee2e2;
+    --color-danger-text: #991b1b;
+    --color-warning: #f59e0b;
+    --color-warning-bg: #fef3c7;
+    --color-warning-text: #92400e;
+    --color-info: #3b82f6;
+    --color-info-bg: #dbeafe;
+    --color-info-text: #1e40af;
+    --color-neutral: #6b7280;
+    --color-neutral-bg: #f3f4f6;
+    --color-neutral-text: #4b5563;
+
+    --color-bg: #f8fafc;
+    --color-surface: #ffffff;
+    --color-border: #e2e8f0;
+    --color-border-light: #f0f0f0;
+
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-xs: 0.75rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 2rem;
+
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 64px;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 8px 30px rgba(0, 101, 119, 0.12);
+    --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.25s ease;
+    --transition-slow: 0.35s ease;
+}
+
+/* --------------------------------------------
+   BASE & CONTAINER
+   -------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: #1a2f3e;
+    background: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.interesses-container {
+    max-width: 1100px;
+    margin: 120px auto var(--spacing-2xl);
+    padding: 0 var(--spacing-lg);
+    font-family: var(--font-family);
+}
+
+/* --------------------------------------------
+   HEADER
+   -------------------------------------------- */
+.interesses-header {
+    background: var(--color-primary-gradient);
+    color: #fff;
+    padding: var(--spacing-2xl) var(--spacing-3xl);
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.interesses-header h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--line-height-tight);
+    margin: 0 0 var(--spacing-xs) 0;
+    letter-spacing: -0.02em;
+}
+
+.interesses-header h1 i {
+    color: var(--color-gold);
+    margin-right: var(--spacing-sm);
+}
+
+.interesses-header p {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-normal);
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* --------------------------------------------
+   FLASH MESSAGES
+   -------------------------------------------- */
+.flash-sucesso,
+.flash-erro,
+.flash-aviso {
+    max-width: 100%;
+    margin: 0 0 var(--spacing-lg) 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-weight-medium);
+    border-left: 5px solid;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+}
+.flash-sucesso {
+    border-left-color: var(--color-success);
+    color: var(--color-success-text);
+    background: var(--color-success-bg);
+}
+.flash-erro {
+    border-left-color: var(--color-danger);
+    color: var(--color-danger-text);
+    background: var(--color-danger-bg);
+}
+.flash-aviso {
+    border-left-color: var(--color-warning);
+    color: var(--color-warning-text);
+    background: var(--color-warning-bg);
+}
+
+/* --------------------------------------------
+   EMPTY STATE
+   -------------------------------------------- */
+.interesses-empty {
+    text-align: center;
+    padding: var(--spacing-3xl) var(--spacing-2xl);
+    background: rgba(255, 255, 255, 0.88);
+    border-radius: var(--radius-xl);
+    border: 2px dashed #d1d5db;
+    backdrop-filter: blur(2px);
+    margin-bottom: var(--spacing-xl);
+}
+
+.interesses-empty i {
+    font-size: 3.5rem;
+    color: #94a3b8;
+    margin-bottom: var(--spacing-md);
+    display: block;
+}
+
+.interesses-empty h3 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: #1a1a1a;
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.interesses-empty p {
+    font-size: var(--font-size-base);
+    color: #555;
+    margin: 0 0 var(--spacing-lg) 0;
+}
+
+.interesses-empty .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: var(--color-primary);
+    color: #fff;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    transition: var(--transition-base);
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+}
+.interesses-empty .btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.3);
+}
+
+/* --------------------------------------------
+   GRID DE CARDS
+   -------------------------------------------- */
+.interesses-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* --------------------------------------------
+   CARD INDIVIDUAL
+   -------------------------------------------- */
+.interesse-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.interesse-card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+/* --- Cabeçalho do card --- */
+.interesse-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: #f8fafc;
+    border-bottom: 1px solid var(--color-border-light);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.interesse-cliente {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.interesse-cliente img,
+.interesse-cliente i {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.interesse-cliente img {
+    border: 2px solid var(--color-primary);
+}
+
+.interesse-cliente div {
+    display: flex;
+    flex-direction: column;
+}
+
+.interesse-cliente strong {
+    font-weight: var(--font-weight-semibold);
+    color: #1a2f3e;
+    font-size: var(--font-size-base);
+}
+
+.interesse-data {
+    font-size: var(--font-size-xs);
+    color: var(--color-neutral);
+}
+
+/* --- Status --- */
+.interesse-status {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.interesse-status.pendente {
+    background: var(--color-warning-bg);
+    color: var(--color-warning-text);
+}
+
+/* --- Corpo do card --- */
+.interesse-body {
+    padding: var(--spacing-lg);
+    flex: 1;
+}
+
+.interesse-body h3 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+    line-height: var(--line-height-tight);
+}
+
+.interesse-mensagem {
+    font-size: var(--font-size-sm);
+    color: #1a2f3e;
+    margin: 0 0 var(--spacing-md) 0;
+    line-height: var(--line-height-relaxed);
+    background: var(--color-primary-light);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--color-primary);
+}
+
+.interesse-mensagem strong {
+    color: var(--color-primary-dark);
+}
+
+.interesse-preco {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.interesse-preco i {
+    color: var(--color-gold);
+    font-size: 1.1rem;
+}
+
+/* --- Ações do card --- */
+.interesse-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: #fafbfc;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.interesse-acoes form {
+    margin: 0;
+}
+
+/* Botões */
+.btn-aceitar,
+.btn-recusar,
+.btn-chat {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    line-height: 1.5;
+    min-height: 38px;
+    white-space: nowrap;
+}
+
+.btn-aceitar {
+    background: var(--color-success);
+    color: #fff;
+}
+.btn-aceitar:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.btn-recusar {
+    background: var(--color-danger);
+    color: #fff;
+}
+.btn-recusar:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
+
+.btn-chat {
+    background: var(--color-primary);
+    color: #fff;
+}
+.btn-chat:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.35);
+}
+
+.btn-aceitar i,
+.btn-recusar i,
+.btn-chat i {
+    font-size: 0.9em;
+}
+
+/* --------------------------------------------
+   LINKS DE NAVEGAÇÃO (rodapé)
+   -------------------------------------------- */
+.interesses-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-md) var(--spacing-xl);
+    padding: var(--spacing-lg) 0;
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--spacing-lg);
+}
+
+.interesses-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    transition: var(--transition-base);
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-full);
+    background: transparent;
+}
+
+.interesses-links a:hover {
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    transform: translateX(3px);
+}
+
+.interesses-links a i {
+    font-size: 0.9em;
+}
+
+/* --------------------------------------------
+   RESPONSIVIDADE
+   -------------------------------------------- */
+@media (max-width: 768px) {
+    .interesses-container {
+        margin-top: 80px;
+        padding: 0 var(--spacing-md);
+    }
+
+    .interesses-header {
+        padding: var(--spacing-xl) var(--spacing-lg);
+        border-radius: var(--radius-lg);
+    }
+
+    .interesses-header h1 {
+        font-size: var(--font-size-xl);
+    }
+
+    .interesses-header p {
+        font-size: var(--font-size-base);
+    }
+
+    .interesse-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+    .interesse-cliente {
+        gap: var(--spacing-sm);
+    }
+
+    .interesse-cliente img,
+    .interesse-cliente i {
+        width: 36px;
+        height: 36px;
+        font-size: 1.6rem;
+    }
+
+    .interesse-status {
+        align-self: flex-start;
+    }
+
+    .interesse-body h3 {
+        font-size: var(--font-size-lg);
+    }
+
+    .interesse-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .interesse-acoes form {
+        width: 100%;
+    }
+
+    .btn-aceitar,
+    .btn-recusar,
+    .btn-chat {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .interesses-links {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+    .interesses-links a {
+        justify-content: center;
+        background: var(--color-primary-light);
+        border-radius: var(--radius-sm);
+        padding: var(--spacing-md);
+    }
+
+    .interesses-links a:hover {
+        transform: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .interesses-container {
+        margin-top: 70px;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .interesses-header {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .interesses-header h1 {
+        font-size: var(--font-size-lg);
+    }
+
+    .interesses-header p {
+        font-size: var(--font-size-sm);
+    }
+
+    .interesse-body {
+        padding: var(--spacing-md);
+    }
+
+    .interesse-body h3 {
+        font-size: var(--font-size-base);
+    }
+
+    .interesse-mensagem {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-xs);
+    }
+
+    .interesse-preco {
+        font-size: var(--font-size-base);
+    }
+
+    .interesse-acoes {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .btn-aceitar,
+    .btn-recusar,
+    .btn-chat {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-sm) var(--spacing-md);
+        min-height: 34px;
+    }
+}

@@ -1,10 +1,7 @@
-/* public/css/moderador.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-/* ============================================================
-   ESTILOS GERAIS DO MODERADOR
-   ============================================================ */
-
-/* Container principal */
 .moderador-container {
     max-width: 1200px;
     margin: 120px auto 40px;
@@ -19,7 +16,7 @@
     margin-bottom: 2rem;
     box-shadow: 0 8px 30px rgba(0, 101, 119, 0.2);
 }
-
+ 
 .moderador-header h1 {
     font-size: 2rem;
     font-weight: 800;

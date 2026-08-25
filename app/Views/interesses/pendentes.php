@@ -2,7 +2,7 @@
 // app/Views/interesses/pendentes.php
 
 $tituloPagina = $tituloPagina ?? 'Propostas Pendentes - Aptus';
-$cssPagina = $cssPagina ?? 'interesses.css';
+$cssPagina = $cssPagina ?? 'pendentes.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 

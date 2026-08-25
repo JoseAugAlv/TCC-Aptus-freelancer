@@ -124,7 +124,7 @@ if ($interesse && isset($interesse['situacao']) && $interesse['situacao'] == 'co
     <?php endif; ?>
     
     <div style="margin-top: 20px;">
-        <a href="/Aptus/interesses/ativos">Voltar</a>
+        <a href="/Aptus/interesses/meus">Voltar</a>
     </div>
 </div>
 

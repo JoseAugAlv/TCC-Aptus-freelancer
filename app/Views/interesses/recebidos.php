@@ -2,7 +2,7 @@
 // app/Views/interesses/recebidos.php
 
 $tituloPagina = $tituloPagina ?? 'Interesses Recebidos - Aptus';
-$cssPagina = $cssPagina ?? 'interesses.css';
+$cssPagina = $cssPagina ?? 'recebidos.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 

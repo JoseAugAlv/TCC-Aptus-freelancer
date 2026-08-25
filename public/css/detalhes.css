@@ -231,7 +231,7 @@ hr {
 }
 
 /* Botão "Voltar" (link no final) */
-.detalhes-container a[href*="interesses/ativos"] {
+.detalhes-container a[href*="interesses/meus"] {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
