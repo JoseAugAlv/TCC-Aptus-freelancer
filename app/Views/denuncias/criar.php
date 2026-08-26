@@ -2,7 +2,7 @@
 // app/Views/denuncias/criar.php
 
 $tituloPagina = $tituloPagina ?? 'Denunciar - Aptus';
-$cssPagina = $cssPagina ?? 'denuncias.css';
+$cssPagina = $cssPagina ?? 'criar_denun.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
