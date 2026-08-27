@@ -1,10 +1,18 @@
+:root {
+    --cor-primaria: #006577;
+    --cor-dourado: #C9A227;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 .moderador-container {
     max-width: 1200px;
-    margin: 120px auto 40px;
+    margin: 80px auto 40px;  /* ← Ajuste aqui: 120px → 80px */
     padding: 0 20px;
 }
 
@@ -16,7 +24,7 @@ body {
     margin-bottom: 2rem;
     box-shadow: 0 8px 30px rgba(0, 101, 119, 0.2);
 }
- 
+
 .moderador-header h1 {
     font-size: 2rem;
     font-weight: 800;
@@ -24,7 +32,7 @@ body {
 }
 
 .moderador-header h1 i {
-    color: #C9A227;
+    color: var(--cor-dourado);
     margin-right: 10px;
 }
 
@@ -43,10 +51,6 @@ body {
     margin-top: 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
-/* ============================================================
-   DASHBOARD - CARDS DE MODERAÇÃO
-   ============================================================ */
 
 .moderador-grid {
     display: grid;
@@ -107,10 +111,6 @@ body {
     background: #10b981;
 }
 
-/* ============================================================
-   TABELAS DE MODERAÇÃO
-   ============================================================ */
-
 .moderador-table-wrapper {
     background: rgba(255, 255, 255, 0.88);
     border-radius: 20px;
@@ -164,35 +164,26 @@ body {
     background: #fef3c7;
     color: #92400e;
 }
-
 .badge-status.aprovado {
     background: #d1fae5;
     color: #065f46;
 }
-
 .badge-status.rejeitado {
     background: #fee2e2;
     color: #991b1b;
 }
-
 .badge-status.ativo {
     background: #dbeafe;
     color: #1e40af;
 }
-
 .badge-status.concluido {
     background: #d1fae5;
     color: #065f46;
 }
-
 .badge-status.cancelado {
     background: #f3f4f6;
     color: #4b5563;
 }
-
-/* ============================================================
-   BOTÕES DE AÇÃO
-   ============================================================ */
 
 .btn-moderador {
     display: inline-flex;
@@ -216,7 +207,6 @@ body {
     background: #10b981;
     color: #fff;
 }
-
 .btn-aprovar:hover {
     background: #059669;
     transform: translateY(-2px);
@@ -227,7 +217,6 @@ body {
     background: #ef4444;
     color: #fff;
 }
-
 .btn-rejeitar:hover {
     background: #dc2626;
     transform: translateY(-2px);
@@ -238,7 +227,6 @@ body {
     background: #006577;
     color: #fff;
 }
-
 .btn-analisar:hover {
     background: #004d5c;
     transform: translateY(-2px);
@@ -258,30 +246,20 @@ body {
     text-decoration: none;
     transition: all 0.3s ease;
 }
-
 .btn-voltar-moderador:hover {
     background: #4b5563;
     transform: translateY(-2px);
 }
-
-/* ============================================================
-   GRUPO DE AÇÕES NA TABELA
-   ============================================================ */
 
 .btn-group {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
 }
-
 .btn-group .btn-moderador {
     padding: 5px 14px;
     font-size: 0.8rem;
 }
-
-/* ============================================================
-   EMPTY STATE
-   ============================================================ */
 
 .moderador-empty {
     text-align: center;
@@ -290,29 +268,22 @@ body {
     border-radius: 20px;
     border: 2px dashed #d1d5db;
 }
-
 .moderador-empty i {
     font-size: 3.5rem;
     color: #94a3b8;
     margin-bottom: 1rem;
     display: block;
 }
-
 .moderador-empty h3 {
     color: #1a1a1a;
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
 }
-
 .moderador-empty p {
     color: #555;
     font-size: 1rem;
     margin-bottom: 1.5rem;
 }
-
-/* ============================================================
-   STATS DO MODERADOR
-   ============================================================ */
 
 .moderador-stats {
     display: grid;
@@ -320,7 +291,6 @@ body {
     gap: 16px;
     margin-bottom: 2rem;
 }
-
 .moderador-stat {
     background: #fff;
     padding: 18px 20px;
@@ -328,22 +298,16 @@ body {
     border: 1px solid #e2e8f0;
     text-align: center;
 }
-
 .moderador-stat .stat-number {
     font-size: 2rem;
     font-weight: 800;
     color: #006577;
     display: block;
 }
-
 .moderador-stat .stat-label {
     font-size: 0.85rem;
     color: #6b7280;
 }
-
-/* ============================================================
-   DETALHES DA DENÚNCIA / DISPUTA
-   ============================================================ */
 
 .detalhes-container-moderador {
     background: #fff;
@@ -352,41 +316,34 @@ body {
     border: 1px solid #e2e8f0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
-
 .detalhes-container-moderador .detalhes-section {
     margin-bottom: 24px;
     padding-bottom: 24px;
     border-bottom: 1px solid #f0f0f0;
 }
-
 .detalhes-container-moderador .detalhes-section:last-child {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
 }
-
 .detalhes-container-moderador h3 {
     color: #006577;
     font-size: 1.1rem;
     margin: 0 0 12px 0;
 }
-
 .detalhes-container-moderador .detalhes-row {
     display: grid;
     grid-template-columns: 120px 1fr;
     gap: 8px 20px;
     padding: 4px 0;
 }
-
 .detalhes-container-moderador .detalhes-row .label {
     font-weight: 600;
     color: #4b5563;
 }
-
 .detalhes-container-moderador .detalhes-row .value {
     color: #1a2f3e;
 }
-
 .detalhes-container-moderador .detalhes-descricao {
     background: #f8fafc;
     padding: 16px;
@@ -396,21 +353,15 @@ body {
     word-break: break-word;
 }
 
-/* ============================================================
-   FORMULÁRIOS DO MODERADOR
-   ============================================================ */
-
 .form-moderador .form-group {
     margin-bottom: 16px;
 }
-
 .form-moderador label {
     display: block;
     font-weight: 600;
     color: #1a2f3e;
     margin-bottom: 4px;
 }
-
 .form-moderador textarea {
     width: 100%;
     padding: 10px 14px;
@@ -421,16 +372,11 @@ body {
     resize: vertical;
     transition: all 0.3s;
 }
-
 .form-moderador textarea:focus {
     border-color: #006577;
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.1);
 }
-
-/* ============================================================
-   RESPONSIVIDADE
-   ============================================================ */
 
 @media (max-width: 992px) {
     .moderador-grid {
@@ -439,53 +385,50 @@ body {
 }
 
 @media (max-width: 768px) {
+    .moderador-container {
+        margin-top: 70px;  /* Ajuste para mobile também */
+    }
     .moderador-header {
         padding: 1.5rem 1.5rem;
     }
-
     .moderador-header h1 {
         font-size: 1.5rem;
     }
-
     .moderador-header p {
         font-size: 0.95rem;
     }
-
     .moderador-grid {
         grid-template-columns: 1fr 1fr;
     }
-
     .moderador-table thead th,
     .moderador-table tbody td {
         padding: 10px 12px;
         font-size: 0.85rem;
     }
-
     .btn-group {
         flex-direction: column;
         gap: 4px;
     }
-
     .detalhes-container-moderador .detalhes-row {
         grid-template-columns: 1fr;
         gap: 2px;
     }
-
     .detalhes-container-moderador .detalhes-row .label {
         font-weight: 700;
     }
 }
 
 @media (max-width: 480px) {
+    .moderador-container {
+        margin-top: 60px;
+    }
     .moderador-grid {
         grid-template-columns: 1fr;
     }
-
     .moderador-stats {
         grid-template-columns: 1fr 1fr;
     }
-
     .moderador-header h1 {
         font-size: 1.2rem;
     }
-} 
+}

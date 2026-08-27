@@ -12,7 +12,7 @@ $configs = $configs ?? [];
 <div class="config-container">
     <div class="config-header">
         <h1><i class="fas fa-cogs"></i> Configuracoes</h1>
-        <p>Gerencie as configuracoes do sistema</p>
+        <p>Gerencie as configurações do sistema</p>
     </div>
 
     <hr>
@@ -28,7 +28,7 @@ $configs = $configs ?? [];
         
         <!-- Configuracoes Gerais -->
         <div class="config-card">
-            <h3><i class="fas fa-globe"></i> Configuracoes Gerais</h3>
+            <h3><i class="fas fa-globe"></i> Configurações Gerais</h3>
             
             <div class="form-group">
                 <label for="site_nome">Nome do Site</label>
@@ -38,7 +38,7 @@ $configs = $configs ?? [];
             </div>
             
             <div class="form-group">
-                <label for="site_descricao">Descricao do Site</label>
+                <label for="site_descricao">Descrição do Site</label>
                 <input type="text" id="site_descricao" name="site_descricao" 
                        value="<?= htmlspecialchars($configs['site_descricao'] ?? '') ?>" 
                        class="form-control">
@@ -60,7 +60,7 @@ $configs = $configs ?? [];
                 </div>
                 
                 <div class="form-group">
-                    <label for="site_endereco">Endereco</label>
+                    <label for="site_endereco">Endereço</label>
                     <input type="text" id="site_endereco" name="site_endereco" 
                            value="<?= htmlspecialchars($configs['site_endereco'] ?? '') ?>" 
                            class="form-control">
@@ -70,11 +70,11 @@ $configs = $configs ?? [];
 
         <!-- Configuracoes de Upload -->
         <div class="config-card">
-            <h3><i class="fas fa-upload"></i> Configuracoes de Upload</h3>
+            <h3><i class="fas fa-upload"></i> Configurações de Upload</h3>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="upload_max_size">Tamanho Maximo (MB)</label>
+                    <label for="upload_max_size">Tamanho Máximo (MB)</label>
                     <input type="number" id="upload_max_size" name="upload_max_size" 
                            value="<?= htmlspecialchars($configs['upload_max_size'] ?? '5') ?>" 
                            class="form-control" min="1" max="50">
@@ -91,25 +91,25 @@ $configs = $configs ?? [];
 
         <!-- Configuracoes de Moderacao -->
         <div class="config-card">
-            <h3><i class="fas fa-shield-alt"></i> Configuracoes de Moderacao</h3>
+            <h3><i class="fas fa-shield-alt"></i> Configurações de Moderação</h3>
             
             <div class="form-group checkbox-group">
                 <label>
                     <input type="checkbox" name="moderacao_automatica" value="1"
                            <?= ($configs['moderacao_automatica'] ?? '0') == '1' ? 'checked' : '' ?>>
-                    Aprovacao automatica de anuncios
+                    Aprovação automática de anúncios
                 </label>
-                <small class="help-text">Se ativado, anuncios sao aprovados automaticamente sem moderacao manual.</small>
+                <small class="help-text">Se ativado, anúncios são aprovados automaticamente sem moderação manual.</small>
             </div>
         </div>
 
         <!-- Configuracoes de Seguranca -->
         <div class="config-card">
-            <h3><i class="fas fa-lock"></i> Configuracoes de Seguranca</h3>
+            <h3><i class="fas fa-lock"></i> Configurações de Segurança</h3>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="sessao_tempo">Tempo de Sessao (segundos)</label>
+                    <label for="sessao_tempo">Tempo de Sessão (segundos)</label>
                     <input type="number" id="sessao_tempo" name="sessao_tempo" 
                            value="<?= htmlspecialchars($configs['sessao_tempo'] ?? '3600') ?>" 
                            class="form-control" min="300">
@@ -126,7 +126,7 @@ $configs = $configs ?? [];
 
         <!-- Configuracoes de Email -->
         <div class="config-card">
-            <h3><i class="fas fa-envelope"></i> Configuracoes de Email (SMTP)</h3>
+            <h3><i class="fas fa-envelope"></i> Configurações de Email (SMTP)</h3>
             
             <div class="form-row">
                 <div class="form-group">
@@ -152,7 +152,7 @@ $configs = $configs ?? [];
             </div>
             
             <div class="form-group">
-                <label for="email_user">Usuario SMTP</label>
+                <label for="email_user">Usuário SMTP</label>
                 <input type="email" id="email_user" name="email_user" 
                        value="<?= htmlspecialchars($configs['email_user'] ?? '') ?>" 
                        class="form-control" placeholder="seuemail@gmail.com">
@@ -169,19 +169,19 @@ $configs = $configs ?? [];
 
         <!-- Configuracoes de Manutencao -->
         <div class="config-card">
-            <h3><i class="fas fa-tools"></i> Manutencao</h3>
+            <h3><i class="fas fa-tools"></i> Manutenção</h3>
             
             <div class="form-group checkbox-group">
                 <label>
                     <input type="checkbox" name="manutencao" value="1"
                            <?= ($configs['manutencao'] ?? '0') == '1' ? 'checked' : '' ?>>
-                    Ativar Modo Manutencao
+                    Ativar Modo Manutenção
                 </label>
                 <small class="help-text">Quando ativado, apenas administradores podem acessar o site.</small>
             </div>
             
             <div class="form-group">
-                <label for="manutencao_mensagem">Mensagem de Manutencao</label>
+                <label for="manutencao_mensagem">Mensagem de Manutenção</label>
                 <textarea id="manutencao_mensagem" name="manutencao_mensagem" 
                           class="form-control" rows="3"><?= htmlspecialchars($configs['manutencao_mensagem'] ?? 'Sistema em manutencao. Volte em breve.') ?></textarea>
             </div>
@@ -190,7 +190,7 @@ $configs = $configs ?? [];
         <!-- Botoes -->
         <div class="config-actions">
             <button type="submit" class="btn-salvar">
-                <i class="fas fa-save"></i> Salvar Configuracoes
+                <i class="fas fa-save"></i> Salvar Configurações
             </button>
             <a href="/Aptus/admin/dashboard" class="btn-voltar">
                 <i class="fas fa-arrow-left"></i> Voltar

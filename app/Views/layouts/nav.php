@@ -56,20 +56,20 @@ if ($usuario) {
                     <?php endif; ?>
                     
                     <?php if ($role == 1 || $role == 2): ?>
-                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderacao</a></li>
+                        <li><a href="/Aptus/moderator"><i class="fas fa-shield-alt"></i> Moderação</a></li>
                     <?php endif; ?>
                     
                     <?php if ($role == 1 || $role == 4): ?>
-                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configuracoes</a></li>
+                        <li><a href="/Aptus/admin/configuracoes"><i class="fas fa-cogs"></i> Configurações</a></li>
                     <?php endif; ?>
                     
                     <!-- RELATORIOS - ADICIONADO AQUI -->
                     <?php if ($role == 1 || $role == 2 || $role == 4): ?>
-                        <li><a href="/Aptus/relatorios"><i class="fas fa-chart-bar"></i> Relatorios</a></li>
+                        <li><a href="/Aptus/relatorios"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
                     <?php endif; ?>
                     
                     <?php if ($role == 4): ?>
-                        <li><a href="/Aptus/master" style="color: #f59e0b;"><i class="fas fa-crown"></i> Area Master</a></li>
+                        <li><a href="/Aptus/master" style="color: #f59e0b;"><i class="fas fa-crown"></i> Área Master</a></li>
                     <?php endif; ?>
                 </ul>
             </li>
