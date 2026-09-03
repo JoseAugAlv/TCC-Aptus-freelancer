@@ -17,7 +17,7 @@ $usuarioData = $usuarioData ?? [];
             <p>Bem-vindo, <?= htmlspecialchars($usuario['nome'] ?? '') ?>!</p>
         </div>
         <div class="header-actions">
-            <a href="/Aptus/anuncios" class="btn-primary">+ Explorar Serviços</a>
+            <a href="/Aptus/anuncios" class="btn-primary">Explorar Serviços</a>
         </div>
     </div>
 
