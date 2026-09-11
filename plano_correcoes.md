@@ -26,11 +26,11 @@
 - [ ] Confirmar todos os requisitos atendidos (S) estão funcionando
 
 ## 5. Cookies / Privacidade / LGPD
-- [ ] Criar banner de consentimento de cookies
-- [ ] Criar página de Política de Privacidade e LGPD
-- [ ] Criar página de Termos de Uso (se não existir completa)
-- [ ] Implementar aceitação obrigatória antes de navegar (se solicitado)
-- [ ] Salvar consentimento do usuário (cookie/sessão)
+- [x] Criar banner de consentimento de cookies
+- [x] Criar página de Política de Privacidade e LGPD
+- [x] Criar página de Termos de Uso (se não existir completa)
+- [x] Implementar aceitação obrigatória antes de navegar (se solicitado)
+- [x] Salvar consentimento do usuário (cookie/sessão)
 
 ## 6. Arquivos a serem criados/modificados
 - `plano_correcoes.md`
