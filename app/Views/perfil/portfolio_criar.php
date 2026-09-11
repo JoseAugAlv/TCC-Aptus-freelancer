@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/perfil/portfolio_criar.php
 
 $tituloPagina = $tituloPagina ?? 'Adicionar ao Portfólio - Aptus';

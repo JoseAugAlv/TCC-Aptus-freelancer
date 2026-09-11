@@ -99,8 +99,6 @@ class ChatController
     public function enviar()
     {
         // Ativar debug
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -114,8 +112,6 @@ class ChatController
 
         // DEBUG: Ver o que está chegando
         error_log("=== CHAT ENVIAR ===");
-        error_log("POST: " . print_r($_POST, true));
-        error_log("RAW INPUT: " . file_get_contents('php://input'));
 
         $usuarioId = $_SESSION['usuario']['id'];
         
@@ -129,7 +125,7 @@ class ChatController
             if ($input) {
                 $interesseId = isset($input['interesse_id']) ? (int)$input['interesse_id'] : 0;
                 $mensagem = isset($input['mensagem']) ? trim($input['mensagem']) : '';
-                error_log("Dados do JSON: " . print_r($input, true));
+                
             }
         }
 
@@ -196,7 +192,7 @@ class ChatController
             $stmt->execute([$mensagemId]);
             $mensagemEnviada = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            error_log("Mensagem enviada: " . print_r($mensagemEnviada, true));
+            
             
             echo json_encode([
                 'success' => true,

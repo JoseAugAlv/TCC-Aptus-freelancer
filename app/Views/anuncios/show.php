@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/anuncios/show.php
 
 $tituloPagina = $tituloPagina ?? 'Detalhes do Servico - Aptus';
@@ -85,7 +86,7 @@ $totalFavoritos = $totalFavoritos ?? 0;
             <div class="freelancer-header">
                 <div class="freelancer-avatar">
                     <?php if (!empty($anuncio['foto_perfil']) && $anuncio['foto_perfil'] != 'default.png'): ?>
-                        <img src="/Aptus/public/uploads/<?= htmlspecialchars($anuncio['foto_perfil']) ?>" 
+                        <img alt="Foto do anúncio" src="/Aptus/public/uploads/<?= htmlspecialchars($anuncio['foto_perfil']) ?>" 
                              alt="<?= htmlspecialchars($anuncio['freelancer_nome']) ?>">
                     <?php else: ?>
                         <i class="fas fa-user"></i>

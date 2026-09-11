@@ -50,7 +50,6 @@ $router->get('/perfil/publico/{id}', 'PerfilController@publico');
 /*
    PORTFÓLIO
 */
-$router->get('/perfil/portfolio', 'PortfolioController@index', [3, 2, 1, 4]);
 $router->get('/perfil/portfolio/criar', 'PortfolioController@criar', [3, 2, 1, 4]);
 $router->post('/perfil/portfolio/salvar', 'PortfolioController@salvar', [3, 2, 1, 4]);
 $router->get('/perfil/portfolio/editar/{id}', 'PortfolioController@editar', [3, 2, 1, 4]);
@@ -60,12 +59,9 @@ $router->get('/perfil/portfolio/excluir/{id}', 'PortfolioController@excluir', [3
 /*
    ANÚNCIOS (Usuário logado)
 */
-$router->get('/anuncios', 'AnuncioController@index');
-$router->get('/anuncios/{slug}', 'AnuncioController@show');
 
 // Anúncios - CRUD (usuário logado)
 $router->get('/anuncios/meus', 'AnuncioController@meus', [3, 2, 1, 4]);
-$router->get('/anuncios/criar', 'AnuncioController@criar', [3, 2, 1, 4]);
 $router->post('/anuncios/salvar', 'AnuncioController@salvar', [3, 2, 1, 4]);
 $router->get('/anuncios/editar/{id}', 'AnuncioController@editar', [3, 2, 1, 4]);
 $router->post('/anuncios/atualizar', 'AnuncioController@atualizar', [3, 2, 1, 4]);
@@ -90,10 +86,10 @@ $router->get('/interesses/recebidos', 'InteresseController@recebidos', [3, 2, 1,
 /*
    CONFIRMAÇÃO DE PAGAMENTO
 */
-$router->get('/pagamentos/confirmar', 'PagamentoController@confirmar', [3, 2, 1, 4]);
-$router->post('/pagamentos/confirmar-contratante', 'PagamentoController@confirmarContratante', [3, 2, 1, 4]);
-$router->post('/pagamentos/confirmar-freelancer', 'PagamentoController@confirmarFreelancer', [3, 2, 1, 4]);
-$router->get('/pagamentos', 'PagamentoController@index', [3, 2, 1, 4]);
+// $router->get('/pagamentos/confirmar', 'PagamentoController@confirmar', [3, 2, 1, 4]);
+// $router->post('/pagamentos/confirmar-contratante', 'PagamentoController@confirmarContratante', [3, 2, 1, 4]);
+// $router->post('/pagamentos/confirmar-freelancer', 'PagamentoController@confirmarFreelancer', [3, 2, 1, 4]);
+// $router->get('/pagamentos', 'PagamentoController@index', [3, 2, 1, 4]);
 
 /*
    DISPUTAS
@@ -133,45 +129,44 @@ $router->get('/admin', 'AdminController@index', [1, 4]);
 $router->get('/admin/dashboard', 'AdminController@dashboard', [1, 4]);
 
 // Admin - Usuários
-$router->get('/admin/usuarios', 'AdminUsuarioController@index', [1, 4]);
-$router->get('/admin/usuarios/criar', 'AdminUsuarioController@criar', [1, 4]);
-$router->post('/admin/usuarios/salvar', 'AdminUsuarioController@salvar', [1, 4]);
-$router->get('/admin/usuarios/editar', 'AdminUsuarioController@editar', [1, 4]);
-$router->post('/admin/usuarios/atualizar', 'AdminUsuarioController@atualizar', [1, 4]);
-$router->get('/admin/usuarios/excluir', 'AdminUsuarioController@excluir', [1, 4]);
-$router->post('/admin/usuarios/banir', 'AdminUsuarioController@banir', [1, 4]);
-$router->post('/admin/usuarios/desbanir', 'AdminUsuarioController@desbanir', [1, 4]);
+// $router->get('/admin/usuarios', 'AdminUsuarioController@index', [1, 4]);
+// $router->get('/admin/usuarios/criar', 'AdminUsuarioController@criar', [1, 4]);
+// $router->post('/admin/usuarios/salvar', 'AdminUsuarioController@salvar', [1, 4]);
+// $router->get('/admin/usuarios/editar', 'AdminUsuarioController@editar', [1, 4]);
+ $router->post('/admin/usuarios/atualizar', 'AdminUsuarioController@atualizar', [1, 4]);
+ $router->get('/admin/usuarios/excluir', 'AdminUsuarioController@excluir', [1, 4]);
+ $router->post('/admin/usuarios/banir', 'AdminUsuarioController@banir', [1, 4]);
+ $router->post('/admin/usuarios/desbanir', 'AdminUsuarioController@desbanir', [1, 4]);
 
 // Admin - Anúncios
-$router->get('/admin/anuncios', 'AdminAnuncioController@index', [1, 4]);
-$router->get('/admin/anuncios/editar', 'AdminAnuncioController@editar', [1, 4]);
-$router->post('/admin/anuncios/atualizar', 'AdminAnuncioController@atualizar', [1, 4]);
-$router->get('/admin/anuncios/excluir', 'AdminAnuncioController@excluir', [1, 4]);
+// $router->get('/admin/anuncios', 'AdminAnuncioController@index', [1, 4]);
+// $router->get('/admin/anuncios/editar', 'AdminAnuncioController@editar', [1, 4]);
+// $router->post('/admin/anuncios/atualizar', 'AdminAnuncioController@atualizar', [1, 4]);
+// $router->get('/admin/anuncios/excluir', 'AdminAnuncioController@excluir', [1, 4]);
 
 // Admin - Denúncias
-$router->get('/admin/denuncias', 'AdminDenunciaController@index', [1, 4]);
-$router->get('/admin/denuncias/detalhes', 'AdminDenunciaController@detalhes', [1, 4]);
-$router->post('/admin/denuncias/analisar', 'AdminDenunciaController@analisar', [1, 4]);
+// $router->get('/admin/denuncias', 'AdminDenunciaController@index', [1, 4]);
+// $router->get('/admin/denuncias/detalhes', 'AdminDenunciaController@detalhes', [1, 4]);
+// $router->post('/admin/denuncias/analisar', 'AdminDenunciaController@analisar', [1, 4]);
 
 // Admin - Disputas
-$router->get('/admin/disputas', 'AdminDisputaController@index', [1, 4]);
-$router->get('/admin/disputas/detalhes', 'AdminDisputaController@detalhes', [1, 4]);
-$router->post('/admin/disputas/resolver', 'AdminDisputaController@resolver', [1, 4]);
+// $router->get('/admin/disputas', 'AdminDisputaController@index', [1, 4]);
+// $router->get('/admin/disputas/detalhes', 'AdminDisputaController@detalhes', [1, 4]);
+// $router->post('/admin/disputas/resolver', 'AdminDisputaController@resolver', [1, 4]);
 
 // Admin - Categorias
-$router->get('/admin/categorias', 'AdminCategoriaController@index', [1, 4]);
-$router->post('/admin/categorias/salvar', 'AdminCategoriaController@salvar', [1, 4]);
-$router->post('/admin/categorias/atualizar', 'AdminCategoriaController@atualizar', [1, 4]);
-$router->get('/admin/categorias/excluir', 'AdminCategoriaController@excluir', [1, 4]);
+// $router->get('/admin/categorias', 'AdminCategoriaController@index', [1, 4]);
+// $router->post('/admin/categorias/salvar', 'AdminCategoriaController@salvar', [1, 4]);
+// $router->post('/admin/categorias/atualizar', 'AdminCategoriaController@atualizar', [1, 4]);
+// $router->get('/admin/categorias/excluir', 'AdminCategoriaController@excluir', [1, 4]);
 
 // Admin - Logs
-$router->get('/admin/logs', 'AdminLogController@index', [1, 4]);
+// $router->get('/admin/logs', 'AdminLogController@index', [1, 4]);
 
 /*
    MODERADOR (Perfil 2 - Moderador)
 */
 $router->get('/moderator', 'ModeradorController@index', [1, 2, 4]);
-$router->get('/moderator/disputas', 'ModeradorController@disputas', [1, 2, 4]);
 $router->get('/moderator/usuarios', 'ModeradorController@usuarios', [1, 2, 4]);
 $router->get('/moderator/categorias', 'ModeradorController@categorias', [1, 2, 4]);
 
@@ -207,7 +202,7 @@ $router->get('/cliente', 'ClienteController@dashboard', [2, 3, 4]);
 
 // Avaliações
 $router->get('/avaliacoes/criar/{id}', 'AvaliacaoController@criar', [3, 2, 1, 4]);
-$router->post('/avaliacoes/salvar', 'AvaliacaoController@salvar', [3, 2, 1, 4]);
+// $router->post('/avaliacoes/salvar', 'AvaliacaoController@salvar', [3, 2, 1, 4]);
 $router->get('/avaliacoes/responder/{id}', 'AvaliacaoController@responder', [3, 2, 1, 4]);
 $router->post('/avaliacoes/salvar-resposta', 'AvaliacaoController@salvarResposta', [3, 2, 1, 4]);
 

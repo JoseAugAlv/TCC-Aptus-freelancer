@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/avaliacoes/responder.php
 
 $tituloPagina = $tituloPagina ?? 'Responder Avaliação - Aptus';

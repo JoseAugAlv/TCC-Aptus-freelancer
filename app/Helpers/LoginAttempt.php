@@ -5,7 +5,7 @@ class LoginAttempt {
         if ($ip === '') $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
         $pdo = Database::getConnection();
         try {
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM login_tentativa WHERE email = ? OR ip = ? AND criado_em > (NOW() - INTERVAL 15 MINUTE)");
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM login_tentativa WHERE (email = ? OR ip = ?) AND criado_em > (NOW() - INTERVAL 15 MINUTE)");
             $stmt->execute([$email, $ip]);
             return (int)$stmt->fetchColumn() < 5;
         } catch (Exception $e) {

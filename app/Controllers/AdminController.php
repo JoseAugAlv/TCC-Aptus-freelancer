@@ -30,7 +30,7 @@ class AdminController
         // Verificar permissão: Admin (1) ou Master (4)
         if (!in_array($role, [1, 4])) {
             echo "<h1>403 - Acesso Negado</h1>";
-            echo "<p>Seu perfil: " . $role . "</p>";
+            echo "<p>Você não tem permissão para acessar esta página.</p>";
             echo "<p>Perfis permitidos: Admin (1) ou Master (4)</p>";
             echo '<p><a href="/Aptus/">Voltar para o início</a></p>';
             exit;

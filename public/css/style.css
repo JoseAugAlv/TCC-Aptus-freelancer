@@ -1,1 +1,6 @@
 body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #1a1a2e; margin: 0; }
+.is-loading { opacity: 0.7; pointer-events: none; }
+
+html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+.container, .auth-container, .hero-content { max-width: 100%; padding: 0 16px; }
+@media (max-width: 480px) { .auth-card, .search-box { width: 100% !important; } }

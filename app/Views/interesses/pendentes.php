@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/interesses/pendentes.php
 
 $tituloPagina = $tituloPagina ?? 'Propostas Pendentes - Aptus';

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 $tituloPagina = 'Logs do Sistema - Aptus';
 $cssPagina = 'logs.css';
 require_once __DIR__ . '/../layouts/header.php';

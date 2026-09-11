@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/home/index.php
 
 $tituloPagina = $tituloPagina ?? 'Aptus - Conectando Talentos';

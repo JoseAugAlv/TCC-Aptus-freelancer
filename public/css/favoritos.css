@@ -341,7 +341,7 @@
     font-size: 1.1rem;
     font-weight: 700;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #C9A227;
+    color: #5a3a0e;
 }
 
 /* ===== STATS ===== */
@@ -419,7 +419,7 @@
 }
 
 .favoritos-voltar a:hover {
-    color: #C9A227;
+    color: #5a3a0e;
     background: rgba(201, 162, 39, 0.08);
     transform: translateX(-5px);
 }

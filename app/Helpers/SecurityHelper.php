@@ -57,7 +57,7 @@ class SecurityHelper
             session_start();
         }
         
-        if (empty($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
+        if (empty($_SESSION['csrf_token']) || !hash_equals($token, $_SESSION["csrf_token"])) {
             return false;
         }
         

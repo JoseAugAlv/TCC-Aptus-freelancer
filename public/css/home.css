@@ -141,6 +141,7 @@ body {
 }
 
 .search-input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.35);
     outline: none;
     background: rgba(255, 255, 255, 1);
 }
@@ -919,4 +920,5 @@ body {
         gap: 4px;
         align-items: flex-start;
     }
-}
+}.search-input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.35); outline:none; background:rgba(255,255,255,1); box-shadow:0 0 0 3px rgba(0,101,119,0.35); }

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * Atualiza o badge de notificacoes via AJAX
      */
     function atualizarBadgeNotificacoes() {
-        fetch('/Aptus/notificacoes/contador')
+        fetch('/Aptus/notificacoes/contador', { headers: { 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').content : '' } })
             .then(function(response) {
                 if (!response.ok) {
                     throw new Error('Erro na resposta do servidor');

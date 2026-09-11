@@ -100,7 +100,7 @@ class AuthController
             $sql = "UPDATE usuario SET remember_token = ? WHERE id_usuario = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$token, $usuario['id_usuario']]);
-            setcookie('remember_token', $token, time() + 30*24*3600, '/Aptus', '', false, true);
+            setcookie('remember_token', $token, time() + 30*24*3600, '/Aptus', '', true, true);
         }
 
         LoginAttempt::reset($email);
@@ -200,6 +200,13 @@ class AuthController
             header('Location: /Aptus/login/cadastrar');
             exit;
         }
+        require_once __DIR__ . '/../Helpers/SecurityHelper.php';
+        $forca = SecurityHelper::validarForcaSenha($senha);
+        if (!$forca['valida']) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Senha fraca: ' . implode(', ', $forca['erros'])];
+            header('Location: /Aptus/login/cadastrar');
+            exit;
+        }
 
         if ($senha !== $senhaConfirm) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'As senhas nao coincidem.'];
@@ -210,7 +217,7 @@ class AuthController
         // Verificar se email ja existe
         $usuarioExistente = $this->usuario->findByEmail($email);
         if ($usuarioExistente) {
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Este e-mail ja esta cadastrado.'];
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Se o email estiver cadastrado, voce recebera instrucoes.'];
             header('Location: /Aptus/login/cadastrar');
             exit;
         }

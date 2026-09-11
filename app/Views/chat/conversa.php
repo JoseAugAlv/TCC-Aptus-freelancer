@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/chat/conversa.php
 
 $tituloPagina = $tituloPagina ?? 'Chat - Aptus';
@@ -170,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRF-Token': document.querySelector('input[name="_csrf_token"]').value,
                 },
                 body: JSON.stringify(dados)
             })

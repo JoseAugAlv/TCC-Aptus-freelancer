@@ -22,6 +22,9 @@ class Router
 
     public function post($uri, $action, $roles = [])
     {
+        if (isset($this->routes['POST'][$uri])) {
+            throw new \RuntimeException("Rota POST duplicada: {$uri}");
+        }
         $this->routes['POST'][$uri] = [
             'action' => $action,
             'roles' => $roles

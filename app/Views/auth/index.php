@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/auth/index.php
 
 $tituloPagina = $tituloPagina ?? 'Login - Aptus';

@@ -14,7 +14,7 @@ class SessionConfig
         
         // Criar diretório se não existir
         if (!is_dir($sessionPath)) {
-            mkdir($sessionPath, 0777, true);
+            mkdir($sessionPath, 0750, true);
         }
         
         // Verificar se o diretório tem permissão de escrita
@@ -37,7 +37,7 @@ class SessionConfig
         session_name('APTUS_SESSION');
         
         // Iniciar sessão com supressão de erros
-        @session_start();
+        session_start();
 
         if (!isset($_SESSION['last_regenerate'])) {
             $_SESSION['last_regenerate'] = time();

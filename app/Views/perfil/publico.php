@@ -32,7 +32,7 @@ if (isset($perfil['id_perfil'])) {
     <div class="perfil-publico-card">
         <div class="perfil-publico-avatar">
             <?php if (!empty($perfil['foto_perfil']) && $perfil['foto_perfil'] != 'default.png'): ?>
-                <img src="/Aptus/public/uploads/<?= htmlspecialchars($perfil['foto_perfil']) ?>" alt="Foto de perfil">
+                <img alt="Foto de perfil" src="/Aptus/public/uploads/<?= htmlspecialchars($perfil['foto_perfil']) ?>" alt="Foto de perfil">
             <?php else: ?>
                 <i class="fas fa-user-circle"></i>
             <?php endif; ?>
