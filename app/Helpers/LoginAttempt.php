@@ -5,9 +5,13 @@ class LoginAttempt {
         $key = 'login_attempt_' . md5($email);
         $attempts = isset($_SESSION[$key]) ? (int)$_SESSION[$key] : 0;
         $max = 5;
-        $configs = new Configuracao();
-        $val = $configs->get('tentativas_login');
-        if ($val !== null) $max = (int)$val;
+        try {
+            $configs = new Configuracao();
+            $val = $configs->get('tentativas_login');
+            if ($val !== null) $max = (int)$val;
+        } catch (Exception $e) {
+            $max = 5;
+        }
         if ($attempts >= $max) return false;
         return true;
     }
