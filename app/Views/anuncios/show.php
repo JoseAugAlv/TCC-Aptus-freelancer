@@ -124,7 +124,8 @@ $totalFavoritos = $totalFavoritos ?? 0;
                         <button type="submit" class="btn-interesse" id="btnInteresse">
                             <i class="fas fa-handshake"></i> Tenho Interesse
                         </button>
-                    </form>
+                    <?= CsrfMiddleware::field() ?>
+</form>
                 <?php endif; ?>
             <?php elseif (!$usuario): ?>
                 <a href="/Aptus/login" class="btn-interesse">

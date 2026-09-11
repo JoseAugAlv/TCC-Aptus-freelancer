@@ -6,7 +6,7 @@ class AuthMiddleware
     public static function handle()
     {
         if (!Auth::check()) {
-            header('Location: /RecycleWays/login');
+            header('Location: /Aptus/login');
             exit;
         }
     }

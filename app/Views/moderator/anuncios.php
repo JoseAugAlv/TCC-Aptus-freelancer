@@ -55,11 +55,13 @@ $anuncios = $anuncios ?? [];
                                 <form method="POST" action="/Aptus/moderator/anuncios/aprovar">
                                     <input type="hidden" name="id" value="<?= $anuncio['id_anuncio'] ?>">
                                     <button type="submit" class="btn-aprovar" onclick="return confirm('Aprovar este anúncio?')">Aprovar</button>
-                                </form>
+                                <?= CsrfMiddleware::field() ?>
+</form>
                                 <form method="POST" action="/Aptus/moderator/anuncios/rejeitar">
                                     <input type="hidden" name="id" value="<?= $anuncio['id_anuncio'] ?>">
                                     <button type="submit" class="btn-rejeitar" onclick="return confirm('Rejeitar este anúncio?')">Rejeitar</button>
-                                </form>
+                                <?= CsrfMiddleware::field() ?>
+</form>
                             </td>
                         </tr>
                     <?php endforeach; ?>

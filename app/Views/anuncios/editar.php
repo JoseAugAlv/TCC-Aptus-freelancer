@@ -72,6 +72,7 @@ $categorias = $categorias ?? [];
         <button type="submit">Atualizar Serviço</button>
         <a href="/Aptus/anuncios/meus">Cancelar</a>
     </div>
+<?= CsrfMiddleware::field() ?>
 </form>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

@@ -71,14 +71,16 @@ $motivos = $motivos ?? [];
                 <button type="submit" class="btn-aprovar" onclick="return confirm('Aprovar esta denuncia?')">
                     <i class="fas fa-check"></i> Aprovar Denuncia
                 </button>
-            </form>
+            <?= CsrfMiddleware::field() ?>
+</form>
             
             <form method="POST" action="/Aptus/moderator/denuncias/rejeitar" style="display: inline;">
                 <input type="hidden" name="id" value="<?= $denuncia['id_denuncia'] ?? 0 ?>">
                 <button type="submit" class="btn-rejeitar" onclick="return confirm('Rejeitar esta denuncia?')">
                     <i class="fas fa-times"></i> Rejeitar Denuncia
                 </button>
-            </form>
+            <?= CsrfMiddleware::field() ?>
+</form>
             
             <a href="/Aptus/moderator/denuncias" class="btn-voltar">
                 <i class="fas fa-arrow-left"></i> Voltar

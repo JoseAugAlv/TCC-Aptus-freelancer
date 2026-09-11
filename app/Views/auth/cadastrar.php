@@ -46,7 +46,8 @@ require_once __DIR__ . '/../layouts/nav.php';
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-full" id="btnCadastrar">Cadastrar</button>
-            </form>
+            <?= CsrfMiddleware::field() ?>
+</form>
 
             <div class="auth-footer">
                 <p>Já tem conta? <a href="/Aptus/login">Faça login</a></p>

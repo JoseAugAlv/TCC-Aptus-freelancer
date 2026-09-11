@@ -68,13 +68,15 @@ $interesses = $interesses ?? [];
                             <button type="submit" class="btn-aceitar" onclick="return confirm('Aceitar esta proposta?')">
                                 <i class="fas fa-check"></i> Aceitar
                             </button>
-                        </form>
+                        <?= CsrfMiddleware::field() ?>
+</form>
                         <form method="POST" action="/Aptus/interesses/recusar" style="display: inline;">
                             <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
                             <button type="submit" class="btn-recusar" onclick="return confirm('Recusar esta proposta?')">
                                 <i class="fas fa-times"></i> Recusar
                             </button>
-                        </form>
+                        <?= CsrfMiddleware::field() ?>
+</form>
                         <a href="/Aptus/chat/<?= $interesse['id_interesse'] ?>" class="btn-chat">
                             <i class="fas fa-comments"></i> Chat
                         </a>

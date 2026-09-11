@@ -66,7 +66,8 @@ $denuncias = $denuncias ?? [];
                         <i class="fas fa-undo"></i> Limpar
                     </a>
                 </div>
-            </form>
+            <?= CsrfMiddleware::field() ?>
+</form>
         </div>
 
         <!-- TABELA -->

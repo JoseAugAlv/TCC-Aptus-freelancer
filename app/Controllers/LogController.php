@@ -20,7 +20,7 @@ class LogController
                 'tipo' => 'erro',
                 'mensagem' => 'Você não tem permissão para acessar esta página.'
             ];
-            header('Location: /RecycleWays/');
+            header('Location: /Aptus/');
             exit;
         }
 
@@ -39,7 +39,7 @@ class LogController
         $acoes = $this->logSistema->getAcoes();
 
         // Paginação HTML
-        $paginationHtml = $this->renderPagination($pagina, $totalPaginas, '/RecycleWays/logs');
+        $paginationHtml = $this->renderPagination($pagina, $totalPaginas, '/Aptus/logs');
 
         require '../app/Views/logs/index.php';
     }

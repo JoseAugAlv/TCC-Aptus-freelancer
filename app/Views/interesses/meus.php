@@ -104,7 +104,8 @@ $interesses = $interesses ?? [];
                                 <button type="submit" class="btn-cancelar" onclick="return confirm('Cancelar este interesse?')">
                                     <i class="fas fa-times"></i> Cancelar
                                 </button>
-                            </form>
+                            <?= CsrfMiddleware::field() ?>
+</form>
                         <?php endif; ?>
                     </div>
                 </div>

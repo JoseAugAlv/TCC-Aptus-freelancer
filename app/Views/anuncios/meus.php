@@ -90,14 +90,16 @@ $anuncios = $anuncios ?? [];
                                             <button type="submit" class="btn-acao pausar" title="Pausar">
                                                 <i class="fas fa-pause"></i> <span>Pausar</span>
                                             </button>
-                                        </form>
+                                        <?= CsrfMiddleware::field() ?>
+</form>
                                     <?php elseif ($anuncio['situacao'] == 'pausado'): ?>
                                         <form method="POST" action="/Aptus/anuncios/ativar">
                                             <input type="hidden" name="id" value="<?= $anuncio['id_anuncio'] ?>">
                                             <button type="submit" class="btn-acao ativar" title="Ativar">
                                                 <i class="fas fa-play"></i> <span>Ativar</span>
                                             </button>
-                                        </form>
+                                        <?= CsrfMiddleware::field() ?>
+</form>
                                     <?php endif; ?>
                                     <a href="/Aptus/anuncios/excluir/<?= $anuncio['id_anuncio'] ?>" 
                                        class="btn-acao excluir" 

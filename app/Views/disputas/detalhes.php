@@ -82,7 +82,8 @@ $role = $_SESSION['usuario']['role'] ?? 0;
                     <button type="submit" class="btn-aprovar" onclick="return confirm('Aprovar esta disputa?')">
                         <i class="fas fa-check"></i> Aprovar
                     </button>
-                </form>
+                <?= CsrfMiddleware::field() ?>
+</form>
                 <form method="POST" action="/Aptus/moderator/disputas/rejeitar" style="display: inline;">
                     <input type="hidden" name="id" value="<?= $disputa['id_disputa'] ?>">
                     <div class="form-group">
@@ -92,7 +93,8 @@ $role = $_SESSION['usuario']['role'] ?? 0;
                     <button type="submit" class="btn-rejeitar" onclick="return confirm('Rejeitar esta disputa?')">
                         <i class="fas fa-times"></i> Rejeitar
                     </button>
-                </form>
+                <?= CsrfMiddleware::field() ?>
+</form>
             <?php endif; ?>
             
             <a href="javascript:history.back()" class="btn-voltar">

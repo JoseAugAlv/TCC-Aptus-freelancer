@@ -196,7 +196,8 @@ $configs = $configs ?? [];
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>
         </div>
-    </form>
+    <?= CsrfMiddleware::field() ?>
+</form>
 </div>
 
 

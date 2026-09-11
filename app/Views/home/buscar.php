@@ -84,7 +84,8 @@ $ordenar = $ordenar ?? 'recentes';
                     <a href="/Aptus/buscar" class="btn-limpar">Limpar filtros</a>
                 </div>
             </div>
-        </form>
+        <?= CsrfMiddleware::field() ?>
+</form>
     </div>
 
     <?php if (!empty($termo) || $filtroCategoria > 0 || $filtroPrecoMin > 0 || $filtroPrecoMax > 0): ?>

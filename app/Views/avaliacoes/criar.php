@@ -53,6 +53,7 @@ $anuncio = $this->anuncio->findById($interesse['id_anuncio'] ?? 0);
         <button type="submit">Enviar Avaliação</button>
         <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?? 0 ?>">Cancelar</a>
     </div>
+<?= CsrfMiddleware::field() ?>
 </form>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

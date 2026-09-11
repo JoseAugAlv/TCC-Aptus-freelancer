@@ -94,7 +94,8 @@ $usuarioData = $usuarioData ?? [];
                                     <form method="POST" action="/Aptus/interesses/cancelar" style="display: inline;">
                                         <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
                                         <button type="submit" onclick="return confirm('Cancelar este interesse?')" style="background: none; border: none; color: #ef4444; cursor: pointer; text-decoration: underline;">Cancelar</button>
-                                    </form>
+                                    <?= CsrfMiddleware::field() ?>
+</form>
                                 <?php endif; ?>
                             </td>
                         </tr>

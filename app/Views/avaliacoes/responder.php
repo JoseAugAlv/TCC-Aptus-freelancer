@@ -41,6 +41,7 @@ $avaliacao = $avaliacao ?? [];
         <button type="submit">Enviar Resposta</button>
         <a href="/Aptus/interesses/detalhes/<?= $avaliacao['id_interesse'] ?? 0 ?>">Cancelar</a>
     </div>
+<?= CsrfMiddleware::field() ?>
 </form>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

@@ -66,7 +66,8 @@ $motivos = $motivos ?? [];
                     <i class="fas fa-times"></i> Cancelar
                 </a>
             </div>
-        </form>
+        <?= CsrfMiddleware::field() ?>
+</form>
     </div>
 </div>
 

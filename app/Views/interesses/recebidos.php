@@ -63,7 +63,8 @@ $interesses = $interesses ?? [];
                             <form method="POST" action="/Aptus/interesses/concluir" style="display: inline;">
                                 <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
                                 <button type="submit" onclick="return confirm('Concluir este serviço?')">Concluir</button>
-                            </form>
+                            <?= CsrfMiddleware::field() ?>
+</form>
                         <?php endif; ?>
                     </td>
                 </tr>

@@ -23,7 +23,7 @@ $isError = $status === 'erro' || empty($status);
                 <p style="color: var(--color-text); margin-bottom: 1.5rem;">
                     Seu e-mail foi verificado com sucesso. Agora você já pode fazer login na sua conta.
                 </p>
-                <a href="/RecycleWays/login" class="btn btn-new">
+                <a href="/Aptus/login" class="btn btn-new">
                     <i class="fas fa-sign-in-alt"></i> Fazer Login
                 </a>
             <?php else: ?>
@@ -39,10 +39,10 @@ $isError = $status === 'erro' || empty($status);
                     Se você perdeu o prazo, faça login e solicite um novo link.
                 </p>
                 <div style="display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="/RecycleWays/login" class="btn">
+                    <a href="/Aptus/login" class="btn">
                         <i class="fas fa-arrow-left"></i> Voltar
                     </a>
-                    <a href="/RecycleWays/auth/re-enviar?email=" class="btn btn-new">
+                    <a href="/Aptus/auth/re-enviar?email=" class="btn btn-new">
                         <i class="fas fa-envelope"></i> Reenviar Link
                     </a>
                 </div>
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         allowEscapeKey: false
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/RecycleWays/login';
+            window.location.href = '/Aptus/login';
         }
     });
 });
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         allowEscapeKey: false
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/RecycleWays/login';
+            window.location.href = '/Aptus/login';
         }
     });
 });

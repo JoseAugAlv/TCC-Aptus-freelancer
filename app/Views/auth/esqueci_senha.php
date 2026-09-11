@@ -29,7 +29,8 @@ require_once __DIR__ . '/../layouts/nav.php';
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-full">Enviar Instrucoes</button>
-            </form>
+            <?= CsrfMiddleware::field() ?>
+</form>
 
             <div class="auth-footer">
                 <p><a href="/Aptus/login">Voltar para o login</a></p>

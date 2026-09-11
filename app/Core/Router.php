@@ -11,6 +11,9 @@ class Router
 
     public function get($uri, $action, $roles = [])
     {
+        if (isset($this->routes['GET'][$uri])) {
+            throw new \RuntimeException("Rota GET duplicada: {$uri}");
+        }
         $this->routes['GET'][$uri] = [
             'action' => $action,
             'roles' => $roles

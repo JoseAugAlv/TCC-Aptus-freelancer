@@ -27,7 +27,8 @@ $usuario = $_SESSION['usuario'] ?? null;
                     <button type="submit" class="btn-search-submit">
                         <i class="fas fa-search"></i>
                     </button>
-                </form>
+                <?= CsrfMiddleware::field() ?>
+</form>
 
                 <div class="filtros-section" id="filtrosSection" style="display: none;">
                     <form id="formFiltros" action="/Aptus/buscar" method="GET">
@@ -53,7 +54,8 @@ $usuario = $_SESSION['usuario'] ?? null;
                         <div class="filtro-acoes">
                             <button type="submit" class="btn-aplicar-filtros">Aplicar Filtros</button>
                         </div>
-                    </form>
+                    <?= CsrfMiddleware::field() ?>
+</form>
                 </div>
             </div>
         </div>

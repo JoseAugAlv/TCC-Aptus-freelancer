@@ -18,6 +18,6 @@ class Auth
 
     public static function role()
     {
-        return $_SESSION['usuario']['perfil'] ?? null;
+        return $_SESSION['usuario']['role'] ?? null;
     }
 }

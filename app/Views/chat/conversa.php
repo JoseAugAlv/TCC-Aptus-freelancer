@@ -92,7 +92,8 @@ $usuario = $_SESSION['usuario'] ?? null;
                     <button type="submit" id="btnEnviar">
                         <i class="fas fa-paper-plane"></i>
                     </button>
-                </form>
+                <?= CsrfMiddleware::field() ?>
+</form>
             </div>
         <?php else: ?>
             <div class="chat-main-vazio">

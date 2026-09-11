@@ -158,7 +158,8 @@ $avaliacaoModel = new Avaliacao();
                                             Enviar Avaliacao
                                         </button>
                                     </div>
-                                </form>
+                                <?= CsrfMiddleware::field() ?>
+</form>
                             </div>
                         <?php elseif ($usuarioJaAvaliou && !$pagamentoDivergente): ?>
                             <div class="avaliacao-ja-feita">
@@ -180,7 +181,8 @@ $avaliacaoModel = new Avaliacao();
                                     <button type="submit" class="btn-confirmar" onclick="return confirm('Confirmar que o servico foi executado?')">
                                         Confirmar Execucao
                                     </button>
-                                </form>
+                                <?= CsrfMiddleware::field() ?>
+</form>
                             <?php endif; ?>
                             
                             <?php if ($pagamentoDivergente): ?>
@@ -266,7 +268,8 @@ $avaliacaoModel = new Avaliacao();
                                             Enviar Avaliacao
                                         </button>
                                     </div>
-                                </form>
+                                <?= CsrfMiddleware::field() ?>
+</form>
                             </div>
                         <?php else: ?>
                             <div class="avaliacao-ja-feita">

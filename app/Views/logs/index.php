@@ -24,7 +24,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 
             <!-- Filtros -->
             <div class="logs-filtros">
-                <form method="GET" action="/RecycleWays/logs">
+                <form method="GET" action="/Aptus/logs">
                     <div class="filtros-grid">
                         <div class="filtro-group">
                             <label for="buscar"><i class="fas fa-search"></i> Buscar</label>
@@ -61,13 +61,14 @@ require_once __DIR__ . '/../layouts/nav.php';
                                 <button type="submit" class="btn" style="background: #2563eb; color: white;">
                                     <i class="fas fa-filter"></i> Filtrar
                                 </button>
-                                <a href="/RecycleWays/logs" class="btn" style="background: #6c757d; color: white;">
+                                <a href="/Aptus/logs" class="btn" style="background: #6c757d; color: white;">
                                     <i class="fas fa-undo"></i> Limpar
                                 </a>
                             </div>
                         </div>
                     </div>
-                </form>
+                <?= CsrfMiddleware::field() ?>
+</form>
             </div>
 
             <!-- Lista de Logs -->
@@ -123,7 +124,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 
             <!-- Voltar -->
             <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #f0f0f0; text-align: center;">
-                <a href="/RecycleWays/" class="btn">
+                <a href="/Aptus/" class="btn">
                     <i class="fas fa-arrow-left"></i> Voltar
                 </a>
             </div>

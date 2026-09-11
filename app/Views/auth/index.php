@@ -51,7 +51,8 @@ $email = $_GET['email'] ?? '';
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-full" id="btnLogin">Entrar</button>
-            </form>
+            <?= CsrfMiddleware::field() ?>
+</form>
 
             <div class="auth-footer">
                 <div class="auth-links">

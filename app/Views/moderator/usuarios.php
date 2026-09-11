@@ -54,7 +54,8 @@ $usuarios = $usuarios ?? [];
                                     <form method="POST" action="/Aptus/admin/usuarios/banir">
                                         <input type="hidden" name="id" value="<?= $usuario['id_usuario'] ?>">
                                         <button type="submit" class="btn-banir" onclick="return confirm('Tem certeza que deseja banir este usuário?')">Banir</button>
-                                    </form>
+                                    <?= CsrfMiddleware::field() ?>
+</form>
                                 <?php endif; ?>
                             </td>
                         </tr>
