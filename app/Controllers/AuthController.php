@@ -100,7 +100,7 @@ class AuthController
             $sql = "UPDATE usuario SET remember_token = ? WHERE id_usuario = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$token, $usuario['id_usuario']]);
-            setcookie('remember_token', $token, time() + 30*24*3600, '/Aptus', '', true, true);
+            setcookie('remember_token', $token, time() + 30*24*3600, '/Aptus', $_SERVER['HTTP_HOST'] ?? 'localhost', true, true);
         }
 
         LoginAttempt::reset($email);

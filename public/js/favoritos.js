@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.disabled = true;
             this.style.opacity = '0.7';
             
-            fetch(url, {
+            fetch(url, { headers: { "X-CSRF-Token": document.querySelector("input[name=\"_csrf_token\"]") ? document.querySelector("input[name=\"_csrf_token\"]").value : "" },
                 method: 'POST',
                 body: formData
             })
