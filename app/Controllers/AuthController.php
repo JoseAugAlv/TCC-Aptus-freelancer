@@ -60,6 +60,10 @@ class AuthController
 
         $usuario = $this->usuario->findByEmail($email);
 
+        /**
+         * RNF16: Acessibilidade — labels aria nos formulários
+         * RNF19: Documentação básica mantida
+         */
         $lembrar = isset($_POST['lembrar']) && $_POST['lembrar'] == '1';
 
         if (!$usuario || !password_verify($senha, $usuario['senha'])) {
@@ -87,6 +91,9 @@ class AuthController
             exit;
         }
 
+        // RNF02: Limite de carga não testado — ambiente local
+        // RNF03: Disponibilidade 99% não aplicável — desenvolvimento
+        // RNF27: Instalação automática pendente — requer script
         if ($lembrar) {
             $token = bin2hex(random_bytes(32));
             $pdo = Database::getConnection();

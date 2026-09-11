@@ -35,12 +35,12 @@ $email = $_GET['email'] ?? '';
             <form method="POST" action="/Aptus/login" class="auth-form" id="loginForm" onsubmit="return aceitarLgpdEContinuar(event)">
                 <div class="form-group">
                     <label for="email">E-mail <span class="obrigatorio">*</span></label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com" required>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com" required aria-label="E-mail">
                 </div>
 
                 <div class="form-group">
                     <label for="senha">Senha <span class="obrigatorio">*</span></label>
-                    <input type="password" id="senha" name="senha" class="form-control" placeholder="••••••••" required>
+                    <input type="password" id="senha" name="senha" class="form-control" placeholder="••••••••" required aria-label="Senha">
                 </div>
 
                 <div class="form-group remember-group">
