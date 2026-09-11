@@ -32,7 +32,7 @@ $email = $_GET['email'] ?? '';
                 <?php unset($_SESSION['flash']); ?>
             <?php endif; ?>
 
-            <form method="POST" action="/Aptus/login" class="auth-form" id="loginForm">
+            <form method="POST" action="/Aptus/login" class="auth-form" id="loginForm" onsubmit="return aceitarLgpdEContinuar(event)">
                 <div class="form-group">
                     <label for="email">E-mail <span class="obrigatorio">*</span></label>
                     <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com" required>
@@ -59,6 +59,17 @@ $email = $_GET['email'] ?? '';
                 </div>
                 <p>Não tem uma conta? <a href="/Aptus/login/cadastrar">Criar Conta</a></p>
             </div>
+            <script>
+            function aceitarLgpdEContinuar(e){
+              if(document.getElementById('lgpd-modal').style.display!=='none'){
+                alert('Por favor, concorde com os Termos, Privacidade e Cookies (LGPD) para continuar.');
+                document.getElementById('lgpd-modal').style.display='flex';
+                e.preventDefault();
+                return false;
+              }
+              return true;
+            }
+            </script>
 
             <!-- Area DEV - Login Rapido -->
             <?php

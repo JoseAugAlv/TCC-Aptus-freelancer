@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+<?php require '../app/Views/layouts/lgpd_modal.php'; ?>
 <!-- Banner de Consentimento de Cookies -->
 <div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Consentimento de cookies" aria-modal="true">
   <p>Utilizamos cookies e tecnologias semelhantes para melhorar sua experiência, garantir segurança e cumprir a LGPD. Você pode aceitar, recusar ou consultar <a href="/Aptus/cookies.html">nossa política de cookies</a>.</p>

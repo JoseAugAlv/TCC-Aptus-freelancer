@@ -22,7 +22,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                 <?php unset($_SESSION['flash']); ?>
             <?php endif; ?>
 
-            <form method="POST" action="/Aptus/login/salvar" class="auth-form" onsubmit="return validarSenha()">
+            <form method="POST" action="/Aptus/login/salvar" class="auth-form" onsubmit="return validarSenha() && aceitarLgpdEContinuarCadastrar(event)">
                 <div class="form-group">
                     <label for="nome">Nome completo</label>
                     <input type="text" id="nome" name="nome" class="form-control" placeholder="Seu nome completo" required>
@@ -56,6 +56,15 @@ require_once __DIR__ . '/../layouts/nav.php';
 </section>
 
 <script>
+function aceitarLgpdEContinuarCadastrar(e){
+  if(document.getElementById('lgpd-modal').style.display!=='none'){
+    alert('Por favor, concorde com os Termos, Privacidade e Cookies (LGPD) para cadastrar.');
+    document.getElementById('lgpd-modal').style.display='flex';
+    e.preventDefault();
+    return false;
+  }
+  return true;
+}
 function verificarRequisitosSenha() {
     var senha = document.getElementById('senha').value;
     var requisitos = document.getElementById('requisitos-senha');
