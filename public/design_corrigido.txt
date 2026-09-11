@@ -1,0 +1,1 @@
+Correções design aplicadas: cookie-banner já integrado, consistência de fontes mantida (Segoe UI), responsividade via responsive.css. Nenhuma quebra estrutural encontrada nos arquivos principais.
