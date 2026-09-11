@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="<?= $_SESSION[\x27csrf_token\x27] ?? '\x27 ?>">
     <title><?= $tituloPagina ?? 'Aptus - Conectando Talentos' ?></title>
 
     <link rel="shortcut icon" href="/Aptus/public/images/logo.ico" type="image/x-icon">
