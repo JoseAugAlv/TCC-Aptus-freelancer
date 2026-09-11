@@ -1,0 +1,8 @@
+/* CSS para consentimento de cookies e página LGPD */
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#0f172a;color:#fff;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;z-index:9999;box-shadow:0 -4px 20px rgba(0,0,0,.2);transform:translateY(100%);transition:transform .4s ease}
+.cookie-banner.show{transform:translateY(0)}
+.cookie-banner p{margin:0;font-size:.92rem;line-height:1.4}
+.cookie-banner a{color:#93c5fd;text-decoration:underline}
+.cookie-banner .btn-cookie{background:#4f46e5;color:#fff;border:none;border-radius:6px;padding:.5rem 1rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.cookie-banner .btn-cookie:hover{background:#4338ca}
+@media(max-width:640px){.cookie-banner{flex-direction:column;align-items:flex-start;padding:1rem}.cookie-banner .btn-cookie{width:100%;text-align:center}}
