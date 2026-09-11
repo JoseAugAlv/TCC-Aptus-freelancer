@@ -1,5 +1,5 @@
 <?php
-$tituloPagina = 'Logs do Sistema - RecycleWays';
+$tituloPagina = 'Logs do Sistema - Aptus';
 $cssPagina = 'logs.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';

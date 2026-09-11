@@ -134,6 +134,11 @@ class Router
             return;
         }
 
+        if ($method === "POST") {
+            require_once __DIR__ . "/../Middleware/CsrfMiddleware.php";
+            CsrfMiddleware::validate();
+        }
+
         $controllerInstance->$methodName(...$params);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-$tituloPagina = 'Verificação de E-mail - RecycleWays';
+$tituloPagina = 'Verificação de E-mail - Aptus';
 $cssPagina = 'auth.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';

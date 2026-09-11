@@ -1,27 +1,29 @@
 <?php
 require_once __DIR__ . '/../Models/Configuracao.php';
 class LoginAttempt {
-    public static function check($email) {
-        $key = 'login_attempt_' . md5($email);
-        $attempts = isset($_SESSION[$key]) ? (int)$_SESSION[$key] : 0;
-        $max = 5;
+    public static function check(string $email, string $ip = ''): bool {
+        if ($ip === '') $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $pdo = Database::getConnection();
         try {
-            $configs = new Configuracao();
-            $val = $configs->get('tentativas_login');
-            if ($val !== null) $max = (int)$val;
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM login_tentativa WHERE email = ? OR ip = ? AND criado_em > (NOW() - INTERVAL 15 MINUTE)");
+            $stmt->execute([$email, $ip]);
+            return (int)$stmt->fetchColumn() < 5;
         } catch (Exception $e) {
-            $max = 5;
+            return true;
         }
-        if ($attempts >= $max) return false;
-        return true;
     }
-    public static function increment($email) {
-        $key = 'login_attempt_' . md5($email);
-        if (!isset($_SESSION[$key])) $_SESSION[$key] = 0;
-        $_SESSION[$key]++;
+    public static function increment(string $email, string $ip = ''): void {
+        if ($ip === '') $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $pdo = Database::getConnection();
+        try {
+            $pdo->prepare("INSERT INTO login_tentativa (email, ip, criado_em) VALUES (?, ?, NOW())")->execute([$email, $ip]);
+        } catch (Exception $e) {}
     }
-    public static function reset($email) {
-        $key = 'login_attempt_' . md5($email);
-        unset($_SESSION[$key]);
+    public static function reset(string $email, string $ip = ''): void {
+        if ($ip === '') $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $pdo = Database::getConnection();
+        try {
+            $pdo->prepare("DELETE FROM login_tentativa WHERE email = ? OR ip = ?")->execute([$email, $ip]);
+        } catch (Exception $e) {}
     }
 }
