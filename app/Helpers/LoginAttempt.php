@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../Models/Configuracao.php';
 class LoginAttempt {
     public static function check($email) {
         $key = 'login_attempt_' . md5($email);
