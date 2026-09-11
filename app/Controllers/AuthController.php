@@ -51,9 +51,17 @@ class AuthController
             exit;
         }
 
+        require_once __DIR__ . '/../Helpers/LoginAttempt.php';
+        if (!LoginAttempt::check($email)) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Muitas tentativas. Tente novamente mais tarde.'];
+            header('Location: /Aptus/login');
+            exit;
+        }
+
         $usuario = $this->usuario->findByEmail($email);
 
         if (!$usuario || !password_verify($senha, $usuario['senha'])) {
+            LoginAttempt::increment($email);
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'E-mail ou senha incorretos.'];
             header('Location: /Aptus/login');
             exit;
@@ -76,6 +84,8 @@ class AuthController
             header('Location: /Aptus/login');
             exit;
         }
+
+        LoginAttempt::reset($email);
 
         $idPerfil = $usuario['id_perfil'] ?? 3;
 
