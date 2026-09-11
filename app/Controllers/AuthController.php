@@ -60,6 +60,8 @@ class AuthController
 
         $usuario = $this->usuario->findByEmail($email);
 
+        $lembrar = isset($_POST['lembrar']) && $_POST['lembrar'] == '1';
+
         if (!$usuario || !password_verify($senha, $usuario['senha'])) {
             LoginAttempt::increment($email);
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'E-mail ou senha incorretos.'];
@@ -83,6 +85,15 @@ class AuthController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Sua conta foi banida. Motivo: ' . ($usuario['motivo_banimento'] ?? 'Nao informado')];
             header('Location: /Aptus/login');
             exit;
+        }
+
+        if ($lembrar) {
+            $token = bin2hex(random_bytes(32));
+            $pdo = Database::getConnection();
+            $sql = "UPDATE usuario SET remember_token = ? WHERE id_usuario = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$token, $usuario['id_usuario']]);
+            setcookie('remember_token', $token, time() + 30*24*3600, '/Aptus', '', false, true);
         }
 
         LoginAttempt::reset($email);

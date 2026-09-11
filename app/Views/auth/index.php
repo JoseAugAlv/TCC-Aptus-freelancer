@@ -43,6 +43,13 @@ $email = $_GET['email'] ?? '';
                     <input type="password" id="senha" name="senha" class="form-control" placeholder="••••••••" required>
                 </div>
 
+                <div class="form-group remember-group">
+                    <label class="remember-check">
+                        <input type="checkbox" name="lembrar" value="1">
+                        <span>Lembrar-me</span>
+                    </label>
+                </div>
+
                 <button type="submit" class="btn btn-primary btn-full" id="btnLogin">Entrar</button>
             </form>
 
