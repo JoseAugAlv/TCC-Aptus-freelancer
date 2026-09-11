@@ -200,6 +200,7 @@ $router->get('/logs', 'LogController@index', [1, 2, 4]);
    TERMOS
 */
 $router->get('/termos', 'TermosController@index');
+$router->get('/cookies', 'CookieController@index');
 
 // Cliente
 $router->get('/cliente', 'ClienteController@dashboard', [2, 3, 4]);
