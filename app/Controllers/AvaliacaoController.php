@@ -1,5 +1,6 @@
 <?php
 // app/Controllers/AvaliacaoController.php
+
 require_once __DIR__ . '/../Models/Avaliacao.php';
 require_once __DIR__ . '/../Models/Interesse.php';
 require_once __DIR__ . '/../Models/Anuncio.php';
@@ -50,7 +51,8 @@ class AvaliacaoController
         $anuncio = $this->anuncio->findById($interesse['id_anuncio']);
 
         $tituloPagina = 'Avaliar Serviço - Aptus';
-        $cssPagina = 'avaliacoes.css';
+        $cssPagina    = 'avaliacoes.css';
+
         require '../app/Views/avaliacoes/criar.php';
     }
 
@@ -109,9 +111,8 @@ class AvaliacaoController
             $avaliacaoId = (int) $pdo->lastInsertId();
             $this->avaliacao->recalcularNotaMedia($avaliadoId);
 
-            // Notificação (agora com o ID correto da avaliação)
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $avaliadoId,
@@ -136,10 +137,7 @@ class AvaliacaoController
             exit;
 
         } catch (Throwable $e) {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-            // [FIX-MED-02] Detalhe técnico só no log
+            if ($pdo->inTransaction()) $pdo->rollBack();
             error_log('Erro em AvaliacaoController::salvar: ' . $e->getMessage());
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível enviar a avaliação. Tente novamente.'];
             header('Location: /Aptus/interesses/ativos');
@@ -175,7 +173,8 @@ class AvaliacaoController
         }
 
         $tituloPagina = 'Responder Avaliação - Aptus';
-        $cssPagina = 'avaliacoes.css';
+        $cssPagina    = 'avaliacoes.css';
+
         require '../app/Views/avaliacoes/responder.php';
     }
 
@@ -206,8 +205,8 @@ class AvaliacaoController
 
             $this->avaliacao->responder($avaliacaoId, $resposta);
 
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $avaliacao['id_avaliador'],

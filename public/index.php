@@ -1,13 +1,13 @@
 <?php
 // public/index.php
 
-// 1) Config primeiro (necessário para SessionConfig e para o bootstrap)
+// 1) Config
 require_once __DIR__ . '/../app/Config/config.php';
 Config::load();
 
 $appEnv = Config::get('APP_ENV') ?: 'development';
 
-// 2) Bootstrap de erros dependente do ambiente
+// 2) Bootstrap de erros
 if ($appEnv === 'production') {
     ini_set('display_errors', '0');
     ini_set('display_startup_errors', '0');
@@ -17,12 +17,9 @@ if ($appEnv === 'production') {
     error_reporting(E_ALL);
 }
 
-// Handler global de exceções não capturadas
+// Handler global
 set_exception_handler(function (Throwable $e) use ($appEnv) {
-    error_log(
-        'Exceção não capturada: ' . $e->getMessage() .
-        ' em ' . $e->getFile() . ':' . $e->getLine()
-    );
+    error_log('Exceção não capturada: ' . $e->getMessage() . ' em ' . $e->getFile() . ':' . $e->getLine());
     http_response_code(500);
 
     if ($appEnv === 'production') {
@@ -39,7 +36,7 @@ set_exception_handler(function (Throwable $e) use ($appEnv) {
     }
 });
 
-// 3) Sessão (agora APP_ENV já está em $_ENV, o flag secure funciona)
+// 3) Sessão
 require_once __DIR__ . '/../app/Config/SessionConfig.php';
 SessionConfig::configure();
 
@@ -47,7 +44,7 @@ SessionConfig::configure();
 require_once __DIR__ . '/../app/Config/database.php';
 require_once __DIR__ . '/../app/Core/Router.php';
 
-// 5) [FIX-CRIT-03] Auto-login por cookie "lembrar-me"
+// 5) Auto-login via remember_token (com path dinâmico)
 if (!isset($_SESSION['usuario'])
     && isset($_COOKIE['remember_token'])
     && $_COOKIE['remember_token'] !== '') {
@@ -65,7 +62,6 @@ if (!isset($_SESSION['usuario'])
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && (int) $user['ativo'] === 1 && (int) $user['banido'] === 0) {
-            // Renova o ID de sessão para mitigar fixation no auto-login
             session_regenerate_id(true);
 
             $_SESSION['usuario'] = [
@@ -75,10 +71,11 @@ if (!isset($_SESSION['usuario'])
                 'role'  => (int) ($user['id_perfil'] ?? 0),
             ];
         } else {
-            // Token de usuário banido/inativo: invalidar o cookie
+            // Token de usuário banido/inativo: invalida o cookie
+            $appUrlPath = parse_url(Config::get('APP_URL', '/Aptus'), PHP_URL_PATH) ?: '/Aptus';
             setcookie('remember_token', '', [
                 'expires'  => time() - 3600,
-                'path'     => '/Aptus',
+                'path'     => rtrim($appUrlPath, '/') . '/',
                 'domain'   => $_SERVER['HTTP_HOST'] ?? 'localhost',
                 'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
                 'httponly' => true,
@@ -86,7 +83,6 @@ if (!isset($_SESSION['usuario'])
             ]);
         }
     } catch (Throwable $e) {
-        // Auto-login é acessório — se falhar, segue como anônimo sem quebrar
         error_log('Falha no auto-login por remember_token: ' . $e->getMessage());
     }
 }

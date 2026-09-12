@@ -1,14 +1,15 @@
 <?php
-$tituloPagina = 'Verificação de E-mail - Aptus';
-$cssPagina = 'auth.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
-$status = $_GET['status'] ?? '';
+$tituloPagina = 'Verificação de E-mail - Aptus';
+$cssPagina    = 'auth.css';
+
+$status   = $_GET['status']   ?? '';
 $mensagem = $_GET['mensagem'] ?? '';
 
-$isSuccess = $status === 'sucesso';
-$isError = $status === 'erro' || empty($status);
+$isSuccess = ($status === 'sucesso');
+$isError   = ($status === 'erro' || empty($status));
 ?>
 
 <section class="auth-section animate-in">
@@ -32,18 +33,15 @@ $isError = $status === 'erro' || empty($status);
                 </div>
                 <h1 style="color: #991b1b; margin-bottom: 0.5rem;">Erro na Verificação</h1>
                 <p style="color: var(--color-text); margin-bottom: 1.5rem;">
-                    <?= htmlspecialchars($mensagem ?? 'Token inválido ou expirado.') ?>
+                    <?= htmlspecialchars($mensagem ?: 'Token inválido ou expirado.') ?>
                 </p>
                 <p style="color: var(--color-text); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                    <i class="fas fa-lightbulb"></i> Dica: O link de verificação é válido por 24 horas. 
+                    <i class="fas fa-lightbulb"></i> Dica: O link de verificação é válido por 24 horas.
                     Se você perdeu o prazo, faça login e solicite um novo link.
                 </p>
                 <div style="display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
                     <a href="/Aptus/login" class="btn">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </a>
-                    <a href="/Aptus/auth/re-enviar?email=" class="btn btn-new">
-                        <i class="fas fa-envelope"></i> Reenviar Link
+                        <i class="fas fa-arrow-left"></i> Voltar ao Login
                     </a>
                 </div>
             <?php endif; ?>
@@ -65,10 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmButtonText: 'Fazer Login',
         allowOutsideClick: false,
         allowEscapeKey: false
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = '/Aptus/login';
-        }
+    }).then(function(result) {
+        if (result.isConfirmed) window.location.href = '/Aptus/login';
     });
 });
 </script>
@@ -78,15 +74,13 @@ document.addEventListener('DOMContentLoaded', function() {
     Swal.fire({
         icon: 'error',
         title: 'Erro na verificação',
-        text: '<?= htmlspecialchars($mensagem ?? 'Token inválido ou expirado.') ?>',
+        text: '<?= htmlspecialchars($mensagem ?: 'Token inválido ou expirado.') ?>',
         confirmButtonColor: '#dc3545',
         confirmButtonText: 'Voltar',
         allowOutsideClick: false,
         allowEscapeKey: false
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = '/Aptus/login';
-        }
+    }).then(function(result) {
+        if (result.isConfirmed) window.location.href = '/Aptus/login';
     });
 });
 </script>

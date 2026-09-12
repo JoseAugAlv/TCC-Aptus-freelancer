@@ -1,8 +1,9 @@
 <?php
+require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 // app/Views/admin/dashboard.php
 
 $tituloPagina = $tituloPagina ?? 'Dashboard - Admin';
-$cssPagina = $cssPagina ?? 'admin.css';
+$cssPagina    = $cssPagina    ?? 'admin.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 ?>
@@ -15,7 +16,6 @@ require_once __DIR__ . '/../layouts/nav.php';
         </div>
     </div>
 
-    <!-- KPIs -->
     <div class="kpi-grid">
         <div class="kpi-card">
             <div class="kpi-icon"><i class="fas fa-users"></i></div>
@@ -49,10 +49,8 @@ require_once __DIR__ . '/../layouts/nav.php';
         </div>
     </div>
 
-    <!-- Conteúdo -->
     <div class="admin-content">
         <div class="admin-left">
-            <!-- Últimos Usuários -->
             <div class="card">
                 <h3><i class="fas fa-user-plus"></i> Últimos Usuários</h3>
                 <div class="table-wrapper">
@@ -73,7 +71,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                                     <tr>
                                         <td>
                                             <?php if (!empty($user['foto_perfil']) && $user['foto_perfil'] != 'default.png'): ?>
-                                                <img src="/Aptus/public/uploads/<?= htmlspecialchars($user['foto_perfil']) ?>" 
+                                                <img src="<?= htmlspecialchars(\UploadHelper::getUrl($user['foto_perfil']), ENT_QUOTES, 'UTF-8') ?>"
                                                      alt="Foto" class="avatar-mini">
                                             <?php else: ?>
                                                 <i class="fas fa-user-circle" style="font-size: 1.5rem; color: #94a3b8;"></i>
@@ -95,7 +93,6 @@ require_once __DIR__ . '/../layouts/nav.php';
                 </div>
             </div>
 
-            <!-- Últimos Anúncios -->
             <div class="card">
                 <h3><i class="fas fa-tools"></i> Últimos Anúncios</h3>
                 <div class="table-wrapper">
@@ -134,13 +131,11 @@ require_once __DIR__ . '/../layouts/nav.php';
         </div>
 
         <div class="admin-right">
-            <!-- Gráfico -->
             <div class="card">
                 <h3><i class="fas fa-chart-pie"></i> Distribuição de Usuários</h3>
                 <canvas id="userChart" height="250"></canvas>
             </div>
 
-            <!-- Resumo -->
             <div class="card">
                 <h3><i class="fas fa-info-circle"></i> Resumo</h3>
                 <ul class="resumo-list">
@@ -178,7 +173,6 @@ require_once __DIR__ . '/../layouts/nav.php';
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gráfico de Distribuição de Usuários
     const ctx = document.getElementById('userChart').getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
@@ -197,11 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: {
-                        padding: 15,
-                        usePointStyle: true,
-                        pointStyle: 'circle'
-                    }
+                    labels: { padding: 15, usePointStyle: true, pointStyle: 'circle' }
                 }
             },
             cutout: '65%'

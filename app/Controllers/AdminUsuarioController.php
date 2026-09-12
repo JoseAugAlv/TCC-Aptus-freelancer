@@ -1,4 +1,5 @@
 <?php
+// app/Controllers/AdminUsuarioController.php
 
 require_once __DIR__ . '/../Config/database.php';
 
@@ -38,15 +39,25 @@ class AdminUsuarioController
                 $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível atualizar (e-mail duplicado?).'];
             }
         }
-        header('Location: /Aptus/admin/usuarios'); exit;
+
+        header('Location: /Aptus/admin/usuarios');
+        exit;
     }
 
+    /**
+     * Exclusão via POST (era GET, vulnerável a CSRF).
+     * O id agora vem do corpo do POST.
+     */
     public function excluir()
     {
         $this->verificaPermissao();
 
-        $id = (int) ($_GET['id'] ?? 0);
-        if ($id <= 0) { header('Location: /Aptus/admin/usuarios'); exit; }
+        $id = (int) ($_POST['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: /Aptus/admin/usuarios');
+            exit;
+        }
 
         try {
             $stmt = $this->conn->prepare(
@@ -64,7 +75,8 @@ class AdminUsuarioController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível excluir este usuário.'];
         }
 
-        header('Location: /Aptus/admin/usuarios'); exit;
+        header('Location: /Aptus/admin/usuarios');
+        exit;
     }
 
     public function banir()
@@ -75,11 +87,15 @@ class AdminUsuarioController
         $motivo      = trim($_POST['motivo'] ?? '');
         $moderadorId = (int) $_SESSION['usuario']['id'];
 
-        if ($id <= 0) { header('Location: /Aptus/admin/usuarios'); exit; }
+        if ($id <= 0) {
+            header('Location: /Aptus/admin/usuarios');
+            exit;
+        }
 
         if ($motivo === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o motivo do banimento.'];
-            header('Location: /Aptus/moderator/usuarios'); exit;
+            header('Location: /Aptus/moderator/usuarios');
+            exit;
         }
 
         try {
@@ -99,7 +115,8 @@ class AdminUsuarioController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível banir este usuário.'];
         }
 
-        header('Location: /Aptus/moderator/usuarios'); exit;
+        header('Location: /Aptus/moderator/usuarios');
+        exit;
     }
 
     public function desbanir()
@@ -107,6 +124,7 @@ class AdminUsuarioController
         $this->verificaPermissao();
 
         $id = (int) ($_POST['id'] ?? 0);
+
         if ($id > 0) {
             try {
                 $stmt = $this->conn->prepare(
@@ -125,6 +143,8 @@ class AdminUsuarioController
                 $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível desbanir este usuário.'];
             }
         }
-        header('Location: /Aptus/moderator/usuarios'); exit;
+
+        header('Location: /Aptus/moderator/usuarios');
+        exit;
     }
 }

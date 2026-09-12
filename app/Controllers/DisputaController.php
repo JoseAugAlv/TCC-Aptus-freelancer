@@ -13,8 +13,8 @@ class DisputaController
 
     public function __construct()
     {
-        $this->disputa    = new Disputa();
-        $this->interesse  = new Interesse();
+        $this->disputa     = new Disputa();
+        $this->interesse   = new Interesse();
         $this->confirmacao = new ConfirmacaoPagamento();
     }
 
@@ -42,7 +42,8 @@ class DisputaController
         $motivos   = $this->disputa->getMotivos();
 
         $tituloPagina = 'Abrir Disputa - Aptus';
-        $cssPagina = 'disputas.css';
+        $cssPagina    = 'disputas.css';
+
         require '../app/Views/disputas/criar.php';
     }
 
@@ -86,14 +87,13 @@ class DisputaController
             $this->disputa->create($dados);
             $disputaId = (int) $pdo->lastInsertId();
 
-            // Notificar moderadores
-            $sql = "SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4)";
+            $sql  = "SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $moderadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $sqlNotif = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-                         VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $sqlNotif  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmtNotif = $pdo->prepare($sqlNotif);
 
             foreach ($moderadores as $moderador) {
@@ -108,9 +108,8 @@ class DisputaController
                 ]);
             }
 
-            // Notificar a outra parte
             $interesse = $this->interesse->findById($interesseId);
-            $outroId = ((int) $interesse['id_contratante'] === $usuarioId)
+            $outroId   = ((int) $interesse['id_contratante'] === $usuarioId)
                 ? (int) $interesse['id_freelancer']
                 : (int) $interesse['id_contratante'];
 
@@ -160,7 +159,8 @@ class DisputaController
         if (!$podeVer) { header('Location: /Aptus/interesses/ativos'); exit; }
 
         $tituloPagina = 'Detalhes da Disputa - Aptus';
-        $cssPagina = 'disputas.css';
+        $cssPagina    = 'disputas.css';
+
         require '../app/Views/disputas/detalhes.php';
     }
 
@@ -176,7 +176,8 @@ class DisputaController
         $totalPendentes = $this->disputa->countPendentes();
 
         $tituloPagina = 'Disputas - Moderação';
-        $cssPagina = 'moderador.css';
+        $cssPagina    = 'moderador.css';
+
         require '../app/Views/moderator/disputas.php';
     }
 
@@ -203,8 +204,8 @@ class DisputaController
 
             $disputa = $this->disputa->findById($id);
 
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
 
             $titulo   = 'Disputa aprovada';
@@ -249,8 +250,8 @@ class DisputaController
 
             $disputa = $this->disputa->findById($id);
 
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
 
             $titulo   = 'Disputa rejeitada';

@@ -84,62 +84,52 @@ INSERT INTO usuario (
     nota_media, total_avaliacoes, ativo, banido, email_verificado,
     data_verificacao, data_criacao
 ) VALUES
-(3, 'Ana Paula Costa', 'ana@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Ana Paula Costa', 'ana@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '11987654321', '11987654321', '12345678901', '1990-05-15', 'ana_perfil.jpg',
  'Designer gráfica com 8 anos de experiência, especializada em identidade visual',
  'São Paulo', 'SP', 4.80, 5, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 180 DAY)),
 
-(3, 'Roberto Almeida', 'roberto@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Roberto Almeida', 'roberto@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '21998765432', '21998765432', '98765432109', '1985-08-22', 'roberto_perfil.jpg',
  'Desenvolvedor fullstack com foco em PHP e React',
  'Rio de Janeiro', 'RJ', 4.60, 8, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 200 DAY)),
 
-(3, 'Carla Mendes', 'carla@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Carla Mendes', 'carla@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '31998765432', '31998765432', '45678912345', '1992-11-30', 'carla_perfil.jpg',
  'Fotógrafa especializada em casamentos e eventos',
  'Belo Horizonte', 'MG', 4.90, 12, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 150 DAY)),
 
-(3, 'Fernando Lima', 'fernando@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Fernando Lima', 'fernando@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '41998765432', '41998765432', '78912345678', '1988-03-10', 'fernando_perfil.jpg',
  'Tradutor juramentado e intérprete de conferências',
  'Curitiba', 'PR', 4.70, 6, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 220 DAY)),
 
-(3, 'Mariana Souza', 'mariana@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Mariana Souza', 'mariana@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '51998765432', '51998765432', '45612378945', '1995-07-18', 'mariana_perfil.jpg',
  'Consultora de marketing digital e growth hacking',
  'Porto Alegre', 'RS', 4.50, 4, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 100 DAY)),
 
-(3, 'Lucas Ferreira', 'lucas@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Lucas Ferreira', 'lucas@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '61998765432', '61998765432', '78945612378', '1993-09-05', 'lucas_perfil.jpg',
  'Eletricista residencial e industrial',
  'Brasília', 'DF', 4.30, 3, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 90 DAY)),
 
-(3, 'Patrícia Oliveira', 'patricia@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Patrícia Oliveira', 'patricia@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '71998765432', '71998765432', '12378945612', '1991-12-12', 'patricia_perfil.jpg',
  'Encanadora com 10 anos de experiência',
  'Salvador', 'BA', 4.80, 9, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 130 DAY)),
 
-(3, 'João Silva', 'joao@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'João Silva', 'joao@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '11991234567', '11991234567', '98765432100', '1982-07-20', 'joao_perfil.jpg',
  'Pedreiro com 15 anos de experiência em obras e reformas',
  'São Paulo', 'SP', 4.70, 7, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 110 DAY)),
 
-(3, 'Maria Santos', 'maria.santos@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Maria Santos', 'maria.santos@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '21997654321', '21997654321', '45612378912', '1989-10-05', 'maria_perfil.jpg',
  'Diarista e organizadora de ambientes',
  'Rio de Janeiro', 'RJ', 4.90, 14, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 160 DAY)),
 
-(3, 'Carlos Oliveira', 'carlos@aptus.com', (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
-,
+(3, 'Carlos Oliveira', 'carlos@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC',
  '31999876543', '31999876543', '78945612301', '1986-03-25', 'carlos_perfil.jpg',
  'Jardineiro especializado em paisagismo',
  'Belo Horizonte', 'MG', 4.60, 5, 1, 0, 1, NOW(), DATE_SUB(NOW(), INTERVAL 140 DAY));

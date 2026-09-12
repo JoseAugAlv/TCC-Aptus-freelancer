@@ -1,4 +1,5 @@
 <?php
+// app/Controllers/PortfolioController.php
 
 require_once __DIR__ . '/../Models/Portfolio.php';
 require_once __DIR__ . '/../Helpers/UploadHelper.php';
@@ -18,10 +19,11 @@ class PortfolioController
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
         $usuarioId = $_SESSION['usuario']['id'];
-        $itens = $this->portfolio->getByUsuario($usuarioId);
+        $itens     = $this->portfolio->getByUsuario($usuarioId);
 
         $tituloPagina = 'Meu Portfólio - Aptus';
-        $cssPagina = 'perfil.css';
+        $cssPagina    = 'perfil.css';
+
         require '../app/Views/perfil/portfolio.php';
     }
 
@@ -31,7 +33,8 @@ class PortfolioController
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
         $tituloPagina = 'Adicionar ao Portfólio - Aptus';
-        $cssPagina = 'perfil.css';
+        $cssPagina    = 'perfil.css';
+
         require '../app/Views/perfil/portfolio_criar.php';
     }
 
@@ -41,7 +44,7 @@ class PortfolioController
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
-        $titulo = trim($_POST['titulo'] ?? '');
+        $titulo    = trim($_POST['titulo'] ?? '');
         $descricao = trim($_POST['descricao'] ?? '');
 
         if ($titulo === '') {
@@ -50,12 +53,11 @@ class PortfolioController
             exit;
         }
 
-        // [FIX-CRIT-2.2] Upload passa pelo helper
         $imagem = null;
         if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
             $resultado = UploadHelper::upload($_FILES['imagem'], 'portfolio');
             if ($resultado['success']) {
-                $imagem = $resultado['nome'];   // só o nome do arquivo
+                $imagem = $resultado['nome'];
             } else {
                 $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro no upload: ' . $resultado['message']];
                 header('Location: /Aptus/perfil/portfolio/criar');
@@ -87,7 +89,7 @@ class PortfolioController
         if (!$id) { header('Location: /Aptus/perfil/portfolio'); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
-        $item = $this->portfolio->findById($id);
+        $item      = $this->portfolio->findById($id);
 
         if (!$item || (int) $item['id_usuario'] !== $usuarioId) {
             header('Location: /Aptus/perfil/portfolio');
@@ -95,7 +97,8 @@ class PortfolioController
         }
 
         $tituloPagina = 'Editar Portfólio - Aptus';
-        $cssPagina = 'perfil.css';
+        $cssPagina    = 'perfil.css';
+
         require '../app/Views/perfil/portfolio_editar.php';
     }
 
@@ -104,9 +107,9 @@ class PortfolioController
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
-        $id = (int) ($_POST['id'] ?? 0);
+        $id        = (int) ($_POST['id'] ?? 0);
         $usuarioId = (int) $_SESSION['usuario']['id'];
-        $titulo = trim($_POST['titulo'] ?? '');
+        $titulo    = trim($_POST['titulo'] ?? '');
         $descricao = trim($_POST['descricao'] ?? '');
 
         $item = $this->portfolio->findById($id);
@@ -123,11 +126,9 @@ class PortfolioController
 
         $dados = ['titulo' => $titulo, 'descricao' => $descricao];
 
-        // [FIX-CRIT-2.2] Upload passa pelo helper
         if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
             $resultado = UploadHelper::upload($_FILES['imagem'], 'portfolio');
             if ($resultado['success']) {
-                // Apaga a antiga (nome apenas, dentro de uploads/portfolio/)
                 if (!empty($item['imagem'])) {
                     $antigo = $_SERVER['DOCUMENT_ROOT'] . '/Aptus/public/uploads/portfolio/' . basename($item['imagem']);
                     if (file_exists($antigo)) @unlink($antigo);
@@ -150,13 +151,23 @@ class PortfolioController
         exit;
     }
 
-    public function excluir($id = null)
+    /**
+     * Exclusão via POST (era GET, vulnerável a CSRF).
+     * O id agora vem do corpo do POST.
+     */
+    public function excluir()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
-        if (!$id) { header('Location: /Aptus/perfil/portfolio'); exit; }
 
+        $id        = (int) ($_POST['id'] ?? 0);
         $usuarioId = (int) $_SESSION['usuario']['id'];
+
+        if ($id <= 0) {
+            header('Location: /Aptus/perfil/portfolio');
+            exit;
+        }
+
         $item = $this->portfolio->findById($id);
         if (!$item || (int) $item['id_usuario'] !== $usuarioId) {
             header('Location: /Aptus/perfil/portfolio');

@@ -44,11 +44,12 @@ class InteresseController
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
-        $model     = new Interesse();
+        $model      = new Interesse();
         $interesses = $model->getPendentesByFreelancer((int) $_SESSION['usuario']['id']);
 
         $tituloPagina = 'Interesses Recebidos - Aptus';
-        $cssPagina = 'recebidos.css';
+        $cssPagina    = 'recebidos.css';
+
         require '../app/Views/interesses/recebidos.php';
     }
 
@@ -57,10 +58,10 @@ class InteresseController
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
-        $anuncioId      = (int) ($_GET['anuncio'] ?? 0);
-        $contratanteId  = (int) $_SESSION['usuario']['id'];
+        $anuncioId       = (int) ($_GET['anuncio'] ?? 0);
+        $contratanteId   = (int) $_SESSION['usuario']['id'];
         $contratanteNome = $_SESSION['usuario']['nome'];
-        $mensagem       = $_POST['mensagem'] ?? 'Olá! Tenho interesse no seu serviço.';
+        $mensagem        = $_POST['mensagem'] ?? 'Olá! Tenho interesse no seu serviço.';
 
         if ($anuncioId <= 0) { header('Location: /Aptus/anuncios'); exit; }
 
@@ -71,13 +72,13 @@ class InteresseController
 
         if ($contratanteId === $freelancerId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não pode ter interesse no seu próprio anúncio.'];
-            header('Location: /Aptus/anuncios/' . $anuncio['slug']); exit;
+            header('Location: /Aptus/anuncios/' . $anuncio['slug']);
+            exit;
         }
 
-        $pdo = Database::getConnection();
-
-        $sql = "SELECT id_interesse, situacao FROM interesse
-                WHERE id_anuncio = ? AND id_contratante = ? AND situacao IN ('pendente', 'ativo', 'concluido')";
+        $pdo  = Database::getConnection();
+        $sql  = "SELECT id_interesse, situacao FROM interesse
+                 WHERE id_anuncio = ? AND id_contratante = ? AND situacao IN ('pendente', 'ativo', 'concluido')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$anuncioId, $contratanteId]);
         $interesseExistente = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -90,7 +91,8 @@ class InteresseController
                 default     => 'Você já enviou uma proposta para este serviço.',
             };
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => $mensagemFlash];
-            header('Location: /Aptus/anuncios/' . $anuncio['slug']); exit;
+            header('Location: /Aptus/anuncios/' . $anuncio['slug']);
+            exit;
         }
 
         try {
@@ -99,16 +101,16 @@ class InteresseController
             $interesseModel = new Interesse();
 
             $dados = [
-                'id_anuncio'        => $anuncioId,
-                'id_contratante'    => $contratanteId,
-                'id_freelancer'     => $freelancerId,
-                'mensagem_inicial'  => $mensagem,
+                'id_anuncio'       => $anuncioId,
+                'id_contratante'   => $contratanteId,
+                'id_freelancer'    => $freelancerId,
+                'mensagem_inicial' => $mensagem,
             ];
 
             $interesseId = $interesseModel->create($dados);
 
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem)
-                    VALUES (?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem)
+                     VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $freelancerId,
@@ -142,7 +144,7 @@ class InteresseController
         if ($interesseId <= 0) { header('Location: /Aptus/interesses/pendentes'); exit; }
 
         $interesseModel = new Interesse();
-        $interesse = $interesseModel->findById($interesseId);
+        $interesse      = $interesseModel->findById($interesseId);
 
         if (!$interesse || (int) $interesse['id_freelancer'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para esta ação.'];
@@ -160,8 +162,8 @@ class InteresseController
             $pdo->beginTransaction();
             $interesseModel->aceitar($interesseId);
 
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem)
-                    VALUES (?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem)
+                     VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $interesse['id_contratante'],
@@ -195,7 +197,7 @@ class InteresseController
         if ($interesseId <= 0) { header('Location: /Aptus/interesses/pendentes'); exit; }
 
         $interesseModel = new Interesse();
-        $interesse = $interesseModel->findById($interesseId);
+        $interesse      = $interesseModel->findById($interesseId);
 
         if (!$interesse || (int) $interesse['id_freelancer'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para esta ação.'];
@@ -213,8 +215,8 @@ class InteresseController
             $pdo->beginTransaction();
             $interesseModel->recusar($interesseId);
 
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem)
-                    VALUES (?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem)
+                     VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $interesse['id_contratante'],
@@ -243,10 +245,11 @@ class InteresseController
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
         $interesseModel = new Interesse();
-        $interesses = $interesseModel->getPendentesByFreelancer((int) $_SESSION['usuario']['id']);
+        $interesses     = $interesseModel->getPendentesByFreelancer((int) $_SESSION['usuario']['id']);
 
         $tituloPagina = 'Propostas Pendentes - Aptus';
-        $cssPagina = 'pendentes.css';
+        $cssPagina    = 'pendentes.css';
+
         require '../app/Views/interesses/pendentes.php';
     }
 
@@ -256,13 +259,13 @@ class InteresseController
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
         $interesseModel = new Interesse();
-        $usuarioId = (int) $_SESSION['usuario']['id'];
-        $role      = (int) $_SESSION['usuario']['role'];
+        $usuarioId      = (int) $_SESSION['usuario']['id'];
+        $role           = (int) $_SESSION['usuario']['role'];
 
         if ($role === 3) {
             $comoContratante = $interesseModel->getAtivosByContratante($usuarioId);
             $comoFreelancer  = $interesseModel->getAtivosByFreelancer($usuarioId);
-            $interesses = array_merge($comoContratante, $comoFreelancer);
+            $interesses      = array_merge($comoContratante, $comoFreelancer);
             usort($interesses, fn ($a, $b) => strtotime($b['data_interesse']) - strtotime($a['data_interesse']));
         } else {
             $pdo = Database::getConnection();
@@ -278,28 +281,32 @@ class InteresseController
             $interesses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        // [FIX-MED-4.7] Pré-carrega "usuário já avaliou" em 1 query só
+        // Pré-carrega "usuário já avaliou" em 1 query só (evita N+1)
         $ids = array_column($interesses, 'id_interesse');
         $usuarioJaAvaliou = [];
+
         if (!empty($ids)) {
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
             $sql = "SELECT id_interesse FROM avaliacao
                     WHERE id_avaliador = ? AND id_interesse IN ($placeholders)";
-            $stmt = $pdo->prepare($sql);
+            $stmt = Database::getConnection()->prepare($sql);
             $stmt->execute(array_merge([$usuarioId], $ids));
+
             foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $idInt) {
                 $usuarioJaAvaliou[(int) $idInt] = true;
             }
         }
+
         foreach ($interesses as &$int) {
             $int['usuario_ja_avaliou'] = isset($usuarioJaAvaliou[(int) $int['id_interesse']]);
         }
         unset($int);
 
         $tituloPagina = 'Serviços Ativos - Aptus';
-        $cssPagina = 'ativos.css';
+        $cssPagina    = 'ativos.css';
+
         require '../app/Views/interesses/ativos.php';
-}
+    }
 
     public function meus()
     {
@@ -307,7 +314,7 @@ class InteresseController
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
-        $pdo = Database::getConnection();
+        $pdo       = Database::getConnection();
 
         $sql = "SELECT i.*,
                        a.titulo AS anuncio_titulo, a.preco AS anuncio_preco, a.slug AS anuncio_slug,
@@ -324,7 +331,8 @@ class InteresseController
         $interesses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $tituloPagina = 'Meus Interesses - Aptus';
-        $cssPagina = 'interesses.css';
+        $cssPagina    = 'interesses.css';
+
         require '../app/Views/interesses/meus.php';
     }
 
@@ -367,12 +375,12 @@ class InteresseController
         }
 
         $tituloPagina = 'Detalhes do Interesse - Aptus';
-        $cssPagina = 'detalhes.css';
+        $cssPagina    = 'detalhes.css';
 
         require_once __DIR__ . '/../Models/Avaliacao.php';
         $avaliacaoModel = new Avaliacao();
-        $jaAvaliou = false;
-        $avaliacaoData = null;
+        $jaAvaliou      = false;
+        $avaliacaoData  = null;
 
         if (isset($interesse['situacao']) && $interesse['situacao'] === 'concluido') {
             $jaAvaliou = $avaliacaoModel->exists($interesse['id_interesse']);
@@ -382,7 +390,6 @@ class InteresseController
         }
 
         require '../app/Views/interesses/detalhes.php';
-
     }
 
     public function confirmarExecucao()
@@ -396,9 +403,8 @@ class InteresseController
         if ($interesseId <= 0) { header('Location: /Aptus/interesses/ativos'); exit; }
 
         $interesseModel = new Interesse();
-        $avaliacaoModel = new Avaliacao();
+        $interesse      = $interesseModel->findById($interesseId);
 
-        $interesse = $interesseModel->findById($interesseId);
         if (!$interesse || !$interesseModel->pertence($interesseId, $usuarioId)) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para esta ação.'];
             header('Location: /Aptus/interesses/ativos'); exit;
@@ -438,8 +444,8 @@ class InteresseController
 
             $concluido = $interesseModel->verificarEConcluir($interesseId);
 
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem)
-                    VALUES (?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem)
+                     VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
 
             if ($concluido) {

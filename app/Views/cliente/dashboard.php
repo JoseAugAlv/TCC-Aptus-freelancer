@@ -4,11 +4,11 @@ require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 // app/Views/cliente/dashboard.php
 
 $tituloPagina = $tituloPagina ?? 'Dashboard Cliente - Aptus';
-$cssPagina = $cssPagina ?? 'cliente.css';
+$cssPagina    = $cssPagina    ?? 'cliente.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
-$usuario = $_SESSION['usuario'] ?? null;
+$usuario     = $_SESSION['usuario'] ?? null;
 $usuarioData = $usuarioData ?? [];
 ?>
 
@@ -23,7 +23,6 @@ $usuarioData = $usuarioData ?? [];
         </div>
     </div>
 
-    <!-- KPIs -->
     <div class="kpi-grid">
         <div class="kpi-card">
             <div class="kpi-icon"><i class="fas fa-paper-plane"></i></div>
@@ -52,7 +51,6 @@ $usuarioData = $usuarioData ?? [];
         </div>
     </div>
 
-    <!-- Últimos Interesses -->
     <div class="card">
         <h3><i class="fas fa-paper-plane"></i> Últimos Interesses</h3>
         <?php if (empty($ultimosInteresses)): ?>
@@ -72,32 +70,28 @@ $usuarioData = $usuarioData ?? [];
                 </thead>
                 <tbody>
                     <?php foreach ($ultimosInteresses as $interesse): ?>
+                        <?php
+                        $cor = match ($interesse['situacao']) {
+                            'ativo'     => '#10b981',
+                            'concluido' => '#3b82f6',
+                            'cancelado' => '#ef4444',
+                            default     => '#94a3b8',
+                        };
+                        ?>
                         <tr>
                             <td><?= htmlspecialchars($interesse['anuncio_titulo']) ?></td>
                             <td><?= htmlspecialchars($interesse['freelancer_nome']) ?></td>
                             <td>R$ <?= number_format($interesse['anuncio_preco'], 2, ',', '.') ?></td>
-                            <td>
-                                <?php 
-                                    $cor = match($interesse['situacao']) {
-                                        'ativo' => '#10b981',
-                                        'concluido' => '#3b82f6',
-                                        'cancelado' => '#ef4444',
-                                        default => '#94a3b8'
-                                    };
-                                ?>
-                                <span style="color: <?= $cor ?>; font-weight: bold;">
-                                    <?= ucfirst($interesse['situacao']) ?>
-                                </span>
-                            </td>
+                            <td><span style="color: <?= $cor ?>; font-weight: bold;"><?= ucfirst($interesse['situacao']) ?></span></td>
                             <td><?= date('d/m/Y', strtotime($interesse['data_interesse'])) ?></td>
                             <td>
                                 <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?>">Ver</a>
                                 <?php if ($interesse['situacao'] == 'ativo'): ?>
-                                    <form method="POST" action="/Aptus/interesses/cancelar" style="display: inline;">
+                                    <form method="POST" action="/Aptus/interesses/cancelar" style="display:inline;">
                                         <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
-                                        <button type="submit" onclick="return confirm('Cancelar este interesse?')" style="background: none; border: none; color: #ef4444; cursor: pointer; text-decoration: underline;">Cancelar</button>
-                                    <?= CsrfMiddleware::field() ?>
-</form>
+                                        <?= CsrfMiddleware::field() ?>
+                                        <button type="submit" onclick="return confirm('Cancelar este interesse?')" style="background:none;border:none;color:#ef4444;cursor:pointer;text-decoration:underline;">Cancelar</button>
+                                    </form>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -110,7 +104,6 @@ $usuarioData = $usuarioData ?? [];
         <?php endif; ?>
     </div>
 
-    <!-- Favoritos -->
     <div class="card">
         <h3><i class="fas fa-heart"></i> Favoritos</h3>
         <?php if (empty($favoritos)): ?>
@@ -122,7 +115,8 @@ $usuarioData = $usuarioData ?? [];
                     <div class="favorito-card">
                         <div class="favorito-imagem">
                             <?php if (!empty($favorito['foto_capa'])): ?>
-                               <img src="<?= htmlspecialchars(\UploadHelper::getUrl($favorito['foto_capa']), ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($favorito['titulo'], ENT_QUOTES, 'UTF-8') ?>">
+                                <img src="<?= htmlspecialchars(\UploadHelper::getUrl($favorito['foto_capa']), ENT_QUOTES, 'UTF-8') ?>"
+                                     alt="<?= htmlspecialchars($favorito['titulo'], ENT_QUOTES, 'UTF-8') ?>">
                             <?php else: ?>
                                 <i class="fas fa-briefcase"></i>
                             <?php endif; ?>
@@ -147,26 +141,13 @@ $usuarioData = $usuarioData ?? [];
         <?php endif; ?>
     </div>
 
-    <!-- Informações do Perfil -->
     <div class="card">
         <h3><i class="fas fa-user"></i> Informações do Perfil</h3>
         <div class="perfil-info-grid">
-            <div>
-                <span class="label">Nome</span>
-                <span class="value"><?= htmlspecialchars($usuarioData['nome'] ?? '') ?></span>
-            </div>
-            <div>
-                <span class="label">E-mail</span>
-                <span class="value"><?= htmlspecialchars($usuarioData['email'] ?? '') ?></span>
-            </div>
-            <div>
-                <span class="label">Telefone</span>
-                <span class="value"><?= htmlspecialchars($usuarioData['telefone'] ?? 'Não informado') ?></span>
-            </div>
-            <div>
-                <span class="label">Membro desde</span>
-                <span class="value"><?= date('d/m/Y', strtotime($usuarioData['data_criacao'] ?? 'now')) ?></span>
-            </div>
+            <div><span class="label">Nome</span><span class="value"><?= htmlspecialchars($usuarioData['nome'] ?? '') ?></span></div>
+            <div><span class="label">E-mail</span><span class="value"><?= htmlspecialchars($usuarioData['email'] ?? '') ?></span></div>
+            <div><span class="label">Telefone</span><span class="value"><?= htmlspecialchars($usuarioData['telefone'] ?? 'Não informado') ?></span></div>
+            <div><span class="label">Membro desde</span><span class="value"><?= date('d/m/Y', strtotime($usuarioData['data_criacao'] ?? 'now')) ?></span></div>
         </div>
         <div class="card-footer">
             <a href="/Aptus/perfil/editar">Editar perfil →</a>

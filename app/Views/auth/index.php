@@ -19,16 +19,16 @@ $senhaDev = 'Aptus@2026';
 
 $gruposDev = [
     'Administrativo' => [
-        ['rotulo' => 'Admin',     'email' => 'admin@aptus.com',     'icone' => 'fa-user-shield', 'cor' => '#ef4444'],
-        ['rotulo' => 'Moderador', 'email' => 'moderador@aptus.com', 'icone' => 'fa-user-cog',    'cor' => '#f59e0b'],
-        ['rotulo' => 'Usuário',   'email' => 'usuario@aptus.com',   'icone' => 'fa-user',        'cor' => '#10b981'],
-        ['rotulo' => 'Master',    'email' => 'master@aptus.com',    'icone' => 'fa-crown',       'cor' => '#8b5cf6'],
+        ['rotulo' => 'Admin',     'email' => 'admin@aptus.com',     'icone' => 'fa-user-shield', 'cor' => '#dc2626'],
+        ['rotulo' => 'Moderador', 'email' => 'moderador@aptus.com', 'icone' => 'fa-user-cog',    'cor' => '#d97706'],
+        ['rotulo' => 'Usuário',   'email' => 'usuario@aptus.com',   'icone' => 'fa-user',        'cor' => '#059669'],
+        ['rotulo' => 'Master',    'email' => 'master@aptus.com',    'icone' => 'fa-crown',       'cor' => '#7c3aed'],
     ],
     'Freelancers' => [
         ['rotulo' => 'Ana',      'email' => 'ana@aptus.com',      'icone' => 'fa-palette',    'cor' => '#db2777'],
-        ['rotulo' => 'Roberto',  'email' => 'roberto@aptus.com',  'icone' => 'fa-code',       'cor' => '#0ea5e9'],
+        ['rotulo' => 'Roberto',  'email' => 'roberto@aptus.com',  'icone' => 'fa-code',       'cor' => '#0284c7'],
         ['rotulo' => 'Carla',    'email' => 'carla@aptus.com',    'icone' => 'fa-camera',     'cor' => '#e11d48'],
-        ['rotulo' => 'Fernando', 'email' => 'fernando@aptus.com', 'icone' => 'fa-language',   'cor' => '#6366f1'],
+        ['rotulo' => 'Fernando', 'email' => 'fernando@aptus.com', 'icone' => 'fa-language',   'cor' => '#4f46e5'],
         ['rotulo' => 'Mariana',  'email' => 'mariana@aptus.com',  'icone' => 'fa-chart-line', 'cor' => '#0d9488'],
     ],
     'Prestadores' => [
@@ -45,7 +45,6 @@ $gruposDev = [
 <section class="auth-section animate-in">
     <div class="auth-layout <?= $modoDev ? 'com-dev' : 'sem-dev' ?>">
 
-        <!-- ============= PAINEL DEV (lateral esquerda) ============= -->
         <?php if ($modoDev): ?>
         <aside class="dev-panel">
             <div class="dev-header">
@@ -103,24 +102,32 @@ $gruposDev = [
             </div>
         </aside>
         <?php endif; ?>
-        <!-- =========================================================== -->
 
-        <!-- ============= CARD DE LOGIN (direita) ============= -->
         <div class="auth-card">
             <div class="auth-header">
                 <h2>Bem-vindo de volta</h2>
                 <p>Faça login para acessar sua conta</p>
             </div>
 
-            <?php if ($status === 'sucesso'): ?>
-                <div id="flashData" data-tipo="sucesso" data-mensagem="<?= htmlspecialchars($mensagem) ?>" data-email="<?= htmlspecialchars($email) ?>"></div>
-            <?php elseif ($status === 'erro'): ?>
-                <div id="flashData" data-tipo="erro" data-mensagem="<?= htmlspecialchars($mensagem) ?>"></div>
-            <?php endif; ?>
+            <?php
+            $flashParaExibir = null;
 
-            <?php if (isset($_SESSION['flash'])): ?>
-                <div id="flashData" data-tipo="<?= htmlspecialchars($_SESSION['flash']['tipo']) ?>" data-mensagem="<?= htmlspecialchars($_SESSION['flash']['mensagem']) ?>"></div>
-                <?php unset($_SESSION['flash']); ?>
+            if (isset($_SESSION['flash'])) {
+                $flashParaExibir = $_SESSION['flash'];
+                unset($_SESSION['flash']);
+            } elseif ($status === 'erro' && $mensagem !== '') {
+                $flashParaExibir = ['tipo' => 'erro', 'mensagem' => $mensagem];
+            } elseif ($status === 'sucesso' && $mensagem !== '') {
+                $flashParaExibir = ['tipo' => 'sucesso', 'mensagem' => $mensagem];
+            }
+
+            if ($flashParaExibir):
+            ?>
+                <div id="flashData"
+                     data-tipo="<?= htmlspecialchars($flashParaExibir['tipo'], ENT_QUOTES, 'UTF-8') ?>"
+                     data-mensagem="<?= htmlspecialchars($flashParaExibir['mensagem'], ENT_QUOTES, 'UTF-8') ?>"
+                     data-email="<?= htmlspecialchars($email, ENT_QUOTES, 'UTF-8') ?>"
+                     style="display:none;"></div>
             <?php endif; ?>
 
             <form method="POST" action="/Aptus/login" class="auth-form" id="loginForm" onsubmit="return aceitarLgpdEContinuar(event)">
@@ -163,15 +170,26 @@ $gruposDev = [
                 <p>Não tem uma conta? <a href="/Aptus/login/cadastrar">Criar Conta Grátis</a></p>
             </div>
         </div>
-
     </div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-function aceitarLgpdEContinuar(e){
+function aceitarLgpdEContinuar(e) {
     var modal = document.getElementById('lgpd-modal');
     if (modal && modal.style.display !== 'none') {
-        alert('Por favor, concorde com os Termos, Privacidade e Cookies (LGPD) para continuar.');
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Aceite necessário',
+                text: 'Por favor, concorde com os Termos, Privacidade e Cookies (LGPD) para continuar.',
+                confirmButtonColor: '#006577',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            alert('Por favor, concorde com os Termos, Privacidade e Cookies (LGPD) para continuar.');
+        }
         modal.style.display = 'flex';
         e.preventDefault();
         return false;
@@ -180,13 +198,66 @@ function aceitarLgpdEContinuar(e){
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    // ============================================================
+    // FLASH via SweetAlert2
+    // ============================================================
+    var flash = document.getElementById('flashData');
+
+    if (flash && typeof Swal !== 'undefined') {
+        var tipo     = flash.dataset.tipo || 'info';
+        var mensagem = flash.dataset.mensagem || '';
+
+        var config = {
+            confirmButtonColor: '#006577',
+            confirmButtonText: 'OK',
+            allowOutsideClick: true,
+            allowEscapeKey: true
+        };
+
+        switch (tipo) {
+            case 'sucesso':
+                config.icon  = 'success';
+                config.title = 'Tudo certo!';
+                config.text  = mensagem;
+                break;
+            case 'erro':
+                config.icon  = 'error';
+                config.title = 'Não foi possível entrar';
+                config.text  = mensagem;
+                break;
+            case 'aviso':
+                config.icon  = 'warning';
+                config.title = 'Atenção';
+                config.text  = mensagem;
+                break;
+            default:
+                config.icon  = 'info';
+                config.title = 'Aviso';
+                config.text  = mensagem;
+        }
+
+        Swal.fire(config);
+
+        if (tipo === 'erro') {
+            var senhaInput = document.getElementById('senha');
+            if (senhaInput) {
+                senhaInput.value = '';
+                senhaInput.focus();
+            }
+        }
+    }
+
+    // ============================================================
+    // Painel dev
+    // ============================================================
     var emailInput = document.getElementById('email');
     var senhaInput = document.getElementById('senha');
     var btnLogin   = document.getElementById('btnLogin');
 
     var toggle = document.getElementById('toggleSenha');
     if (toggle && senhaInput) {
-        toggle.addEventListener('click', function() {
+        toggle.addEventListener('click', function () {
             var isPass = senhaInput.type === 'password';
             senhaInput.type = isPass ? 'text' : 'password';
             toggle.querySelector('i').className = isPass ? 'fas fa-eye-slash' : 'fas fa-eye';
@@ -205,19 +276,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.dev-user, .dev-atalho').forEach(function (el) {
         el.addEventListener('click', function () {
             var isAtalho = this.dataset.auto === '1';
-            var email = isAtalho ? 'admin@aptus.com' : this.dataset.email;
-            var senha = isAtalho ? '<?= addslashes($senhaDev) ?>' : this.dataset.senha;
+            var email    = isAtalho ? 'admin@aptus.com' : this.dataset.email;
+            var senha    = isAtalho ? '<?= addslashes($senhaDev) ?>' : this.dataset.senha;
 
             if (emailInput) emailInput.value = email || '';
             if (senhaInput) senhaInput.value = senha || '';
 
             limparLGPD();
-
             if (btnLogin) btnLogin.focus();
 
-            if (isAtalho && btnLogin) {
-                btnLogin.click();
-            }
+            if (isAtalho && btnLogin) btnLogin.click();
         });
     });
 });
@@ -225,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <style>
 /* ==========================================================
-   LAYOUT EM DUAS COLUNAS
+   LAYOUT
    ========================================================== */
 .auth-layout {
     display: grid;
@@ -235,109 +303,88 @@ document.addEventListener('DOMContentLoaded', function () {
     width: 100%;
     align-items: start;
 }
-.auth-layout.com-dev {
-    grid-template-columns: 380px 1fr;
-}
-.auth-layout.sem-dev {
-    grid-template-columns: 1fr;
-    max-width: 440px;
-}
-.auth-layout.sem-dev .auth-card {
-    margin: 0 auto;
-    width: 100%;
-    max-width: 440px;
-}
+.auth-layout.com-dev  { grid-template-columns: 380px 1fr; }
+.auth-layout.sem-dev  { grid-template-columns: 1fr; max-width: 440px; }
+.auth-layout.sem-dev .auth-card { margin: 0 auto; width: 100%; max-width: 440px; }
 
 /* ==========================================================
-   PAINEL DEV (sidebar esquerda)
+   PAINEL DEV — TEMA CLARO
    ========================================================== */
 .dev-panel {
-    background: #0f172a;
+    background: #ffffff;
     border-radius: 18px;
     padding: 22px 20px;
-    color: #e2e8f0;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-    border: 1px solid #1e293b;
+    color: #1a2f3e;
+    box-shadow: 0 8px 32px rgba(0, 101, 119, 0.10);
+    border: 1px solid #d8edf1;
     position: sticky;
     top: 90px;
     max-height: calc(100vh - 110px);
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #334155 #1e293b;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+    position: relative;
 }
-.dev-panel::-webkit-scrollbar {
-    width: 8px;
+.dev-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 18px 18px 0 0;
+    background: linear-gradient(90deg, #006577 0%, #C9A227 100%);
 }
-.dev-panel::-webkit-scrollbar-track {
-    background: #1e293b;
-    border-radius: 4px;
-}
-.dev-panel::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 4px;
-}
+.dev-panel::-webkit-scrollbar { width: 8px; }
+.dev-panel::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+.dev-panel::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-/* Header */
 .dev-header {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 16px;
     padding-bottom: 16px;
-    border-bottom: 1px solid #1e293b;
+    border-bottom: 1px solid #e8eff3;
+    padding-top: 6px;
 }
 .dev-header-icon {
-    width: 42px;
-    height: 42px;
+    width: 42px; height: 42px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #006577, #C9A227);
+    background: linear-gradient(135deg, #006577, #004d5c);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     font-size: 1.15rem;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 101, 119, 0.25);
 }
-.dev-header-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-}
-.dev-titulo {
-    font-weight: 700;
+.dev-header-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dev-titulo    {
+    font-weight: 800;
     font-size: 0.95rem;
-    color: #ffffff;
+    color: #006577;
     letter-spacing: .2px;
 }
-.dev-subtitulo {
-    font-size: 0.72rem;
-    color: #94a3b8;
-}
+.dev-subtitulo { font-size: 0.72rem; color: #64748b; }
 
-/* Senha universal */
 .dev-senha {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    background: rgba(201, 162, 39, 0.12);
-    border: 1px solid rgba(201, 162, 39, 0.35);
+    background: #fef7e6;
+    border: 1px solid #f5d97a;
     border-radius: 10px;
     margin-bottom: 16px;
     font-size: 0.78rem;
-    color: #fcd34d;
+    color: #8a6d1a;
+    font-weight: 600;
 }
-.dev-senha i {
-    color: #C9A227;
-    font-size: 0.9rem;
-}
-.dev-senha span {
-    flex: 1;
-}
+.dev-senha i { color: #C9A227; font-size: 0.9rem; }
+.dev-senha span { flex: 1; }
 .dev-senha code {
     background: #C9A227;
-    color: #1a2f3e;
+    color: #ffffff;
     padding: 3px 10px;
     border-radius: 6px;
     font-weight: 800;
@@ -346,7 +393,6 @@ document.addEventListener('DOMContentLoaded', function () {
     letter-spacing: .5px;
 }
 
-/* Atalho rápido */
 .dev-atalho {
     display: flex;
     align-items: center;
@@ -356,99 +402,80 @@ document.addEventListener('DOMContentLoaded', function () {
     margin-bottom: 18px;
     background: linear-gradient(135deg, #006577, #004d5c);
     color: #ffffff;
-    border: 2px solid #C9A227;
+    border: none;
     border-radius: 11px;
     font-family: inherit;
     font-size: 0.86rem;
     font-weight: 600;
     cursor: pointer;
     transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 6px 18px rgba(0, 101, 119, 0.35);
+    box-shadow: 0 6px 18px rgba(0, 101, 119, 0.25);
     text-align: left;
 }
-.dev-atalho > i:first-child {
-    color: #C9A227;
-    font-size: 1rem;
-}
-.dev-atalho span {
-    flex: 1;
-    color: #ffffff;
-}
-.dev-atalho strong {
-    color: #C9A227;
-    font-weight: 800;
-}
-.dev-atalho-arrow {
-    opacity: 0.7;
-    transition: transform .2s;
-    color: #ffffff;
-    font-size: 0.8rem;
-}
-.dev-atalho:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 26px rgba(0, 101, 119, 0.45);
-}
-.dev-atalho:hover .dev-atalho-arrow {
-    transform: translateX(4px);
-    opacity: 1;
-}
+.dev-atalho > i:first-child { color: #C9A227; font-size: 1rem; }
+.dev-atalho span { flex: 1; color: #ffffff; }
+.dev-atalho strong { color: #C9A227; font-weight: 800; }
+.dev-atalho-arrow { opacity: 0.7; transition: transform .2s; color: #ffffff; font-size: 0.8rem; }
+.dev-atalho:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0, 101, 119, 0.35); }
+.dev-atalho:hover .dev-atalho-arrow { transform: translateX(4px); opacity: 1; }
+.dev-atalho:active { transform: translateY(0) scale(.99); }
 
-/* Grupos */
-.dev-grupo {
-    margin-bottom: 18px;
-}
-.dev-grupo:last-of-type {
-    margin-bottom: 12px;
-}
+.dev-grupo { margin-bottom: 18px; }
+.dev-grupo:last-of-type { margin-bottom: 12px; }
 .dev-grupo-titulo {
     font-size: 0.68rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    color: #94a3b8;
+    color: #006577;
     margin-bottom: 8px;
     padding-left: 2px;
-}
-
-.dev-lista {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    gap: 8px;
+}
+.dev-grupo-titulo::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0, 101, 119, 0.15), transparent);
 }
 
-/* Item de usuário — ALTO CONTRASTE */
+.dev-lista { display: flex; flex-direction: column; gap: 6px; }
+
+/* Item do usuário — TEMA CLARO com alto contraste */
 .dev-user {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
     padding: 9px 12px;
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-left: 4px solid var(--user-cor, #64748b);
     border-radius: 9px;
     cursor: pointer;
     transition: all .18s ease;
     font-family: inherit;
     text-align: left;
-    color: #ffffff;
+    color: #1a2f3e;
 }
 .dev-user:hover {
     background: var(--user-cor, #64748b);
     border-color: var(--user-cor, #64748b);
     transform: translateX(3px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 .dev-user:hover .dev-user-info strong,
-.dev-user:hover .dev-user-info small,
-.dev-user:hover .dev-user-avatar,
-.dev-user:hover .dev-user-seta {
+.dev-user:hover .dev-user-info small { color: #ffffff; }
+.dev-user:hover .dev-user-avatar {
+    background: rgba(255, 255, 255, 0.25);
     color: #ffffff;
 }
+.dev-user:hover .dev-user-seta { color: #ffffff; }
 
 .dev-user-avatar {
-    width: 30px;
-    height: 30px;
+    width: 30px; height: 30px;
     border-radius: 8px;
     background: var(--user-cor, #64748b);
     display: flex;
@@ -459,71 +486,51 @@ document.addEventListener('DOMContentLoaded', function () {
     flex-shrink: 0;
     transition: all .18s ease;
 }
-.dev-user:hover .dev-user-avatar {
-    background: rgba(255, 255, 255, 0.25);
-    color: #ffffff;
-}
 
-.dev-user-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    min-width: 0;
-}
+.dev-user-info { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .dev-user-info strong {
     font-size: 0.84rem;
     font-weight: 700;
-    color: #ffffff;
+    color: #1a2f3e;
     letter-spacing: .2px;
     line-height: 1.2;
+    transition: color .18s ease;
 }
 .dev-user-info small {
     font-size: 0.68rem;
-    color: #94a3b8;
+    color: #64748b;
     line-height: 1.2;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     transition: color .18s ease;
 }
-
 .dev-user-seta {
     font-size: 0.7rem;
-    color: #64748b;
+    color: #94a3b8;
     transition: all .18s ease;
     flex-shrink: 0;
 }
 
-/* Rodapé */
 .dev-footer {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 10px 12px;
     margin-top: 14px;
-    background: #1e293b;
+    background: #f8fdfe;
+    border: 1px solid #e8eff3;
     border-radius: 8px;
     font-size: 0.7rem;
-    color: #94a3b8;
+    color: #64748b;
     line-height: 1.4;
 }
-.dev-footer i {
-    color: #10b981;
-    font-size: 0.8rem;
-    flex-shrink: 0;
-}
-.dev-footer strong {
-    color: #e2e8f0;
-}
+.dev-footer i { color: #059669; font-size: 0.8rem; flex-shrink: 0; }
+.dev-footer strong { color: #006577; }
 
 /* ==========================================================
    CARD DE LOGIN
    ========================================================== */
-.auth-card {
-    /* login.css já cuida do básico */
-}
-
 .input-wrap {
     position: relative;
     display: flex;
@@ -553,10 +560,7 @@ document.addEventListener('DOMContentLoaded', function () {
     transition: all .2s ease;
     font-size: 0.9rem;
 }
-.toggle-senha:hover {
-    color: #006577;
-    background: rgba(0, 101, 119, 0.06);
-}
+.toggle-senha:hover { color: #006577; background: rgba(0, 101, 119, 0.06); }
 .remember-group {
     display: flex !important;
     justify-content: space-between;
@@ -572,58 +576,34 @@ document.addEventListener('DOMContentLoaded', function () {
     font-weight: 500;
     transition: color .2s ease;
 }
-.link-esqueci:hover {
-    color: #C9A227;
-    text-decoration: underline;
-}
+.link-esqueci:hover { color: #C9A227; text-decoration: underline; }
 .btn-full {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
     gap: 8px;
 }
-.btn-full i {
-    font-size: 0.9rem;
-}
+.btn-full i { font-size: 0.9rem; }
 
 /* ==========================================================
    RESPONSIVO
    ========================================================== */
 @media (max-width: 900px) {
-    .auth-layout.com-dev {
-        grid-template-columns: 1fr;
-        max-width: 520px;
-    }
-    .dev-panel {
-        position: static;
-        max-height: none;
-        order: 2;   /* painel vai para baixo do login no mobile */
-    }
-    .auth-card {
-        order: 1;
-    }
+    .auth-layout.com-dev { grid-template-columns: 1fr; max-width: 520px; }
+    .dev-panel { position: static; max-height: none; order: 2; }
+    .auth-card { order: 1; }
 }
 
 @media (max-width: 520px) {
-    .dev-panel {
-        padding: 16px 14px;
-        border-radius: 14px;
-    }
-    .dev-header-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-    }
+    .dev-panel { padding: 16px 14px; border-radius: 14px; }
+    .dev-panel::before { border-radius: 14px 14px 0 0; }
+    .dev-header-icon { width: 36px; height: 36px; font-size: 1rem; }
     .dev-titulo { font-size: 0.88rem; }
     .dev-user-info strong { font-size: 0.8rem; }
     .dev-user-info small { font-size: 0.64rem; }
     .dev-atalho { font-size: 0.82rem; padding: 11px 14px; }
-    .remember-group {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+    .remember-group { flex-direction: column; align-items: flex-start; }
 }
 </style>
 
-<?php
-require_once __DIR__ . '/../layouts/footer.php';
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>

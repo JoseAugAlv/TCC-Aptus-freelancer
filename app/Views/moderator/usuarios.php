@@ -1,9 +1,6 @@
 <?php
 require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/moderator/usuarios.php
-// [FIX-ALTA-01] Formulário de banir agora exige motivo (obrigatório).
-//               Mostra também o status (ativo / inativo / banido) de cada
-//               usuário, quando disponível no retorno do Model.
 
 $tituloPagina = $tituloPagina ?? 'Usuários - Aptus';
 $cssPagina    = $cssPagina    ?? 'usuarios.css';
@@ -68,18 +65,23 @@ $roleLogado = (int) ($_SESSION['usuario']['role'] ?? 0);
                             </td>
                             <td><?= date('d/m/Y', strtotime($usuario['data_criacao'])) ?></td>
                             <td>
-                                <a href="/Aptus/perfil/publico/<?= (int) $usuario['id_usuario'] ?>" class="btn-ver">Ver</a>
+                                <div class="acoes-linha">
+                                    <a href="/Aptus/perfil/publico/<?= (int) $usuario['id_usuario'] ?>" class="btn-ver">
+                                        Ver
+                                    </a>
 
-                                <?php if (in_array($roleLogado, [1, 4], true) && !$banido): ?>
-                                    <form method="POST" action="/Aptus/admin/usuarios/banir"
-                                          onsubmit="return confirm('Confirmar banimento deste usuário? O motivo ficará registrado.');">
-                                        <input type="hidden" name="id" value="<?= (int) $usuario['id_usuario'] ?>">
-                                        <input type="text" name="motivo" placeholder="Motivo do banimento"
-                                               required maxlength="255" class="input-motivo">
-                                        <?= CsrfMiddleware::field() ?>
-                                        <button type="submit" class="btn-banir">Banir</button>
-                                    </form>
-                                <?php endif; ?>
+                                    <?php if (in_array($roleLogado, [1, 4], true) && !$banido): ?>
+                                        <form method="POST" action="/Aptus/admin/usuarios/banir"
+                                              class="form-banir"
+                                              onsubmit="return confirm('Confirmar banimento deste usuário?');">
+                                            <input type="hidden" name="id" value="<?= (int) $usuario['id_usuario'] ?>">
+                                            <input type="text" name="motivo" placeholder="Motivo do banimento"
+                                                   required maxlength="255" class="input-motivo">
+                                            <?= CsrfMiddleware::field() ?>
+                                            <button type="submit" class="btn-banir">Banir</button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -92,5 +94,21 @@ $roleLogado = (int) ($_SESSION['usuario']['role'] ?? 0);
         </div>
     <?php endif; ?>
 </div>
+
+<style>
+.acoes-linha {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+.acoes-linha .form-banir {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    flex-wrap: wrap;
+}
+</style>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

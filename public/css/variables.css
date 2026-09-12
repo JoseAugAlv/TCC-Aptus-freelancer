@@ -1,8 +1,7 @@
 /* public/css/variables.css
-   [FIX-ALTA-3.3] Arquivo consolidado e agora carregado no header.php.
-   Todas as variáveis globais em um único lugar. Cada CSS específico
-   de página deve consumir estas variáveis em vez de redeclarar :root.
-*/
+   Fonte única de verdade para todas as variáveis globais do Aptus.
+   Carregado no header.php ANTES de qualquer CSS específico de página.
+   Nenhum CSS de página deve redeclarar :root. */
 
 :root {
     /* ========== Cores primárias ========== */

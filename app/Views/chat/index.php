@@ -1,13 +1,14 @@
 <?php
+require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 // app/Views/chat/index.php
 
 $tituloPagina = $tituloPagina ?? 'Chat - Aptus';
-$cssPagina = $cssPagina ?? 'chat.css';
+$cssPagina    = $cssPagina    ?? 'chat.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
 $conversas = $conversas ?? [];
-$usuario = $_SESSION['usuario'] ?? null;
+$usuario   = $_SESSION['usuario'] ?? null;
 ?>
 
 <div class="chat-container">
@@ -19,8 +20,8 @@ $usuario = $_SESSION['usuario'] ?? null;
     <hr>
 
     <?php if (isset($_SESSION['flash'])): ?>
-        <div class="flash-<?= $_SESSION['flash']['tipo'] ?>">
-            <?= htmlspecialchars($_SESSION['flash']['mensagem']) ?>
+        <div class="flash-<?= htmlspecialchars($_SESSION['flash']['tipo'], ENT_QUOTES, 'UTF-8') ?>">
+            <?= htmlspecialchars($_SESSION['flash']['mensagem'], ENT_QUOTES, 'UTF-8') ?>
         </div>
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
@@ -29,9 +30,9 @@ $usuario = $_SESSION['usuario'] ?? null;
         <div class="chat-empty">
             <i class="fas fa-inbox" style="font-size: 4rem; color: #d1d5db;"></i>
             <h3>Nenhuma conversa ainda</h3>
-            <p>Quando voce enviar ou receber um interesse, o chat sera ativado.</p>
+            <p>Quando você enviar ou receber um interesse, o chat será ativado.</p>
             <a href="/Aptus/anuncios" class="btn-explorar">
-                <i class="fas fa-search"></i> Explorar Servicos
+                <i class="fas fa-search"></i> Explorar Serviços
             </a>
         </div>
     <?php else: ?>
@@ -40,7 +41,7 @@ $usuario = $_SESSION['usuario'] ?? null;
                 <a href="/Aptus/chat/<?= $conversa['id_interesse'] ?>" class="conversa-item <?= ($conversa['nao_lidas'] ?? 0) > 0 ? 'nao-lida' : '' ?>">
                     <div class="conversa-avatar">
                         <?php if (!empty($conversa['outro_usuario_foto']) && $conversa['outro_usuario_foto'] != 'default.png'): ?>
-                            <img src="/Aptus/public/uploads/<?= htmlspecialchars($conversa['outro_usuario_foto']) ?>" 
+                            <img src="<?= htmlspecialchars(\UploadHelper::getUrl($conversa['outro_usuario_foto']), ENT_QUOTES, 'UTF-8') ?>"
                                  alt="<?= htmlspecialchars($conversa['outro_usuario_nome']) ?>">
                         <?php else: ?>
                             <i class="fas fa-user-circle"></i>

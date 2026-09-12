@@ -4,16 +4,16 @@ require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 // app/Views/anuncios/show.php
 
 $tituloPagina = $tituloPagina ?? 'Detalhes do Servico - Aptus';
-$cssPagina = 'show.css';
+$cssPagina    = 'show.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
-$anuncio = $anuncio ?? [];
-$fotos = $fotos ?? [];
-$usuario = $_SESSION['usuario'] ?? null;
-$usuarioInteressado = $usuarioInteressado ?? false;
-$favoritado = $favoritado ?? false;
-$totalFavoritos = $totalFavoritos ?? 0;
+$anuncio             = $anuncio ?? [];
+$fotos               = $fotos ?? [];
+$usuario             = $_SESSION['usuario'] ?? null;
+$usuarioInteressado  = $usuarioInteressado ?? false;
+$favoritado          = $favoritado ?? false;
+$totalFavoritos      = $totalFavoritos ?? 0;
 ?>
 
 <h1>Detalhes do Servico</h1>
@@ -31,7 +31,7 @@ $totalFavoritos = $totalFavoritos ?? 0;
     <div class="detalhes-imagem">
         <?php if (!empty($anuncio['foto_capa'])): ?>
             <img src="<?= htmlspecialchars(\UploadHelper::getUrl($anuncio['foto_capa']), ENT_QUOTES, 'UTF-8') ?>"
-                alt="<?= htmlspecialchars($anuncio['titulo'] ?? 'Imagem do serviço', ENT_QUOTES, 'UTF-8') ?>">
+                 alt="<?= htmlspecialchars($anuncio['titulo'] ?? 'Imagem do serviço', ENT_QUOTES, 'UTF-8') ?>">
         <?php else: ?>
             <i class="fas fa-briefcase"></i>
         <?php endif; ?>
@@ -43,10 +43,9 @@ $totalFavoritos = $totalFavoritos ?? 0;
                 <i class="<?= htmlspecialchars($anuncio['categoria_icone'] ?? 'fas fa-tag') ?>"></i>
                 <?= htmlspecialchars($anuncio['categoria_nome'] ?? 'Geral') ?>
             </div>
-            
-            <!-- BOTAO FAVORITO -->
+
             <?php if ($usuario && $usuario['id'] != $anuncio['id_usuario']): ?>
-                <button class="btn-favorito <?= $favoritado ? 'ativo' : '' ?>" 
+                <button class="btn-favorito <?= $favoritado ? 'ativo' : '' ?>"
                         data-anuncio-id="<?= $anuncio['id_anuncio'] ?>">
                     <i class="<?= $favoritado ? 'fas' : 'far' ?> fa-heart"></i>
                     <span class="favorito-texto">
@@ -56,9 +55,9 @@ $totalFavoritos = $totalFavoritos ?? 0;
                 </button>
             <?php endif; ?>
         </div>
-        
+
         <h2><?= htmlspecialchars($anuncio['titulo']) ?></h2>
-        
+
         <p class="preco-destaque">
             <i class="fas fa-tag"></i> R$ <?= number_format($anuncio['preco'], 2, ',', '.') ?>
         </p>
@@ -89,7 +88,7 @@ $totalFavoritos = $totalFavoritos ?? 0;
             <div class="freelancer-header">
                 <div class="freelancer-avatar">
                     <?php if (!empty($anuncio['foto_perfil']) && $anuncio['foto_perfil'] != 'default.png'): ?>
-                        <img alt="Foto do anúncio" src="/Aptus/public/uploads/<?= htmlspecialchars($anuncio['foto_perfil']) ?>" 
+                        <img src="<?= htmlspecialchars(\UploadHelper::getUrl('uploads/perfil/' . basename($anuncio['foto_perfil'])), ENT_QUOTES, 'UTF-8') ?>"
                              alt="<?= htmlspecialchars($anuncio['freelancer_nome']) ?>">
                     <?php else: ?>
                         <i class="fas fa-user"></i>
@@ -104,7 +103,8 @@ $totalFavoritos = $totalFavoritos ?? 0;
                     </p>
                     <?php if (!empty($anuncio['cidade']) || !empty($anuncio['estado'])): ?>
                         <p>
-                            <i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($anuncio['cidade'] ?? '') . (!empty($anuncio['cidade']) && !empty($anuncio['estado']) ? ', ' : '') . htmlspecialchars($anuncio['estado'] ?? '') ?>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <?= htmlspecialchars($anuncio['cidade'] ?? '') . (!empty($anuncio['cidade']) && !empty($anuncio['estado']) ? ', ' : '') . htmlspecialchars($anuncio['estado'] ?? '') ?>
                         </p>
                     <?php endif; ?>
                 </div>
@@ -114,7 +114,6 @@ $totalFavoritos = $totalFavoritos ?? 0;
             <?php endif; ?>
         </div>
 
-        <!-- BOTOES DE ACAO -->
         <div class="detalhes-acoes">
             <?php if ($usuario && $usuario['id'] != $anuncio['id_usuario']): ?>
                 <?php if ($usuarioInteressado): ?>
@@ -122,35 +121,32 @@ $totalFavoritos = $totalFavoritos ?? 0;
                         <i class="fas fa-check-circle"></i> Proposta Enviada
                     </button>
                 <?php else: ?>
-                    <form method="POST" action="/Aptus/interesses/criar?anuncio=<?= $anuncio['id_anuncio'] ?>" 
-                          id="formInteresse">
+                    <form method="POST" action="/Aptus/interesses/criar?anuncio=<?= $anuncio['id_anuncio'] ?>" id="formInteresse">
                         <input type="hidden" name="mensagem" value="Ola! Tenho interesse no seu servico.">
                         <button type="submit" class="btn-interesse" id="btnInteresse">
                             <i class="fas fa-handshake"></i> Tenho Interesse
                         </button>
-                    <?= CsrfMiddleware::field() ?>
-</form>
+                        <?= CsrfMiddleware::field() ?>
+                    </form>
                 <?php endif; ?>
             <?php elseif (!$usuario): ?>
                 <a href="/Aptus/login" class="btn-interesse">
                     <i class="fas fa-sign-in-alt"></i> Faca login para ter interesse
                 </a>
             <?php endif; ?>
-            
+
             <?php if ($usuario && $usuario['id'] == $anuncio['id_usuario']): ?>
                 <a href="/Aptus/anuncios/editar/<?= $anuncio['id_anuncio'] ?>" class="btn-editar">
                     <i class="fas fa-edit"></i> Editar
                 </a>
             <?php endif; ?>
-            
+
             <a href="/Aptus/perfil/publico/<?= $anuncio['id_usuario'] ?>" class="btn-perfil-publico">
                 <i class="fas fa-user"></i> Ver Perfil
             </a>
 
-            <!-- BOTAO DENUNCIAR -->
             <?php if ($usuario && $usuario['id'] != $anuncio['id_usuario']): ?>
-                <a href="/Aptus/denuncias/criar?tipo=anuncio&id=<?= $anuncio['id_anuncio'] ?>" 
-                   class="btn-denunciar">
+                <a href="/Aptus/denuncias/criar?tipo=anuncio&id=<?= $anuncio['id_anuncio'] ?>" class="btn-denunciar">
                     <i class="fas fa-flag"></i> Denunciar
                 </a>
             <?php endif; ?>
@@ -158,14 +154,13 @@ $totalFavoritos = $totalFavoritos ?? 0;
     </div>
 </div>
 
-<!-- Fotos adicionais -->
 <?php if (!empty($fotos)): ?>
     <h3>Fotos do Servico</h3>
     <div class="fotos-grid">
         <?php foreach ($fotos as $foto): ?>
             <div class="foto-item">
-                <<img src="<?= htmlspecialchars(\UploadHelper::getUrl('uploads/anuncio/' . basename($foto['arquivo'])), ENT_QUOTES, 'UTF-8') ?>"
-     alt="Foto do serviço">
+                <img src="<?= htmlspecialchars(\UploadHelper::getUrl('uploads/anuncio/' . basename($foto['arquivo'])), ENT_QUOTES, 'UTF-8') ?>"
+                     alt="Foto do serviço">
             </div>
         <?php endforeach; ?>
     </div>
@@ -176,13 +171,11 @@ $totalFavoritos = $totalFavoritos ?? 0;
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/Aptus/public/js/favoritos.js"></script>
 
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('formInteresse');
-    var btn = document.getElementById('btnInteresse');
-    
+    var btn  = document.getElementById('btnInteresse');
+
     if (form && btn) {
         form.addEventListener('submit', function(e) {
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';

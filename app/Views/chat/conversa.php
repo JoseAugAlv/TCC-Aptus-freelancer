@@ -1,17 +1,18 @@
 <?php
 require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
+require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 // app/Views/chat/conversa.php
 
 $tituloPagina = $tituloPagina ?? 'Chat - Aptus';
-$cssPagina = $cssPagina ?? 'chat.css';
+$cssPagina    = $cssPagina    ?? 'chat.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
-$conversas = $conversas ?? [];
-$mensagens = $mensagens ?? [];
-$interesse = $interesse ?? [];
+$conversas    = $conversas    ?? [];
+$mensagens    = $mensagens    ?? [];
+$interesse    = $interesse    ?? [];
 $outroUsuario = $outroUsuario ?? [];
-$usuario = $_SESSION['usuario'] ?? null;
+$usuario      = $_SESSION['usuario'] ?? null;
 ?>
 
 <div class="chat-full">
@@ -24,12 +25,12 @@ $usuario = $_SESSION['usuario'] ?? null;
                 <p class="chat-sidebar-vazio">Nenhuma conversa</p>
             <?php else: ?>
                 <?php foreach ($conversas as $conv): ?>
-                    <a href="/Aptus/chat/<?= $conv['id_interesse'] ?>" 
-                       class="chat-sidebar-item <?= ($conv['id_interesse'] == $interesse['id_interesse']) ? 'ativo' : '' ?>
+                    <a href="/Aptus/chat/<?= $conv['id_interesse'] ?>"
+                       class="chat-sidebar-item <?= ($conv['id_interesse'] == ($interesse['id_interesse'] ?? 0)) ? 'ativo' : '' ?>
                               <?= ($conv['nao_lidas'] ?? 0) > 0 ? 'nao-lida' : '' ?>">
                         <div class="chat-sidebar-avatar">
                             <?php if (!empty($conv['outro_usuario_foto']) && $conv['outro_usuario_foto'] != 'default.png'): ?>
-                                <img src="/Aptus/public/uploads/<?= htmlspecialchars($conv['outro_usuario_foto']) ?>">
+                                <img src="<?= htmlspecialchars(\UploadHelper::getUrl($conv['outro_usuario_foto']), ENT_QUOTES, 'UTF-8') ?>">
                             <?php else: ?>
                                 <i class="fas fa-user"></i>
                             <?php endif; ?>
@@ -52,7 +53,7 @@ $usuario = $_SESSION['usuario'] ?? null;
             <div class="chat-main-header">
                 <div class="chat-main-usuario">
                     <?php if (!empty($outroUsuario['foto_perfil']) && $outroUsuario['foto_perfil'] != 'default.png'): ?>
-                        <img src="/Aptus/public/uploads/<?= htmlspecialchars($outroUsuario['foto_perfil']) ?>" 
+                        <img src="<?= htmlspecialchars(\UploadHelper::getUrl($outroUsuario['foto_perfil']), ENT_QUOTES, 'UTF-8') ?>"
                              alt="<?= htmlspecialchars($outroUsuario['nome']) ?>">
                     <?php else: ?>
                         <i class="fas fa-user-circle"></i>
@@ -63,7 +64,7 @@ $usuario = $_SESSION['usuario'] ?? null;
                     </div>
                 </div>
                 <a href="/Aptus/anuncios/<?= htmlspecialchars($interesse['anuncio_slug'] ?? '') ?>" class="btn-ver-anuncio">
-                    <i class="fas fa-eye"></i> Ver Anuncio
+                    <i class="fas fa-eye"></i> Ver Anúncio
                 </a>
             </div>
 
@@ -75,7 +76,7 @@ $usuario = $_SESSION['usuario'] ?? null;
                     </div>
                 <?php else: ?>
                     <?php foreach ($mensagens as $msg): ?>
-                        <div class="chat-mensagem <?= ($msg['id_remetente'] == $usuario['id']) ? 'enviada' : 'recebida' ?>" 
+                        <div class="chat-mensagem <?= ($msg['id_remetente'] == $usuario['id']) ? 'enviada' : 'recebida' ?>"
                              data-id="<?= $msg['id_mensagem'] ?>">
                             <div class="chat-mensagem-conteudo">
                                 <div class="chat-mensagem-texto"><?= nl2br(htmlspecialchars($msg['mensagem'])) ?></div>
@@ -93,8 +94,8 @@ $usuario = $_SESSION['usuario'] ?? null;
                     <button type="submit" id="btnEnviar">
                         <i class="fas fa-paper-plane"></i>
                     </button>
-                <?= CsrfMiddleware::field() ?>
-</form>
+                    <?= CsrfMiddleware::field() ?>
+                </form>
             </div>
         <?php else: ?>
             <div class="chat-main-vazio">
@@ -108,78 +109,66 @@ $usuario = $_SESSION['usuario'] ?? null;
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var interesseId = <?= $interesse['id_interesse'] ?? 0 ?>;
-    var ultimoId = 0;
-    var usuarioId = <?= $usuario['id'] ?? 0 ?>;
-    var enviando = false;
+    var interesseId = <?= (int)($interesse['id_interesse'] ?? 0) ?>;
+    var ultimoId    = 0;
+    var usuarioId   = <?= (int)($usuario['id'] ?? 0) ?>;
+    var enviando    = false;
 
     var container = document.getElementById('chatMensagens');
-    if (container) {
-        container.scrollTop = container.scrollHeight;
-    }
+    if (container) container.scrollTop = container.scrollHeight;
 
     var mensagensExistentes = document.querySelectorAll('.chat-mensagem[data-id]');
     if (mensagensExistentes.length > 0) {
-        var ultima = mensagensExistentes[mensagensExistentes.length - 1];
-        ultimoId = parseInt(ultima.dataset.id) || 0;
+        ultimoId = parseInt(mensagensExistentes[mensagensExistentes.length - 1].dataset.id) || 0;
     }
 
-    var form = document.getElementById('formEnviarMensagem');
-    var input = document.getElementById('mensagemInput');
+    var form      = document.getElementById('formEnviarMensagem');
+    var input     = document.getElementById('mensagemInput');
     var btnEnviar = document.getElementById('btnEnviar');
+
+    function escaparHtml(texto) {
+        return String(texto)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function formatarMensagem(texto) {
+        return escaparHtml(texto).replace(/\n/g, '<br>');
+    }
 
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            if (enviando) {
-                return;
-            }
+            if (enviando) return;
 
             var mensagem = input.value.trim();
-            console.log('Mensagem capturada:', mensagem);
-            
-            if (mensagem === '') {
-                console.log('Mensagem vazia, ignorando');
-                return;
-            }
+            if (mensagem === '') return;
 
             input.value = '';
-            
             enviando = true;
             input.disabled = true;
             btnEnviar.disabled = true;
             btnEnviar.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
             var msgElement = criarMensagemTemporaria(mensagem);
-            
             var vazia = document.getElementById('mensagemVazia');
             if (vazia) vazia.remove();
-
             container.appendChild(msgElement);
             container.scrollTop = container.scrollHeight;
 
-            // ENVIAR COMO JSON
-            var dados = {
-                interesse_id: interesseId,
-                mensagem: mensagem
-            };
-            
-            console.log('Enviando JSON:', dados);
-            
             fetch('/Aptus/chat/enviar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-Token': document.querySelector('input[name="_csrf_token"]').value,
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
                 },
-                body: JSON.stringify(dados)
+                body: JSON.stringify({ interesse_id: interesseId, mensagem: mensagem })
             })
-            .then(function(response) { 
-                return response.json(); 
-            })
+            .then(r => r.json())
             .then(function(data) {
-                console.log('Resposta:', data);
                 if (data.success) {
                     atualizarMensagem(msgElement, data.mensagem, true);
                     if (data.mensagem && data.mensagem.id_mensagem) {
@@ -190,26 +179,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     msgElement.querySelector('.chat-mensagem-conteudo').style.borderColor = '#ef4444';
                     msgElement.querySelector('.chat-mensagem-hora').textContent = 'Erro: ' + (data.message || 'Falha ao enviar');
                     msgElement.querySelector('.chat-mensagem-hora').style.color = '#ef4444';
-                    
                     input.disabled = false;
                     btnEnviar.disabled = false;
                     btnEnviar.innerHTML = '<i class="fas fa-paper-plane"></i>';
                     enviando = false;
-                    
                     input.value = mensagem;
                 }
             })
-            .catch(function(error) {
-                console.error('Erro:', error);
+            .catch(function() {
                 msgElement.querySelector('.chat-mensagem-conteudo').style.borderColor = '#ef4444';
-                msgElement.querySelector('.chat-mensagem-hora').textContent = 'Erro de conexao';
+                msgElement.querySelector('.chat-mensagem-hora').textContent = 'Erro de conexão';
                 msgElement.querySelector('.chat-mensagem-hora').style.color = '#ef4444';
-                
                 input.disabled = false;
                 btnEnviar.disabled = false;
                 btnEnviar.innerHTML = '<i class="fas fa-paper-plane"></i>';
                 enviando = false;
-                
                 input.value = mensagem;
             });
         });
@@ -218,39 +202,26 @@ document.addEventListener('DOMContentLoaded', function() {
     function criarMensagemTemporaria(mensagem) {
         var div = document.createElement('div');
         div.className = 'chat-mensagem enviada enviando';
-        div.innerHTML = `
-            <div class="chat-mensagem-conteudo">
-                <div class="chat-mensagem-texto">${mensagem.replace(/\n/g, '<br>').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-                <div class="chat-mensagem-hora">${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}</div>
-            </div>
-        `;
+        div.innerHTML = ''
+            + '<div class="chat-mensagem-conteudo">'
+            + '<div class="chat-mensagem-texto">' + formatarMensagem(mensagem) + '</div>'
+            + '<div class="chat-mensagem-hora">' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}) + '</div>'
+            + '</div>';
         return div;
     }
 
     function atualizarMensagem(elemento, msg, minha) {
         elemento.className = 'chat-mensagem ' + (minha ? 'enviada' : 'recebida');
         elemento.dataset.id = msg.id_mensagem || 0;
-        
         var texto = elemento.querySelector('.chat-mensagem-texto');
-        var mensagemTexto = msg.mensagem || '';
-        texto.textContent = mensagemTexto;
-        texto.innerHTML = mensagemTexto.replace(/\n/g, '<br>').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        
+        texto.innerHTML = formatarMensagem(msg.mensagem || '');
         var hora = elemento.querySelector('.chat-mensagem-hora');
-        var data = new Date(msg.data_envio || Date.now());
-        hora.textContent = data.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+        hora.textContent = new Date(msg.data_envio || Date.now()).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
         hora.style.color = '';
-        
-        var input = document.getElementById('mensagemInput');
-        var btnEnviar = document.getElementById('btnEnviar');
-        if (input) {
-            input.disabled = false;
-            input.focus();
-        }
-        if (btnEnviar) {
-            btnEnviar.disabled = false;
-            btnEnviar.innerHTML = '<i class="fas fa-paper-plane"></i>';
-        }
+        input.disabled = false;
+        input.focus();
+        btnEnviar.disabled = false;
+        btnEnviar.innerHTML = '<i class="fas fa-paper-plane"></i>';
         enviando = false;
     }
 
@@ -258,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (interesseId === 0) return;
 
         fetch('/Aptus/chat/mensagens?interesse_id=' + interesseId + '&ultimo_id=' + ultimoId)
-        .then(function(response) { return response.json(); })
+        .then(r => r.json())
         .then(function(data) {
             if (data.success && data.mensagens.length > 0) {
                 data.mensagens.forEach(function(msg) {
@@ -266,9 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     var existe = document.querySelector('.chat-mensagem[data-id="' + msg.id_mensagem + '"]');
                     if (!existe) {
                         adicionarMensagemRecebida(msg, minha);
-                        if (msg.id_mensagem > ultimoId) {
-                            ultimoId = msg.id_mensagem;
-                        }
+                        if (msg.id_mensagem > ultimoId) ultimoId = msg.id_mensagem;
                     }
                 });
                 container.scrollTop = container.scrollHeight;
@@ -281,22 +250,17 @@ document.addEventListener('DOMContentLoaded', function() {
         var div = document.createElement('div');
         div.className = 'chat-mensagem ' + (minha ? 'enviada' : 'recebida');
         div.dataset.id = msg.id_mensagem;
-        var mensagemTexto = msg.mensagem || '';
-        div.innerHTML = `
-            <div class="chat-mensagem-conteudo">
-                <div class="chat-mensagem-texto">${mensagemTexto.replace(/\n/g, '<br>').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-                <div class="chat-mensagem-hora">${new Date(msg.data_envio).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}</div>
-            </div>
-        `;
+        div.innerHTML = ''
+            + '<div class="chat-mensagem-conteudo">'
+            + '<div class="chat-mensagem-texto">' + formatarMensagem(msg.mensagem || '') + '</div>'
+            + '<div class="chat-mensagem-hora">' + new Date(msg.data_envio).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}) + '</div>'
+            + '</div>';
         container.appendChild(div);
-        
         var vazia = document.getElementById('mensagemVazia');
         if (vazia) vazia.remove();
     }
 
-    if (interesseId > 0) {
-        setInterval(buscarNovasMensagens, 3000);
-    }
+    if (interesseId > 0) setInterval(buscarNovasMensagens, 3000);
 
     if (input) {
         input.addEventListener('keypress', function(e) {
