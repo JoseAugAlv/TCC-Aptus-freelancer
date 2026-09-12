@@ -8,11 +8,13 @@ class FreelancerController
 {
     private $dashboard;
     private $usuario;
+    private $interesse;
 
     public function __construct()
     {
         $this->dashboard = new Dashboard();
         $this->usuario = new Usuario();
+        $this->interesse = new Interesse();
     }
 
     public function dashboard()
