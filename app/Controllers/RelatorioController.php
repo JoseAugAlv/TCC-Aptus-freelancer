@@ -47,8 +47,6 @@ class RelatorioController
         $totalBuscasSemana = $this->buscaLog->getTotalBuscas(7);
         $totalAnuncios = $this->anuncio->getTotal();
         $totalUsuarios = $this->usuario->getTotalAtivos();
-        $totalInteresses = $this->interesse->countAtivosByFreelancer(0); // Pegar total de interesses ativos
-        $totalInteressesConcluidos = $this->interesse->countConcluidosByFreelancer(0);
         
         // Para o total de interesses, vamos buscar do banco
         $pdo = Database::getConnection();
