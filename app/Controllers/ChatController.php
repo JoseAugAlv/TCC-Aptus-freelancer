@@ -11,239 +11,193 @@ class ChatController
 
     public function __construct()
     {
-        $this->mensagem = new Mensagem();
+        $this->mensagem  = new Mensagem();
         $this->interesse = new Interesse();
     }
 
-    /**
-     * Pagina principal do chat - lista conversas
-     * Rota: GET /chat
-     */
     public function index()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
-        $usuarioId = $_SESSION['usuario']['id'];
+        $usuarioId = (int) $_SESSION['usuario']['id'];
         $conversas = $this->mensagem->getConversasRecentes($usuarioId);
-        
+
         $tituloPagina = 'Chat - Aptus';
         $cssPagina = 'chat.css';
-        
         require '../app/Views/chat/index.php';
     }
 
-    /**
-     * Abre uma conversa especifica
-     * Rota: GET /chat/{id}
-     */
     public function conversa($interesseId = null)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!$interesseId) { header('Location: /Aptus/chat'); exit; }
 
-        if (!$interesseId) {
-            header('Location: /Aptus/chat');
-            exit;
-        }
+        $usuarioId = (int) $_SESSION['usuario']['id'];
 
-        $usuarioId = $_SESSION['usuario']['id'];
-        
-        // Verificar se o usuario tem permissao
         if (!$this->mensagem->usuarioPodeVer($interesseId, $usuarioId)) {
             header('Location: /Aptus/chat');
             exit;
         }
 
-        // Buscar dados do interesse
         $interesse = $this->mensagem->getDadosInteresse($interesseId, $usuarioId);
-        if (!$interesse) {
-            header('Location: /Aptus/chat');
-            exit;
-        }
+        if (!$interesse) { header('Location: /Aptus/chat'); exit; }
 
-        // Buscar o outro usuario
         $outroUsuario = $this->mensagem->getOutroUsuario($interesseId, $usuarioId);
-        
-        // Buscar mensagens
-        $mensagens = $this->mensagem->getByInteresse($interesseId, 100);
-        
-        // Marcar mensagens como lidas
+        $mensagens    = $this->mensagem->getByInteresse($interesseId, 100);
+
         $this->mensagem->marcarLidas($interesseId, $usuarioId);
 
-        // Buscar conversas recentes para a sidebar
         $conversas = $this->mensagem->getConversasRecentes($usuarioId);
-        
+
         $tituloPagina = 'Chat - Aptus';
         $cssPagina = 'chat.css';
-        
         require '../app/Views/chat/conversa.php';
     }
 
-    /**
-     * Envia uma nova mensagem (AJAX)
-     * Rota: POST /chat/enviar
-     */
     public function enviar()
     {
-        // Ativar debug
-
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
+        if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) {
             http_response_code(401);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'Login necessario']);
             exit;
         }
 
-        // DEBUG: Ver o que está chegando
-        error_log("=== CHAT ENVIAR ===");
+        $usuarioId = (int) $_SESSION['usuario']['id'];
 
-        $usuarioId = $_SESSION['usuario']['id'];
-        
-        // Tentar pegar de diferentes formas
-        $interesseId = isset($_POST['interesse_id']) ? (int)$_POST['interesse_id'] : 0;
-        $mensagem = isset($_POST['mensagem']) ? trim($_POST['mensagem']) : '';
-        
-        // Se veio como JSON (Content-Type: application/json)
-        if (empty($mensagem) && empty($_POST)) {
-            $input = json_decode(file_get_contents('php://input'), true);
-            if ($input) {
-                $interesseId = isset($input['interesse_id']) ? (int)$input['interesse_id'] : 0;
-                $mensagem = isset($input['mensagem']) ? trim($input['mensagem']) : '';
-                
+        $interesseId = 0;
+        $mensagem    = '';
+
+        // 1) Tenta ler JSON primeiro (Content-Type: application/json)
+        $rawBody = file_get_contents('php://input');
+        if (is_string($rawBody) && $rawBody !== '') {
+            $input = json_decode($rawBody, true);
+            if (is_array($input)) {
+                $interesseId = (int) ($input['interesse_id'] ?? 0);
+                $mensagem    = trim((string) ($input['mensagem'] ?? ''));
             }
         }
 
-        error_log("interesseId: $interesseId");
-        error_log("mensagem: '$mensagem'");
-        error_log("usuarioId: $usuarioId");
+        // 2) Fallback form-encoded
+        if ($interesseId === 0 && !empty($_POST)) {
+            $interesseId = (int) ($_POST['interesse_id'] ?? 0);
+            $mensagem    = trim((string) ($_POST['mensagem'] ?? ''));
+        }
 
         if ($interesseId <= 0) {
-            error_log("ERRO: interesse_id invalido");
             http_response_code(400);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'ID do interesse invalido']);
             exit;
         }
 
-        if (empty($mensagem)) {
-            error_log("ERRO: mensagem vazia");
+        if ($mensagem === '') {
             http_response_code(400);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'Mensagem vazia']);
             exit;
         }
 
-        // Verificar permissao
+        if (mb_strlen($mensagem) > 2000) {
+            http_response_code(413);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['success' => false, 'message' => 'Mensagem muito longa (max. 2000 caracteres)']);
+            exit;
+        }
+
         if (!$this->mensagem->usuarioPodeVer($interesseId, $usuarioId)) {
-            error_log("ERRO: Usuario sem permissao");
             http_response_code(403);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'Sem permissao']);
             exit;
         }
 
-        // Buscar dados do interesse para saber o destinatario
         $interesse = $this->interesse->findById($interesseId);
         if (!$interesse) {
-            error_log("ERRO: Interesse nao encontrado - ID: $interesseId");
             http_response_code(404);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'Interesse nao encontrado']);
             exit;
         }
 
-        // Determinar destinatario
-        $destinatarioId = ($interesse['id_contratante'] == $usuarioId) 
-            ? $interesse['id_freelancer'] 
-            : $interesse['id_contratante'];
+        $destinatarioId = ((int) $interesse['id_contratante'] === $usuarioId)
+            ? (int) $interesse['id_freelancer']
+            : (int) $interesse['id_contratante'];
 
-        error_log("destinatarioId: $destinatarioId");
+        try {
+            $resultado = $this->mensagem->enviar(
+                $interesseId, $usuarioId, $destinatarioId, $mensagem
+            );
 
-        // Enviar mensagem
-        $resultado = $this->mensagem->enviar($interesseId, $usuarioId, $destinatarioId, $mensagem);
+            if (!$resultado) {
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode(['success' => false, 'message' => 'Erro ao enviar mensagem']);
+                exit;
+            }
 
-        if ($resultado) {
-            // Pegar o ID da mensagem inserida
-            $pdo = Database::getConnection();
-            $mensagemId = $pdo->lastInsertId();
-            error_log("Mensagem inserida ID: $mensagemId");
-            
-            // Criar notificacao para o destinatario
-            $this->criarNotificacao($interesseId, $destinatarioId, $usuarioId, $mensagem);
-            
-            // Buscar a mensagem enviada com os dados do remetente
-            $sql = "SELECT m.*, u.nome as remetente_nome, u.foto_perfil as remetente_foto
+            $pdo        = Database::getConnection();
+            $mensagemId = (int) $pdo->lastInsertId();
+
+            $this->criarNotificacao($interesseId, $destinatarioId, $usuarioId, $mensagem, $mensagemId);
+
+            $sql = "SELECT m.*, u.nome AS remetente_nome, u.foto_perfil AS remetente_foto
                     FROM mensagem m
                     JOIN usuario u ON m.id_remetente = u.id_usuario
                     WHERE m.id_mensagem = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$mensagemId]);
             $mensagemEnviada = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            
-            
+
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode([
-                'success' => true,
-                'message' => 'Mensagem enviada',
-                'mensagem' => $mensagemEnviada
+                'success'  => true,
+                'message'  => 'Mensagem enviada',
+                'mensagem' => $mensagemEnviada,
             ]);
-        } else {
-            error_log("ERRO: Falha ao enviar mensagem no banco");
+        } catch (Throwable $e) {
+            error_log('Erro em ChatController::enviar: ' . $e->getMessage());
+            http_response_code(500);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode([
                 'success' => false,
-                'message' => 'Erro ao enviar mensagem no banco'
+                'message' => 'Erro ao enviar mensagem. Tente novamente.',
             ]);
         }
         exit;
     }
 
-    /**
-     * Busca novas mensagens (AJAX)
-     * Rota: GET /chat/mensagens
-     */
     public function mensagens()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
+        if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) {
             http_response_code(401);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'Login necessario']);
             exit;
         }
 
-        $usuarioId = $_SESSION['usuario']['id'];
-        $interesseId = (int)($_GET['interesse_id'] ?? 0);
-        $ultimoId = (int)($_GET['ultimo_id'] ?? 0);
+        $usuarioId   = (int) $_SESSION['usuario']['id'];
+        $interesseId = (int) ($_GET['interesse_id'] ?? 0);
+        $ultimoId    = (int) ($_GET['ultimo_id'] ?? 0);
 
         if ($interesseId <= 0) {
             http_response_code(400);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'ID invalido']);
             exit;
         }
 
-        // Verificar permissao
         if (!$this->mensagem->usuarioPodeVer($interesseId, $usuarioId)) {
             http_response_code(403);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'Sem permissao']);
             exit;
         }
 
-        // Buscar novas mensagens
-        $sql = "SELECT m.*, u.nome as remetente_nome, u.foto_perfil as remetente_foto
+        $sql = "SELECT m.*, u.nome AS remetente_nome, u.foto_perfil AS remetente_foto
                 FROM mensagem m
                 JOIN usuario u ON m.id_remetente = u.id_usuario
                 WHERE m.id_interesse = ? AND m.id_mensagem > ?
@@ -252,68 +206,60 @@ class ChatController
         $stmt->execute([$interesseId, $ultimoId]);
         $mensagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Marcar como lidas as mensagens recebidas
         if (!empty($mensagens)) {
             $this->mensagem->marcarLidas($interesseId, $usuarioId);
         }
 
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode([
-            'success' => true,
+            'success'   => true,
             'mensagens' => $mensagens,
-            'total' => count($mensagens)
+            'total'     => count($mensagens),
         ]);
         exit;
     }
 
-    /**
-     * Marca mensagens como lidas (AJAX)
-     * Rota: POST /chat/marcar-lida
-     */
     public function marcarLida()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
+        if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) {
             http_response_code(401);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false]);
             exit;
         }
 
-        $usuarioId = $_SESSION['usuario']['id'];
-        $interesseId = (int)($_POST['interesse_id'] ?? 0);
+        $usuarioId   = (int) $_SESSION['usuario']['id'];
+        $interesseId = (int) ($_POST['interesse_id'] ?? 0);
 
         if ($interesseId <= 0) {
             http_response_code(400);
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false]);
             exit;
         }
 
         $resultado = $this->mensagem->marcarLidas($interesseId, $usuarioId);
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode(['success' => $resultado]);
         exit;
     }
 
-    /**
-     * Cria notificacao para nova mensagem
-     */
-    private function criarNotificacao($interesseId, $destinatarioId, $remetenteId, $mensagem)
+    private function criarNotificacao($interesseId, $destinatarioId, $remetenteId, $mensagem, $mensagemId)
     {
         try {
-            $pdo = Database::getConnection();
-            
-            // Buscar nome do remetente
-            $sql = "SELECT nome FROM usuario WHERE id_usuario = ?";
+            $pdo  = Database::getConnection();
+            $sql  = "SELECT nome FROM usuario WHERE id_usuario = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$remetenteId]);
             $remetente = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            $titulo = 'Nova mensagem de ' . ($remetente['nome'] ?? 'Usuario');
-            $texto = substr($mensagem, 0, 100) . (strlen($mensagem) > 100 ? '...' : '');
-            
-            $sql = "INSERT INTO notificacao (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            $titulo = 'Nova mensagem de ' . ($remetente['nome'] ?? 'Usuário');
+            $texto  = mb_substr($mensagem, 0, 100) . (mb_strlen($mensagem) > 100 ? '...' : '');
+
+            $sql  = "INSERT INTO notificacao
+                     (id_usuario, id_interesse, tipo, titulo, mensagem, tabela_origem, registro_id)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $destinatarioId,
@@ -322,10 +268,10 @@ class ChatController
                 $titulo,
                 $texto,
                 'mensagem',
-                $pdo->lastInsertId()
+                $mensagemId,
             ]);
-        } catch (Exception $e) {
-            error_log('Erro ao criar notificacao: ' . $e->getMessage());
+        } catch (Throwable $e) {
+            error_log('Erro ao criar notificação de chat: ' . $e->getMessage());
         }
     }
 }

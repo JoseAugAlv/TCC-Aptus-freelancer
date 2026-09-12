@@ -3,7 +3,7 @@ require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/interesses/meus.php
 
 $tituloPagina = $tituloPagina ?? 'Meus Interesses - Aptus';
-$cssPagina = $cssPagina ?? 'interesses.css';
+$cssPagina    = $cssPagina    ?? 'interesses.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
@@ -19,8 +19,8 @@ $interesses = $interesses ?? [];
     <hr>
 
     <?php if (isset($_SESSION['flash'])): ?>
-        <div class="flash-<?= $_SESSION['flash']['tipo'] ?>">
-            <?= htmlspecialchars($_SESSION['flash']['mensagem']) ?>
+        <div class="flash-<?= htmlspecialchars($_SESSION['flash']['tipo'], ENT_QUOTES, 'UTF-8') ?>">
+            <?= htmlspecialchars($_SESSION['flash']['mensagem'], ENT_QUOTES, 'UTF-8') ?>
         </div>
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
@@ -29,34 +29,34 @@ $interesses = $interesses ?? [];
         <div class="interesses-empty">
             <i class="fas fa-inbox"></i>
             <h3>Nenhum interesse enviado</h3>
-            <p>Voce ainda nao enviou nenhum interesse.</p>
+            <p>Você ainda não enviou nenhum interesse.</p>
             <a href="/Aptus/anuncios" class="btn-primary">Explorar Serviços</a>
         </div>
     <?php else: ?>
         <div class="interesses-grid">
-            <?php foreach ($interesses as $interesse): 
-                $statusCor = match($interesse['situacao']) {
-                    'pendente' => '#f59e0b',
-                    'ativo' => '#3b82f6',
+            <?php foreach ($interesses as $interesse):
+                $statusCor = match ($interesse['situacao']) {
+                    'pendente'  => '#f59e0b',
+                    'ativo'     => '#3b82f6',
                     'concluido' => '#10b981',
                     'cancelado' => '#ef4444',
-                    'recusado' => '#6b7280',
-                    default => '#94a3b8'
+                    'recusado'  => '#6b7280',
+                    default     => '#94a3b8',
                 };
-                $statusLabel = match($interesse['situacao']) {
-                    'pendente' => 'Pendente',
-                    'ativo' => 'Ativo',
-                    'concluido' => 'Concluido',
+                $statusLabel = match ($interesse['situacao']) {
+                    'pendente'  => 'Pendente',
+                    'ativo'     => 'Ativo',
+                    'concluido' => 'Concluído',
                     'cancelado' => 'Cancelado',
-                    'recusado' => 'Recusado',
-                    default => ucfirst($interesse['situacao'])
+                    'recusado'  => 'Recusado',
+                    default     => ucfirst($interesse['situacao']),
                 };
             ?>
                 <div class="interesse-card">
                     <div class="interesse-header">
                         <div class="interesse-cliente">
                             <?php if (!empty($interesse['freelancer_foto']) && $interesse['freelancer_foto'] != 'default.png'): ?>
-                                <img src="/Aptus/public/uploads/<?= htmlspecialchars($interesse['freelancer_foto']) ?>" 
+                                <img src="/Aptus/public/uploads/<?= htmlspecialchars($interesse['freelancer_foto']) ?>"
                                      alt="<?= htmlspecialchars($interesse['freelancer_nome']) ?>">
                             <?php else: ?>
                                 <i class="fas fa-user-circle"></i>
@@ -99,14 +99,14 @@ $interesses = $interesses ?? [];
                                 <i class="fas fa-check-circle"></i> Serviço Ativo
                             </a>
                         <?php endif; ?>
-                        <?php if ($interesse['situacao'] == 'pendente' || $interesse['situacao'] == 'ativo'): ?>
-                            <form method="POST" action="/Aptus/interesses/cancelar" style="display: inline;">
+                        <?php if (in_array($interesse['situacao'], ['pendente', 'ativo'], true)): ?>
+                            <form method="POST" action="/Aptus/interesses/cancelar" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
+                                <?= CsrfMiddleware::field() ?>
                                 <button type="submit" class="btn-cancelar" onclick="return confirm('Cancelar este interesse?')">
                                     <i class="fas fa-times"></i> Cancelar
                                 </button>
-                            <?= CsrfMiddleware::field() ?>
-</form>
+                            </form>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -116,7 +116,7 @@ $interesses = $interesses ?? [];
 
     <div class="interesses-links">
         <a href="/Aptus/interesses/pendentes"><i class="fas fa-clock"></i> Propostas Pendentes</a>
-        <a href="/Aptus/interesses/ativos"><i class="fas fa-check-circle"></i> Servicos Ativos</a>
+        <a href="/Aptus/interesses/ativos"><i class="fas fa-check-circle"></i> Serviços Ativos</a>
         <a href="/Aptus/"><i class="fas fa-arrow-left"></i> Voltar</a>
     </div>
 </div>

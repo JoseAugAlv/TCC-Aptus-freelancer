@@ -1,7 +1,6 @@
 <footer class="footer-moderno">
     <div class="footer-container">
         <div class="footer-grid">
-            <!-- Coluna 1: Sobre -->
             <div class="footer-col">
                 <h3 class="footer-titulo">Sobre</h3>
                 <ul class="footer-links">
@@ -11,7 +10,6 @@
                 </ul>
             </div>
 
-            <!-- Coluna 2: Recursos -->
             <div class="footer-col">
                 <h3 class="footer-titulo">Recursos</h3>
                 <ul class="footer-links">
@@ -21,7 +19,6 @@
                 </ul>
             </div>
 
-            <!-- Coluna 3: Suporte -->
             <div class="footer-col">
                 <h3 class="footer-titulo">Suporte</h3>
                 <ul class="footer-links">
@@ -31,7 +28,6 @@
                 </ul>
             </div>
 
-            <!-- Coluna 4: Contato -->
             <div class="footer-col">
                 <h3 class="footer-titulo">Contato</h3>
                 <div class="footer-contato">
@@ -60,7 +56,7 @@
     </div>
 </footer>
 
-<!-- Scripts -->
 <script src="/Aptus/public/js/main.js"></script>
+<script src="/Aptus/public/js/masks.js"></script>
 </body>
 </html>

@@ -2,21 +2,49 @@
 // app/Views/notificacoes/index.php
 
 $tituloPagina = $tituloPagina ?? 'Notificações - Aptus';
-$cssPagina = $cssPagina ?? 'notificacoes.css';
+$cssPagina    = $cssPagina    ?? 'notificacoes.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
 $naoLidas = $naoLidas ?? [];
-$todas = $todas ?? [];
-$usuario = $_SESSION['usuario'] ?? null;
+$todas    = $todas    ?? [];
+$usuario  = $_SESSION['usuario'] ?? null;
 
 $mostrarTodas = isset($_GET['todas']) && $_GET['todas'] == '1';
 $notificacoes = $mostrarTodas ? $todas : $naoLidas;
+
+/**
+ * Resolve a URL de destino a partir da origem + registro_id
+ * (a tabela notificacao não tem coluna "link", então montamos aqui).
+ */
+function urlNotificacao(array $n): string
+{
+    $tabela = $n['tabela_origem'] ?? '';
+    $regId  = (int) ($n['registro_id'] ?? 0);
+    $intId  = (int) ($n['id_interesse'] ?? 0);
+
+    switch ($tabela) {
+        case 'interesse':
+            return $regId ? '/Aptus/interesses/detalhes/' . $regId : '/Aptus/interesses/ativos';
+        case 'disputa':
+            return $regId ? '/Aptus/disputas/detalhes/' . $regId : '/Aptus/interesses/ativos';
+        case 'mensagem':
+            return $intId ? '/Aptus/chat/' . $intId : '/Aptus/chat';
+        case 'avaliacao':
+            return '/Aptus/interesses/ativos';
+        case 'confirmacao_pagamento':
+            return '/Aptus/pagamentos';
+        case 'anuncio_servico':
+            return '/Aptus/anuncios/meus';
+        default:
+            return '';
+    }
+}
 ?>
 
 <div class="notificacoes-container">
     <div class="notificacoes-header">
-        <h1><i></i> Notificações</h1>
+        <h1><i class="fas fa-bell"></i> Notificações</h1>
     </div>
 
     <div class="notificacoes-tabs">
@@ -43,6 +71,7 @@ $notificacoes = $mostrarTodas ? $todas : $naoLidas;
     <?php else: ?>
         <div class="notificacoes-list">
             <?php foreach ($notificacoes as $notif): ?>
+                <?php $linkDestino = urlNotificacao($notif); ?>
                 <div class="notificacao-item <?= $notif['lida'] ? 'lida' : 'nao-lida' ?>">
                     <div class="notificacao-content">
                         <div class="notificacao-titulo">
@@ -59,8 +88,8 @@ $notificacoes = $mostrarTodas ? $todas : $naoLidas;
                         </small>
                     </div>
                     <div class="notificacao-actions">
-                        <?php if (!empty($notif['link'])): ?>
-                            <a href="<?= htmlspecialchars($notif['link']) ?>" class="btn-ver">
+                        <?php if ($linkDestino !== ''): ?>
+                            <a href="<?= htmlspecialchars($linkDestino) ?>" class="btn-ver">
                                 <i class="fas fa-arrow-right"></i> Ver
                             </a>
                         <?php endif; ?>

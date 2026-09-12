@@ -4,8 +4,8 @@
 class Router
 {
     private $routes = [
-        'GET' => [],
-        'POST' => []
+        'GET'  => [],
+        'POST' => [],
     ];
     private static $routeCache = [];
 
@@ -16,7 +16,7 @@ class Router
         }
         $this->routes['GET'][$uri] = [
             'action' => $action,
-            'roles' => $roles
+            'roles'  => $roles,
         ];
     }
 
@@ -27,7 +27,7 @@ class Router
         }
         $this->routes['POST'][$uri] = [
             'action' => $action,
-            'roles' => $roles
+            'roles'  => $roles,
         ];
     }
 
@@ -42,13 +42,13 @@ class Router
         }
 
         $method = $_SERVER['REQUEST_METHOD'];
-        
+
         $cacheKey = $method . ':' . $path;
         if (isset(self::$routeCache[$cacheKey])) {
-            $route = self::$routeCache[$cacheKey];
+            $route  = self::$routeCache[$cacheKey];
             $params = [];
         } else {
-            $route = $this->routes[$method][$path] ?? null;
+            $route  = $this->routes[$method][$path] ?? null;
             $params = [];
 
             if (!$route) {
@@ -63,30 +63,29 @@ class Router
 
                         if (preg_match($pattern, $path, $matches)) {
                             array_shift($matches);
-                            $route = $routeData;
+                            $route  = $routeData;
                             $params = $matches;
                             break;
                         }
                     }
                 }
             }
-            
+
             if ($route) {
                 self::$routeCache[$cacheKey] = $route;
             }
         }
 
         if (!$route) {
-            // Pagina 404 personalizada
             http_response_code(404);
             $tituloPagina = 'Pagina nao encontrada - Aptus';
-            $cssPagina = 'erro.css';
+            $cssPagina    = 'erro.css';
             require_once __DIR__ . '/../Views/errors/404.php';
             return;
         }
 
         $action = $route['action'];
-        $roles = $route['roles'];
+        $roles  = $route['roles'];
 
         if (!empty($roles)) {
             if (session_status() === PHP_SESSION_NONE) {
@@ -100,7 +99,7 @@ class Router
                 exit;
             }
 
-            $roleUsuario = (int) ($usuario['role'] ?? 0);
+            $roleUsuario     = (int) ($usuario['role'] ?? 0);
             $rolesPermitidos = array_map('intval', $roles);
 
             if ($roleUsuario !== 4 && !in_array($roleUsuario, $rolesPermitidos, true)) {
@@ -138,7 +137,7 @@ class Router
         }
 
         if ($method === "POST") {
-            require_once __DIR__ . "/../Middleware/CsrfMiddleware.php";
+            require_once __DIR__ . '/../Middleware/CsrfMiddleware.php';
             CsrfMiddleware::validate();
         }
 

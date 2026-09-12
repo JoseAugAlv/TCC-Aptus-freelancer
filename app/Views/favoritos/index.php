@@ -1,5 +1,6 @@
 <?php
 // app/Views/favoritos/index.php
+require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 
 $tituloPagina = $tituloPagina ?? 'Meus Favoritos - Aptus';
 $cssPagina = $cssPagina ?? 'favoritos.css';
@@ -39,8 +40,8 @@ $favoritos = $favoritos ?? [];
                 <div class="favorito-card" data-anuncio-id="<?= $favorito['id_anuncio'] ?>">
                     <div class="favorito-imagem">
                         <?php if (!empty($favorito['foto_capa'])): ?>
-                            <img src="/Aptus/public/uploads/anuncios/<?= htmlspecialchars($favorito['foto_capa']) ?>" 
-                                 alt="<?= htmlspecialchars($favorito['titulo']) ?>">
+                            <img src="<?= htmlspecialchars(\UploadHelper::getUrl($favorito['foto_capa']), ENT_QUOTES, 'UTF-8') ?>"
+                                alt="<?= htmlspecialchars($favorito['titulo'], ENT_QUOTES, 'UTF-8') ?>">
                         <?php else: ?>
                             <div class="favorito-sem-imagem">
                                 <i class="fas fa-briefcase"></i>
@@ -66,9 +67,9 @@ $favoritos = $favoritos ?? [];
                         <div class="favorito-footer">
                             <div class="favorito-freelancer">
                                 <?php if (!empty($favorito['freelancer_foto']) && $favorito['freelancer_foto'] != 'default.png'): ?>
-                                    <img src="/Aptus/public/uploads/<?= htmlspecialchars($favorito['freelancer_foto']) ?>" 
-                                         alt="<?= htmlspecialchars($favorito['freelancer_nome']) ?>"
-                                         class="avatar-mini">
+                                    <img src="<?= htmlspecialchars(\UploadHelper::getUrl($favorito['freelancer_foto']), ENT_QUOTES, 'UTF-8') ?>"
+                                        alt="<?= htmlspecialchars($favorito['freelancer_nome'], ENT_QUOTES, 'UTF-8') ?>"
+                                        class="avatar-mini">
                                 <?php else: ?>
                                     <i class="fas fa-user-circle"></i>
                                 <?php endif; ?>

@@ -33,17 +33,18 @@ class Disputa
      */
     public function findById($id)
     {
-        $sql = "SELECT d.*, 
-                       u.nome as aberto_por_nome,
-                       u.email as aberto_por_email,
-                       s.situacao as situacao_nome,
-                       i.id_contratante, i.id_freelancer,
-                       a.titulo as anuncio_titulo,
-                       c.nome as contratante_nome,
-                       f.nome as freelancer_nome,
-                       cp.situacao_final as pagamento_situacao,
-                       cp.valor_informado_contratante,
-                       cp.valor_informado_freelancer
+        $sql = "SELECT d.*,
+                    u.nome  AS aberto_por_nome,
+                    u.email AS aberto_por_email,
+                    s.situacao AS situacao_nome,
+                    i.id_contratante, i.id_freelancer,
+                    a.titulo AS anuncio_titulo,
+                    c.nome   AS contratante_nome,
+                    f.nome   AS freelancer_nome,
+                    r.nome   AS responsavel_nome,
+                    cp.situacao_final AS pagamento_situacao,
+                    cp.valor_informado_contratante,
+                    cp.valor_informado_freelancer
                 FROM disputa d
                 JOIN usuario u ON d.id_aberto_por = u.id_usuario
                 JOIN situacao s ON d.id_situacao = s.id_situacao
@@ -51,6 +52,7 @@ class Disputa
                 JOIN anuncio_servico a ON i.id_anuncio = a.id_anuncio
                 JOIN usuario c ON i.id_contratante = c.id_usuario
                 JOIN usuario f ON i.id_freelancer = f.id_usuario
+                LEFT JOIN usuario r ON d.id_responsavel = r.id_usuario
                 LEFT JOIN confirmacao_pagamento cp ON i.id_interesse = cp.id_interesse
                 WHERE d.id_disputa = ?";
         $stmt = $this->conn->prepare($sql);
