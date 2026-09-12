@@ -239,7 +239,7 @@ class AvaliacaoController
         $usuarioId = $_SESSION['usuario']['id'];
         
         // Buscar avaliacao
-        $avaliacao = $this->avaliacao->findByInteresse($avaliacaoId);
+        $avaliacao = $this->avaliacao->findById($avaliacaoId);
         
         if (!$avaliacao) {
             $_SESSION['flash'] = [
@@ -306,7 +306,7 @@ class AvaliacaoController
 
         try {
             // Buscar avaliacao
-            $avaliacao = $this->avaliacao->findByInteresse($avaliacaoId);
+            $avaliacao = $this->avaliacao->findById($avaliacaoId);
             
             if (!$avaliacao || $avaliacao['id_avaliado'] != $usuarioId) {
                 throw new Exception('Voce nao tem permissao para responder esta avaliacao.');

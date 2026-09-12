@@ -16,6 +16,31 @@ class InteresseController
         $this->usuario = new Usuario();
     }
 
+    public function cancelar() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        $id = (int)($_POST['id'] ?? 0);
+        $usuarioId = $_SESSION['usuario']['id'];
+        require_once __DIR__ . '/../Models/Interesse.php';
+        $model = new Interesse();
+        $interesse = $model->findById($id);
+        if ($interesse && ($interesse['id_contratante'] == $usuarioId || $interesse['id_freelancer'] == $usuarioId)) {
+            $model->cancelar($id);
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Interesse cancelado.'];
+        }
+        header('Location: /Aptus/interesses/meus'); exit;
+    }
+    public function recebidos() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        require_once __DIR__ . '/../Models/Interesse.php';
+        $model = new Interesse();
+        $interesses = $model->getPendentesByFreelancer($_SESSION['usuario']['id']);
+        $tituloPagina = 'Interesses Recebidos - Aptus';
+        $cssPagina = 'recebidos.css';
+        require '../app/Views/interesses/recebidos.php';
+    }
+
     /**
      * Cria um novo interesse (pendente)
      */

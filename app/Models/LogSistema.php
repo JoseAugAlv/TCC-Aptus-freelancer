@@ -9,4 +9,16 @@ class LogSistema {
         $stmt->execute([$limit, $offset]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getTotal() {
+        $stmt = $this->conn->query("SELECT COUNT(*) FROM log_sistema");
+        return (int) $stmt->fetchColumn();
+    }
+    public function getTabelas() {
+        $stmt = $this->conn->query("SELECT DISTINCT tabela_afetada FROM log_sistema WHERE tabela_afetada IS NOT NULL");
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+    public function getAcoes() {
+        $stmt = $this->conn->query("SELECT DISTINCT acao FROM log_sistema WHERE acao IS NOT NULL");
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }

@@ -139,6 +139,7 @@ class Interesse
                 FROM interesse i
                 JOIN anuncio_servico a ON i.id_anuncio = a.id_anuncio
                 JOIN usuario f ON i.id_freelancer = f.id_usuario
+                LEFT JOIN confirmacao_pagamento cp ON i.id_interesse = cp.id_interesse
                 WHERE i.id_contratante = ? AND i.situacao = 'ativo'
                 ORDER BY i.data_interesse DESC";
         $stmt = $this->conn->prepare($sql);
@@ -157,6 +158,7 @@ class Interesse
                 FROM interesse i
                 JOIN anuncio_servico a ON i.id_anuncio = a.id_anuncio
                 JOIN usuario c ON i.id_contratante = c.id_usuario
+                LEFT JOIN confirmacao_pagamento cp ON i.id_interesse = cp.id_interesse
                 WHERE i.id_freelancer = ? AND i.situacao = 'ativo'
                 ORDER BY i.data_interesse DESC";
         $stmt = $this->conn->prepare($sql);

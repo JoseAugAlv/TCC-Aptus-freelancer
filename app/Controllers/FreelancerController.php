@@ -3,6 +3,7 @@
 
 require_once __DIR__ . '/../Models/Dashboard.php';
 require_once __DIR__ . '/../Models/Usuario.php';
+require_once __DIR__ . '/../Models/Interesse.php';
 
 class FreelancerController
 {
