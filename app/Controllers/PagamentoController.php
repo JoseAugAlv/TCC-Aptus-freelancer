@@ -1,9 +1,42 @@
 <?php
-require_once __DIR__ . '/../Helpers/SecurityHelper.php';
-require_once __DIR__ . '/../Core/Auth.php';
+require_once __DIR__ . '/../Config/database.php';
 class PagamentoController {
-    public function index() { require_once __DIR__ . '/../Views/pagamentos/index.php'; }
-    public function confirmar() { require_once __DIR__ . '/../Views/pagamentos/confirmar.php'; }
-    public function confirmarContratante() { header('Location: /Aptus/pagamentos'); exit; }
-    public function confirmarFreelancer() { header('Location: /Aptus/pagamentos'); exit; }
+    private $conn;
+    public function __construct() { $this->conn = Database::getConnection(); }
+
+    public function index() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        $tituloPagina = 'Pagamentos - Aptus'; $cssPagina = 'pagamentos.css';
+        require '../app/Views/pagamentos/index.php';
+    }
+
+    public function confirmar() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        $tituloPagina = 'Confirmar Pagamento - Aptus'; $cssPagina = 'pagamentos.css';
+        require '../app/Views/pagamentos/confirmar.php';
+    }
+
+    public function confirmarContratante() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        $id = (int)($_POST['interesse_id'] ?? 0);
+        if ($id > 0) {
+            $stmt = $this->conn->prepare("UPDATE confirmacao_pagamento SET confirmado_contratante = 1 WHERE id_interesse = ?");
+            $stmt->execute([$id]);
+        }
+        header('Location: /Aptus/pagamentos/confirmar'); exit;
+    }
+
+    public function confirmarFreelancer() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        $id = (int)($_POST['interesse_id'] ?? 0);
+        if ($id > 0) {
+            $stmt = $this->conn->prepare("UPDATE confirmacao_pagamento SET confirmado_freelancer = 1 WHERE id_interesse = ?");
+            $stmt->execute([$id]);
+        }
+        header('Location: /Aptus/pagamentos/confirmar'); exit;
+    }
 }

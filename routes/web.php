@@ -155,10 +155,10 @@ $router->get('/admin/dashboard', 'AdminController@dashboard', [1, 4]);
 // $router->post('/admin/disputas/resolver', 'AdminDisputaController@resolver', [1, 4]);
 
 // Admin - Categorias
-// $router->get('/admin/categorias', 'AdminCategoriaController@index', [1, 4]);
-// $router->post('/admin/categorias/salvar', 'AdminCategoriaController@salvar', [1, 4]);
-// $router->post('/admin/categorias/atualizar', 'AdminCategoriaController@atualizar', [1, 4]);
-// $router->get('/admin/categorias/excluir', 'AdminCategoriaController@excluir', [1, 4]);
+$router->get('/admin/categorias', 'AdminCategoriaController@index', [1, 4]);
+$router->post('/admin/categorias/salvar', 'AdminCategoriaController@salvar', [1, 4]);
+$router->post('/admin/categorias/atualizar', 'AdminCategoriaController@atualizar', [1, 4]);
+$router->get('/admin/categorias/excluir', 'AdminCategoriaController@excluir', [1, 4]);
 
 // Admin - Logs
 // $router->get('/admin/logs', 'AdminLogController@index', [1, 4]);

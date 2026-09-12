@@ -135,7 +135,8 @@ class Interesse
     {
         $sql = "SELECT i.*, 
                        a.titulo as anuncio_titulo, a.slug as anuncio_slug, a.preco as anuncio_preco,
-                       f.nome as freelancer_nome, f.foto_perfil as freelancer_foto
+                       f.nome as freelancer_nome, f.foto_perfil as freelancer_foto,
+                       cp.situacao_final, cp.confirmado_contratante, cp.confirmado_freelancer
                 FROM interesse i
                 JOIN anuncio_servico a ON i.id_anuncio = a.id_anuncio
                 JOIN usuario f ON i.id_freelancer = f.id_usuario
@@ -154,7 +155,8 @@ class Interesse
     {
         $sql = "SELECT i.*, 
                        a.titulo as anuncio_titulo, a.slug as anuncio_slug, a.preco as anuncio_preco,
-                       c.nome as contratante_nome, c.foto_perfil as contratante_foto
+                       c.nome as contratante_nome, c.foto_perfil as contratante_foto,
+                       cp.situacao_final, cp.confirmado_contratante, cp.confirmado_freelancer
                 FROM interesse i
                 JOIN anuncio_servico a ON i.id_anuncio = a.id_anuncio
                 JOIN usuario c ON i.id_contratante = c.id_usuario
