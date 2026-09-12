@@ -1,6 +1,8 @@
 <?php
 // app/Config/SessionConfig.php
 
+require_once __DIR__ . '/config.php';
+
 class SessionConfig
 {
     public static function configure()
@@ -9,36 +11,49 @@ class SessionConfig
             return;
         }
 
-        // Definir caminho alternativo para sessões
+        // 1) Diretório de sessões
         $sessionPath = __DIR__ . '/../../tmp';
-        
-        // Criar diretório se não existir
         if (!is_dir($sessionPath)) {
-            mkdir($sessionPath, 0750, true);
+            @mkdir($sessionPath, 0750, true);
         }
-        
-        // Verificar se o diretório tem permissão de escrita
-        if (is_writable($sessionPath)) {
+        if (is_dir($sessionPath) && is_writable($sessionPath)) {
             session_save_path($sessionPath);
         }
 
-        $isProduction = isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'production';
-        $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        // 2) Ambiente / HTTPS
+        $appEnv = Config::get('APP_ENV', 'development');
+        $isProduction = ($appEnv === 'production');
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+
+        // 3) Cookie path derivado do APP_URL (não fixo em /Aptus)
+        $appUrl = Config::get('APP_URL', '/Aptus');
+        $cookiePath = parse_url($appUrl, PHP_URL_PATH);
+        if (!$cookiePath) {
+            $cookiePath = '/';
+        }
+        $cookiePath = rtrim($cookiePath, '/') . '/';
+        if ($cookiePath === '//') {
+            $cookiePath = '/';
+        }
+
+        // 4) Domain dinâmico (remove porta se houver)
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $cookieDomain = preg_replace('/:\d+$/', '', $host);
 
         session_set_cookie_params([
             'lifetime' => 3600,
-            'path' => '/Aptus',
-            'domain' => $_SERVER['HTTP_HOST'] ?? 'localhost',
-            'secure' => $isProduction && $isHttps,
+            'path'     => $cookiePath,
+            'domain'   => $cookieDomain,
+            'secure'   => $isProduction && $isHttps,
             'httponly' => true,
-            'samesite' => 'Lax'
+            'samesite' => 'Lax',
         ]);
 
         session_name('APTUS_SESSION');
-        
-        // Iniciar sessão com supressão de erros
         session_start();
 
+        // 5) Regeneração periódica
         if (!isset($_SESSION['last_regenerate'])) {
             $_SESSION['last_regenerate'] = time();
         } elseif (time() - $_SESSION['last_regenerate'] > 1800) {

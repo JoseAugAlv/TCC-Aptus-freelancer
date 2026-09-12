@@ -1,31 +1,23 @@
-CREATE DATABASE Aptus;
+DROP DATABASE IF EXISTS Aptus;
+CREATE DATABASE Aptus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE Aptus;
 
 -- ============================================================================
--- SEM TRIGGERS (por decisão do projeto). Toda transição de status em
--- cascata (aprovar anúncio, bater confirmação de pagamento, recalcular nota
--- média, banir usuário, resolver disputa etc.) fica no Controller, dentro
--- de uma transação PDO — mesmo padrão do aprovar() no RecycleWays original.
--- ============================================================================
-
--- ============================================================================
--- TABELAS LOOKUP / REFERÊNCIA
+-- 1. LOOKUP / REFERÊNCIA
 -- ============================================================================
 
 CREATE TABLE perfil (
     id_perfil INT PRIMARY KEY AUTO_INCREMENT,
     perfil VARCHAR(20) UNIQUE NOT NULL
 );
+
 INSERT INTO perfil(perfil) VALUES ('Admin'), ('Moderador'), ('Usuario'), ('Master');
--- perfil = nível de acesso administrativo.
--- "Freelancer" e "Contratante" NÃO são perfis fixos (RF01: cadastro único):
--- qualquer usuário 'Usuario' pode anunciar um serviço (freelancer daquele
--- anúncio) e demonstrar interesse em outros (contratante daquela negociação).
 
 CREATE TABLE situacao (
     id_situacao INT PRIMARY KEY AUTO_INCREMENT,
     situacao VARCHAR(20) NOT NULL UNIQUE
 );
+
 INSERT INTO situacao(situacao) VALUES ('Pendente'), ('Aprovado'), ('Rejeitado'), ('Cancelado');
 
 CREATE TABLE categoria (
@@ -44,7 +36,7 @@ CREATE TABLE habilidade (
 );
 
 -- ============================================================================
--- TABELA CORE: USUÁRIO
+-- 2. TABELA CORE: USUÁRIO
 -- ============================================================================
 
 CREATE TABLE usuario (
@@ -71,10 +63,21 @@ CREATE TABLE usuario (
     token_verificacao VARCHAR(64) NULL,
     email_verificado BOOLEAN DEFAULT FALSE,
     data_verificacao DATETIME NULL,
+    remember_token VARCHAR(64) NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_perfil) REFERENCES perfil(id_perfil),
-    FOREIGN KEY (id_moderador_banimento) REFERENCES usuario(id_usuario)
+    FOREIGN KEY (id_moderador_banimento) REFERENCES usuario(id_usuario),
+    INDEX idx_remember_token (remember_token)
+);
+
+CREATE TABLE login_tentativa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    ip VARCHAR(45) NOT NULL,
+    criado_em DATETIME NOT NULL,
+    INDEX idx_email_criado (email, criado_em),
+    INDEX idx_ip_criado (ip, criado_em)
 );
 
 CREATE TABLE usuario_habilidade (
@@ -87,8 +90,6 @@ CREATE TABLE usuario_habilidade (
     UNIQUE KEY uk_usuario_habilidade (id_usuario, id_habilidade)
 );
 
--- Portfólio do PERFIL (RF07) — galeria de trabalhos já realizados,
--- independente dos anúncios ativos no momento.
 CREATE TABLE portfolio (
     id_portfolio INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
@@ -101,7 +102,7 @@ CREATE TABLE portfolio (
 );
 
 -- ============================================================================
--- ANÚNCIO DE SERVIÇO (RF05/RF06) — o freelancer anuncia o que faz e o preço
+-- 3. ANÚNCIOS DE SERVIÇO
 -- ============================================================================
 
 CREATE TABLE anuncio_servico (
@@ -113,8 +114,10 @@ CREATE TABLE anuncio_servico (
     slug VARCHAR(180) UNIQUE,
     preco DECIMAL(10,2) NOT NULL COMMENT 'preco sugerido (RF05)',
     foto_capa VARCHAR(255),
-    situacao ENUM('ativo', 'pausado', 'excluido') DEFAULT 'ativo' COMMENT 'controlado pelo proprio freelancer (RF06)',
-    id_situacao_moderacao INT NOT NULL DEFAULT 1 COMMENT 'Pendente/Aprovado/Rejeitado - controlado pelo moderador (RF17)',
+    situacao ENUM('ativo', 'pausado', 'excluido') DEFAULT 'ativo'
+        COMMENT 'controlado pelo proprio freelancer (RF06)',
+    id_situacao_moderacao INT NOT NULL DEFAULT 1
+        COMMENT 'Pendente/Aprovado/Rejeitado - controlado pelo moderador (RF17)',
     motivo_remocao VARCHAR(255) NULL,
     visualizacoes INT DEFAULT 0,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -124,7 +127,6 @@ CREATE TABLE anuncio_servico (
     FOREIGN KEY (id_situacao_moderacao) REFERENCES situacao(id_situacao)
 );
 
--- Fotos adicionais do anúncio (além da foto de capa)
 CREATE TABLE anuncio_foto (
     id_anuncio_foto INT PRIMARY KEY AUTO_INCREMENT,
     id_anuncio INT NOT NULL,
@@ -135,7 +137,7 @@ CREATE TABLE anuncio_foto (
 );
 
 -- ============================================================================
--- FAVORITOS (RF12)
+-- 4. FAVORITOS, INTERESSES, PAGAMENTOS
 -- ============================================================================
 
 CREATE TABLE favorito (
@@ -148,38 +150,28 @@ CREATE TABLE favorito (
     UNIQUE KEY uk_usuario_anuncio (id_usuario, id_anuncio)
 );
 
--- ============================================================================
--- INTERESSE (RF13) — clique de "Tenho interesse"/"Contratar".
--- É o elo leve entre contratante e freelancer para um anúncio específico;
--- substitui o antigo "contrato" da v1 (sem valor/prazo formais, porque o
--- preço já está fixo no anúncio e o resto é combinado por fora).
--- ============================================================================
-
 CREATE TABLE interesse (
     id_interesse INT PRIMARY KEY AUTO_INCREMENT,
     id_anuncio INT NOT NULL,
     id_contratante INT NOT NULL,
-    id_freelancer INT NOT NULL COMMENT 'redundante com anuncio_servico.id_usuario, denormalizado para facilitar consultas',
+    id_freelancer INT NOT NULL
+        COMMENT 'redundante com anuncio_servico.id_usuario, denormalizado para facilitar consultas',
     mensagem_inicial TEXT NULL,
-    situacao ENUM('ativo', 'concluido', 'cancelado') DEFAULT 'ativo',
+    situacao ENUM('pendente', 'ativo', 'concluido', 'cancelado', 'recusado')
+        NOT NULL DEFAULT 'pendente',
     data_interesse DATETIME DEFAULT CURRENT_TIMESTAMP,
+    data_aceite DATETIME NULL,
+    data_recusa DATETIME NULL,
     data_conclusao DATETIME NULL,
     FOREIGN KEY (id_anuncio) REFERENCES anuncio_servico(id_anuncio),
     FOREIGN KEY (id_contratante) REFERENCES usuario(id_usuario),
     FOREIGN KEY (id_freelancer) REFERENCES usuario(id_usuario)
 );
 
--- ============================================================================
--- ⭐ CONFIRMAÇÃO DE PAGAMENTO EM VIA DE MÃO DUPLA (diferencial mantido da v1)
--- O dinheiro NUNCA passa pela plataforma. Contratante e freelancer
--- confirmam, cada um do seu lado, que o pagamento combinado foi feito.
--- ============================================================================
-
 CREATE TABLE confirmacao_pagamento (
     id_confirmacao INT PRIMARY KEY AUTO_INCREMENT,
     id_interesse INT NOT NULL UNIQUE,
 
-    -- lado do contratante (quem paga)
     confirmado_contratante BOOLEAN DEFAULT FALSE,
     valor_informado_contratante DECIMAL(10,2),
     forma_pagamento_contratante ENUM('pix', 'transferencia', 'dinheiro', 'cartao', 'outro'),
@@ -187,7 +179,6 @@ CREATE TABLE confirmacao_pagamento (
     data_confirmacao_contratante DATETIME,
     observacao_contratante TEXT,
 
-    -- lado do freelancer (quem recebe)
     confirmado_freelancer BOOLEAN DEFAULT FALSE,
     valor_informado_freelancer DECIMAL(10,2),
     data_recebimento_freelancer DATE,
@@ -201,7 +192,7 @@ CREATE TABLE confirmacao_pagamento (
 );
 
 -- ============================================================================
--- DISPUTAS (quando a confirmação de pagamento diverge)
+-- 5. DISPUTAS, AVALIAÇÕES, MENSAGENS
 -- ============================================================================
 
 CREATE TABLE disputa (
@@ -231,11 +222,6 @@ CREATE TABLE disputa_anexo (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
--- ============================================================================
--- AVALIAÇÕES (RF14/RF15) — nota + comentário do contratante, e resposta
--- pública do freelancer (pedido explícito do documento de requisitos)
--- ============================================================================
-
 CREATE TABLE avaliacao (
     id_avaliacao INT PRIMARY KEY AUTO_INCREMENT,
     id_interesse INT NOT NULL,
@@ -252,10 +238,6 @@ CREATE TABLE avaliacao (
     UNIQUE KEY uk_interesse_avaliador (id_interesse, id_avaliador)
 );
 
--- ============================================================================
--- MENSAGENS (RF08) — chat simples vinculado ao interesse
--- ============================================================================
-
 CREATE TABLE mensagem (
     id_mensagem INT PRIMARY KEY AUTO_INCREMENT,
     id_interesse INT NOT NULL,
@@ -271,7 +253,7 @@ CREATE TABLE mensagem (
 );
 
 -- ============================================================================
--- DENÚNCIAS (RF16) — anúncio ou perfil
+-- 6. DENÚNCIAS, BUSCA, LOGS, NOTIFICAÇÕES, RESET
 -- ============================================================================
 
 CREATE TABLE denuncia (
@@ -292,10 +274,6 @@ CREATE TABLE denuncia (
     FOREIGN KEY (id_moderador_analise) REFERENCES usuario(id_usuario)
 );
 
--- ============================================================================
--- BUSCA (RF19 — relatório de categorias mais buscadas)
--- ============================================================================
-
 CREATE TABLE busca_log (
     id_busca INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NULL COMMENT 'null se busca de visitante nao logado',
@@ -305,10 +283,6 @@ CREATE TABLE busca_log (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
 );
-
--- ============================================================================
--- LOGS E NOTIFICAÇÕES
--- ============================================================================
 
 CREATE TABLE log_sistema (
     id_log INT PRIMARY KEY AUTO_INCREMENT,
@@ -346,29 +320,14 @@ CREATE TABLE reset_senha (
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
+
 -- ============================================================================
--- USUÁRIOS PRÉ-CADASTRADOS PARA TESTE
--- Senha de TODOS: 123456
+-- 7. USUÁRIOS PRÉ-CADASTRADOS PARA TESTE
+-- Senha de TODOS: Aptus@2026
 -- ============================================================================
+
 INSERT INTO usuario (id_perfil, nome, email, senha, email_verificado, ativo, banido) VALUES
-(3, 'Usuário Teste', 'usuario@aptus.com', '$2y$10$SnllgubFRD7R8JZpxkCpxOwXTvW1DARdwXkSxMYBc5qs/eUm8eCiG', 1, 1, 0),
-(2, 'Moderador Teste', 'moderador@aptus.com', '$2y$10$SnllgubFRD7R8JZpxkCpxOwXTvW1DARdwXkSxMYBc5qs/eUm8eCiG', 1, 1, 0),
-(1, 'Administrador Teste', 'admin@aptus.com', '$2y$10$SnllgubFRD7R8JZpxkCpxOwXTvW1DARdwXkSxMYBc5qs/eUm8eCiG', 1, 1, 0),
-(4, 'Master Teste', 'master@aptus.com', '$2y$10$SnllgubFRD7R8JZpxkCpxOwXTvW1DARdwXkSxMYBc5qs/eUm8eCiG', 1, 1, 0);
-
-SELECT id_usuario, nome, email, id_perfil, senha, email_verificado, ativo, banido 
-FROM usuario 
-WHERE email = 'usuario@aptus.com';
-
--- ============================================================================
--- SEM TRIGGERS — a lógica que seria automática fica nos Controllers
--- ============================================================================
--- Toda a lógica que envolve efeito colateral em outra tabela (ex.: ao bater
--- confirmado_contratante e confirmado_freelancer com valores iguais, marcar
--- interesse.situacao = 'concluido'; ao divergir, sugerir disputa; ao
--- aprovar anúncio na moderação, liberar id_situacao_moderacao = Aprovado;
--- ao banir usuário, também pausar todos os anúncios dele; ao inserir
--- avaliação, recalcular nota_media/total_avaliacoes do usuario avaliado)
--- deve ficar nos Controllers, dentro de transação PDO, seguindo o mesmo
--- padrão que o RecycleWays original usa em
--- TransferenciaController@aprovar / PagamentoController@aprovar.
+(3, 'Usuário Teste',       'usuario@aptus.com',   '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0),
+(2, 'Moderador Teste',     'moderador@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0),
+(1, 'Administrador Teste', 'admin@aptus.com',     '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0),
+(4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);

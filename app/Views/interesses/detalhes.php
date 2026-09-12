@@ -9,17 +9,8 @@ require_once __DIR__ . '/../layouts/nav.php';
 $interesse = $interesse ?? [];
 $usuario = $_SESSION['usuario'] ?? null;
 
-require_once __DIR__ . '/../../Models/Avaliacao.php';
-$avaliacaoModel = new Avaliacao();
-$jaAvaliou = false;
-$avaliacaoData = null;
-
-if ($interesse && isset($interesse['situacao']) && $interesse['situacao'] == 'concluido') {
-    $jaAvaliou = $avaliacaoModel->exists($interesse['id_interesse']);
-    if ($jaAvaliou) {
-        $avaliacaoData = $avaliacaoModel->findByInteresse($interesse['id_interesse']);
-    }
-}
+$jaAvaliou = $jaAvaliou ?? false;
+$avaliacaoData = $avaliacaoData ?? null;
 ?>
 
 <h1>Detalhes do Interesse</h1>

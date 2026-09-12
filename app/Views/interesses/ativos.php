@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
-// app/Views/interesses/ativos.php
 
 $tituloPagina = $tituloPagina ?? 'Servicos Ativos - Aptus';
 $cssPagina = $cssPagina ?? 'ativos.css';
@@ -9,11 +8,6 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 $interesses = $interesses ?? [];
 $usuario = $_SESSION['usuario'] ?? null;
-
-require_once __DIR__ . '/../../Models/Interesse.php';
-require_once __DIR__ . '/../../Models/Avaliacao.php';
-$interesseModel = new Interesse();
-$avaliacaoModel = new Avaliacao();
 ?>
 
 <div class="interesses-container">
@@ -62,7 +56,7 @@ $avaliacaoModel = new Avaliacao();
                     $jaConfirmou = $isContratante ? $contratanteConfirmou : $freelancerConfirmou;
                     $outroConfirmou = $isContratante ? $freelancerConfirmou : $contratanteConfirmou;
                     
-                    $usuarioJaAvaliou = $interesseModel->usuarioJaAvaliou($interesse['id_interesse'], $usuario['id']);
+                   $usuarioJaAvaliou = !empty($interesse['usuario_ja_avaliou']);
                     
                     // Verificar se pagamento divergente
                     $pagamentoDivergente = false;

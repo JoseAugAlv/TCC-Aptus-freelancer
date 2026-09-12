@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
+require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 // app/Views/anuncios/show.php
 
 $tituloPagina = $tituloPagina ?? 'Detalhes do Servico - Aptus';
@@ -29,6 +30,8 @@ $totalFavoritos = $totalFavoritos ?? 0;
 <div class="detalhes-container">
     <div class="detalhes-imagem">
         <?php if (!empty($anuncio['foto_capa'])): ?>
+            <img src="<?= htmlspecialchars(\UploadHelper::getUrl($anuncio['foto_capa']), ENT_QUOTES, 'UTF-8') ?>"
+                alt="<?= htmlspecialchars($anuncio['titulo'] ?? 'Imagem do serviço', ENT_QUOTES, 'UTF-8') ?>">
         <?php else: ?>
             <i class="fas fa-briefcase"></i>
         <?php endif; ?>
@@ -161,8 +164,8 @@ $totalFavoritos = $totalFavoritos ?? 0;
     <div class="fotos-grid">
         <?php foreach ($fotos as $foto): ?>
             <div class="foto-item">
-                <img src="/Aptus/public/uploads/anuncios/<?= htmlspecialchars($foto['arquivo']) ?>" 
-                     alt="Foto do servico">
+                <<img src="<?= htmlspecialchars(\UploadHelper::getUrl('uploads/anuncio/' . basename($foto['arquivo'])), ENT_QUOTES, 'UTF-8') ?>"
+     alt="Foto do serviço">
             </div>
         <?php endforeach; ?>
     </div>

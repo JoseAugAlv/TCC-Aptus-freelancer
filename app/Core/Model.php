@@ -1,4 +1,5 @@
 <?php
+// app/Core/Model.php
 
 require_once __DIR__ . '/../Config/database.php';
 
@@ -6,70 +7,93 @@ class Model
 {
     protected $conn;
     protected $table;
+    protected $allowedColumns = [];
 
     public function __construct()
     {
         $this->conn = Database::getConnection();
     }
 
-    // Buscar todos os registros
+    /**
+     * Valida identificadores SQL (nomes de coluna/tabela) contra injeção.
+     */
+    protected function safeIdentifier(string $name): string
+    {
+        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
+            throw new InvalidArgumentException("Identificador SQL inválido: {$name}");
+        }
+        return $name;
+    }
+
+    protected function safeTable(): string
+    {
+        return $this->safeIdentifier((string) $this->table);
+    }
+
     public function all()
     {
-        $sql = "SELECT * FROM {$this->table}";
+        $sql  = "SELECT * FROM " . $this->safeTable();
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
-
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Buscar por ID
     public function find($id, $column = 'id')
     {
-        $sql = "SELECT * FROM {$this->table} WHERE {$column} = :id LIMIT 1";
+        $column = $this->safeIdentifier($column);
+        $sql  = "SELECT * FROM " . $this->safeTable() . " WHERE {$column} = :id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
-
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Inserir genérico
     public function insert($data)
     {
-        $columns = implode(", ", array_keys($data));
-        $placeholders = ":" . implode(", :", array_keys($data));
-
-        $sql = "INSERT INTO {$this->table} ($columns) VALUES ($placeholders)";
-        $stmt = $this->conn->prepare($sql);
-
-        return $stmt->execute($data);
-    }
-
-    // Atualizar genérico
-    public function update($id, $data, $column = 'id')
-    {
-        $fields = "";
-
-        foreach ($data as $key => $value) {
-            $fields .= "{$key} = :{$key}, ";
+        if (empty($data)) {
+            throw new InvalidArgumentException('Dados vazios para INSERT.');
         }
 
-        $fields = rtrim($fields, ", ");
+        $cols = [];
+        foreach (array_keys($data) as $col) {
+            $cols[] = $this->safeIdentifier($col);
+        }
 
-        $sql = "UPDATE {$this->table} SET {$fields} WHERE {$column} = :id";
+        $columns      = implode(', ', $cols);
+        $placeholders = ':' . implode(', :', $cols);
+
+        $sql  = "INSERT INTO " . $this->safeTable() . " ($columns) VALUES ($placeholders)";
         $stmt = $this->conn->prepare($sql);
-
-        $data['id'] = $id;
-
         return $stmt->execute($data);
     }
 
-    // Deletar
+    public function update($id, $data, $column = 'id')
+    {
+        if (empty($data)) {
+            return false;
+        }
+
+        $column = $this->safeIdentifier($column);
+        $fields = [];
+
+        foreach (array_keys($data) as $key) {
+            $fields[] = $this->safeIdentifier($key) . " = :{$key}";
+        }
+
+        $sql = "UPDATE " . $this->safeTable()
+             . " SET " . implode(', ', $fields)
+             . " WHERE {$column} = :id";
+
+        $data['id'] = $id;
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute($data);
+    }
+
     public function delete($id, $column = 'id')
     {
-        $sql = "DELETE FROM {$this->table} WHERE {$column} = :id";
+        $column = $this->safeIdentifier($column);
+        $sql  = "DELETE FROM " . $this->safeTable() . " WHERE {$column} = :id";
         $stmt = $this->conn->prepare($sql);
-
         return $stmt->execute(['id' => $id]);
     }
 }

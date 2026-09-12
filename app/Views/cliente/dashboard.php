@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
+require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 // app/Views/cliente/dashboard.php
 
 $tituloPagina = $tituloPagina ?? 'Dashboard Cliente - Aptus';
@@ -121,7 +122,7 @@ $usuarioData = $usuarioData ?? [];
                     <div class="favorito-card">
                         <div class="favorito-imagem">
                             <?php if (!empty($favorito['foto_capa'])): ?>
-                                <img src="/Aptus/public/uploads/anuncios/<?= htmlspecialchars($favorito['foto_capa']) ?>" alt="<?= htmlspecialchars($favorito['titulo']) ?>">
+                               <img src="<?= htmlspecialchars(\UploadHelper::getUrl($favorito['foto_capa']), ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($favorito['titulo'], ENT_QUOTES, 'UTF-8') ?>">
                             <?php else: ?>
                                 <i class="fas fa-briefcase"></i>
                             <?php endif; ?>

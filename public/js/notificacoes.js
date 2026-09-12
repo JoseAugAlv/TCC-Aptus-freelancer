@@ -1,52 +1,39 @@
 // public/js/notificacoes.js
+// [FIX-CRIT-2.3] Passa o CSRF token em todos os POST. Antes só o /contador
+//                tentava (e errado, via meta inexistente).
 
 document.addEventListener('DOMContentLoaded', function() {
-    
-    /**
-     * Atualiza o badge de notificacoes via AJAX
-     */
+
+    function getCsrfToken() {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.content : '';
+    }
+
     function atualizarBadgeNotificacoes() {
-        fetch('/Aptus/notificacoes/contador', { headers: { 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').content : '' } })
+        fetch('/Aptus/notificacoes/contador')
             .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('Erro na resposta do servidor');
-                }
+                if (!response.ok) throw new Error('Erro na resposta do servidor');
                 return response.json();
             })
             .then(function(data) {
                 var total = data.total || 0;
-                
-                // Atualizar badge na navbar (icone do sino)
+
                 var badgeNav = document.getElementById('badgeNotificacao');
                 if (badgeNav) {
-                    if (total > 0) {
-                        badgeNav.textContent = total;
-                        badgeNav.style.display = 'inline-flex';
-                    } else {
-                        badgeNav.style.display = 'none';
-                    }
+                    if (total > 0) { badgeNav.textContent = total; badgeNav.style.display = 'inline-flex'; }
+                    else { badgeNav.style.display = 'none'; }
                 }
-                
-                // Badge mobile (no botao de perfil)
+
                 var badgeMobile = document.getElementById('badgeMobile');
                 if (badgeMobile) {
-                    if (total > 0) {
-                        badgeMobile.textContent = total;
-                        badgeMobile.style.display = 'inline-flex';
-                    } else {
-                        badgeMobile.style.display = 'none';
-                    }
+                    if (total > 0) { badgeMobile.textContent = total; badgeMobile.style.display = 'inline-flex'; }
+                    else { badgeMobile.style.display = 'none'; }
                 }
-                
-                // Badge no menu dropdown
+
                 var badgeMenu = document.getElementById('badgeMenu');
                 if (badgeMenu) {
-                    if (total > 0) {
-                        badgeMenu.textContent = total;
-                        badgeMenu.style.display = 'inline-flex';
-                    } else {
-                        badgeMenu.style.display = 'none';
-                    }
+                    if (total > 0) { badgeMenu.textContent = total; badgeMenu.style.display = 'inline-flex'; }
+                    else { badgeMenu.style.display = 'none'; }
                 }
             })
             .catch(function(error) {
@@ -54,22 +41,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    /**
-     * Marca notificacao como lida via AJAX
-     */
     function marcarNotificacaoLida(id, element) {
         var formData = new FormData();
         formData.append('id', id);
-        
+
         fetch('/Aptus/notificacoes/marcar-lida', {
             method: 'POST',
+            headers: { 'X-CSRF-Token': getCsrfToken() },
             body: formData
         })
-        .then(function(response) {
-            return response.text();
-        })
         .then(function() {
-            // Remover visualmente a notificacao
             if (element) {
                 var item = element.closest('.notificacao-item');
                 if (item) {
@@ -87,18 +68,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /**
-     * Marca todas as notificacoes como lidas via AJAX
-     */
     function marcarTodasLidas() {
         fetch('/Aptus/notificacoes/marcar-todas-lidas', {
-            method: 'POST'
-        })
-        .then(function(response) {
-            return response.text();
+            method: 'POST',
+            headers: { 'X-CSRF-Token': getCsrfToken() }
         })
         .then(function() {
-            // Remover visualmente todas as notificacoes nao lidas
             document.querySelectorAll('.notificacao-item.nao-lida').forEach(function(item) {
                 item.style.opacity = '0.5';
                 var badge = item.querySelector('.notificacao-badge');
@@ -113,35 +88,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ============================================================
-    // EVENTOS
-    // ============================================================
-
-    // Atualizar a cada 30 segundos
     setInterval(atualizarBadgeNotificacoes, 30000);
 
-    // Atualizar quando a pagina ganhar foco
     document.addEventListener('visibilitychange', function() {
-        if (!document.hidden) {
-            atualizarBadgeNotificacoes();
-        }
+        if (!document.hidden) atualizarBadgeNotificacoes();
     });
 
-    // Atualizar ao carregar a pagina
     atualizarBadgeNotificacoes();
 
-    // Marcar notificacao como lida (botoes individuais)
     document.querySelectorAll('.btn-marcar-lida').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             var id = this.dataset.id;
-            if (id) {
-                marcarNotificacaoLida(id, this);
-            }
+            if (id) marcarNotificacaoLida(id, this);
         });
     });
 
-    // Marcar todas como lidas
     var btnMarcarTodas = document.querySelector('.btn-marcar-todas');
     if (btnMarcarTodas) {
         btnMarcarTodas.addEventListener('click', function(e) {
@@ -152,8 +114,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Tornar funcoes globais para uso inline
     window.atualizarBadgeNotificacoes = atualizarBadgeNotificacoes;
-    window.marcarNotificacaoLida = marcarNotificacaoLida;
-    window.marcarTodasLidas = marcarTodasLidas;
 });
