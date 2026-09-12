@@ -86,10 +86,10 @@ $router->get('/interesses/recebidos', 'InteresseController@recebidos', [3, 2, 1,
 /*
    CONFIRMAÇÃO DE PAGAMENTO
 */
-// $router->get('/pagamentos/confirmar', 'PagamentoController@confirmar', [3, 2, 1, 4]);
-// $router->post('/pagamentos/confirmar-contratante', 'PagamentoController@confirmarContratante', [3, 2, 1, 4]);
-// $router->post('/pagamentos/confirmar-freelancer', 'PagamentoController@confirmarFreelancer', [3, 2, 1, 4]);
-// $router->get('/pagamentos', 'PagamentoController@index', [3, 2, 1, 4]);
+$router->get('/pagamentos/confirmar', 'PagamentoController@confirmar', [3, 2, 1, 4]);
+$router->post('/pagamentos/confirmar-contratante', 'PagamentoController@confirmarContratante', [3, 2, 1, 4]);
+$router->post('/pagamentos/confirmar-freelancer', 'PagamentoController@confirmarFreelancer', [3, 2, 1, 4]);
+$router->get('/pagamentos', 'PagamentoController@index', [3, 2, 1, 4]);
 
 /*
    DISPUTAS

@@ -6,7 +6,7 @@ class AdminUsuarioController {
 
     public function atualizar() {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['role'] != 4) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario']) || !in_array($_SESSION['usuario']['role'], [1,4])) { header('Location: /Aptus/login'); exit; }
         $id = (int)($_POST['id'] ?? 0);
         $nome = trim($_POST['nome'] ?? '');
         $email = trim($_POST['email'] ?? '');
@@ -19,7 +19,7 @@ class AdminUsuarioController {
 
     public function excluir() {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['role'] != 4) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario']) || !in_array($_SESSION['usuario']['role'], [1,4])) { header('Location: /Aptus/login'); exit; }
         $id = (int)($_GET['id'] ?? 0);
         if ($id > 0) {
             $stmt = $this->conn->prepare("DELETE FROM usuario WHERE id_usuario = ?");
@@ -30,7 +30,7 @@ class AdminUsuarioController {
 
     public function banir() {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['role'] != 4) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario']) || !in_array($_SESSION['usuario']['role'], [1,4])) { header('Location: /Aptus/login'); exit; }
         $id = (int)($_POST['id'] ?? 0);
         if ($id > 0) {
             $stmt = $this->conn->prepare("UPDATE usuario SET ativo = 0 WHERE id_usuario = ?");
@@ -41,7 +41,7 @@ class AdminUsuarioController {
 
     public function desbanir() {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['role'] != 4) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario']) || !in_array($_SESSION['usuario']['role'], [1,4])) { header('Location: /Aptus/login'); exit; }
         $id = (int)($_POST['id'] ?? 0);
         if ($id > 0) {
             $stmt = $this->conn->prepare("UPDATE usuario SET ativo = 1 WHERE id_usuario = ?");
