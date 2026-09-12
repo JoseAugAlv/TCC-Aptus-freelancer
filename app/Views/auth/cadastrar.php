@@ -36,13 +36,13 @@ require_once __DIR__ . '/../layouts/nav.php';
 
                 <div class="form-group">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="senha" class="form-control" placeholder="Minimo 6 caracteres" required minlength="6" onkeyup="verificarRequisitosSenha()">
+                    <input type="password" id="senha" name="senha" class="form-control" placeholder="Minimo 8 caracteres" required minlength="8" onkeyup="verificarRequisitosSenha()">
                     <div id="requisitos-senha" style="margin-top: 8px; font-size: 0.85rem;"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="senha_confirm">Confirmar Senha</label>
-                    <input type="password" id="senha_confirm" name="senha_confirm" class="form-control" placeholder="Repita a senha" required minlength="6" onkeyup="verificarConfirmacaoSenha()">
+                    <input type="password" id="senha_confirm" name="senha_confirm" class="form-control" placeholder="Repita a senha" required minlength="8" onkeyup="verificarConfirmacaoSenha()">
                     <div id="confirmacao-senha" style="margin-top: 8px; font-size: 0.85rem;"></div>
                 </div>
 
@@ -72,7 +72,7 @@ function verificarRequisitosSenha() {
     var requisitos = document.getElementById('requisitos-senha');
     
     var criterios = [
-        { regex: /.{6,}/, label: 'Minimo 6 caracteres', ok: false },
+        { regex: /.{8,}/, label: 'Minimo 8 caracteres', ok: false },
         { regex: /[A-Z]/, label: 'Pelo menos 1 letra maiuscula', ok: false },
         { regex: /[a-z]/, label: 'Pelo menos 1 letra minuscula', ok: false },
         { regex: /[0-9]/, label: 'Pelo menos 1 numero', ok: false },
@@ -127,7 +127,7 @@ function validarSenha() {
     var confirm = document.getElementById('senha_confirm').value;
     
     var criterios = [
-        { regex: /.{6,}/, ok: false },
+        { regex: /.{8,}/, ok: false },
         { regex: /[A-Z]/, ok: false },
         { regex: /[a-z]/, ok: false },
         { regex: /[0-9]/, ok: false },
@@ -141,7 +141,7 @@ function validarSenha() {
     var todosOk = criterios.every(function(c) { return c.ok; });
     
     if (!todosOk) {
-        alert('A senha deve atender a todos os criterios de seguranca:\n- Minimo 6 caracteres\n- Pelo menos 1 letra maiuscula\n- Pelo menos 1 letra minuscula\n- Pelo menos 1 numero\n- Pelo menos 1 caractere especial');
+        alert('A senha deve atender a todos os criterios de seguranca:\n- Minimo 8 caracteres\n- Pelo menos 1 letra maiuscula\n- Pelo menos 1 letra minuscula\n- Pelo menos 1 numero\n- Pelo menos 1 caractere especial');
         return false;
     }
     

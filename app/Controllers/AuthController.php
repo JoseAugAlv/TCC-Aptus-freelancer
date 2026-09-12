@@ -146,7 +146,7 @@ class AuthController
         }
 
         session_destroy();
-        setcookie("remember_token", "", time() - 3600, "/");
+        setcookie("remember_token", "", time() - 3600, "/Aptus", $_SERVER['HTTP_HOST'] ?? 'localhost', true, true);
 
         header('Location: /Aptus/login');
         exit;
@@ -195,8 +195,8 @@ class AuthController
             exit;
         }
 
-        if (strlen($senha) < 6) {
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'A senha deve ter no minimo 6 caracteres.'];
+        if (strlen($senha) < 8) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'A senha deve ter no minimo 8 caracteres.'];
             header('Location: /Aptus/login/cadastrar');
             exit;
         }
@@ -433,8 +433,8 @@ class AuthController
             exit;
         }
 
-        if (strlen($senha) < 6) {
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'A senha deve ter no minimo 6 caracteres.'];
+        if (strlen($senha) < 8) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'A senha deve ter no minimo 8 caracteres.'];
             header('Location: /Aptus/auth/redefinir?token=' . $token);
             exit;
         }

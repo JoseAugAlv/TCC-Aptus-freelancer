@@ -208,6 +208,9 @@ $router->post('/avaliacoes/salvar-resposta', 'AvaliacaoController@salvarResposta
 
 // routes/web.php
 
+$router->get('/admin/categorias/criar', 'AdminCategoriaController@criar', [1, 4]);
+$router->get('/admin/categorias/editar/{id}', 'AdminCategoriaController@editar', [1, 4]);
+
 /*
    FAVORITOS
 */
