@@ -32,6 +32,17 @@ class Avaliacao
     /**
      * Busca avaliação por interesse
      */
+    public function findById($id) {
+        $sql = "SELECT a.*, av.nome AS avaliador_nome, avd.nome AS avaliado_nome
+                FROM avaliacao a
+                JOIN usuario av ON a.id_avaliador = av.id_usuario
+                JOIN usuario avd ON a.id_avaliado = avd.id_usuario
+                WHERE a.id_avaliacao = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function findByInteresse($interesseId)
     {
         $sql = "SELECT a.*, 

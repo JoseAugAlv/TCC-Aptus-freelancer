@@ -8,7 +8,7 @@ require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
 $interesse = $interesse ?? [];
-$anuncio = $this->anuncio->findById($interesse['id_anuncio'] ?? 0);
+$anuncio = $anuncio ?? [];
 ?>
 
 <h1>Avaliar Serviço</h1>

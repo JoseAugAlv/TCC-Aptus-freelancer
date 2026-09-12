@@ -14,8 +14,9 @@ class LogController
 
     public function index()
     {
-        // Verificar se está logado e é Master (role 5)
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['role'] != 5) {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        // Verificar se está logado e é Admin (role 1,4)
+        if (!isset($_SESSION['usuario']) || !in_array($_SESSION['usuario']['role'], [1,2,4])) {
             $_SESSION['flash'] = [
                 'tipo' => 'erro',
                 'mensagem' => 'Você não tem permissão para acessar esta página.'

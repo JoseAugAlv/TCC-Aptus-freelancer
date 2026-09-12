@@ -86,10 +86,10 @@ $router->get('/interesses/recebidos', 'InteresseController@recebidos', [3, 2, 1,
 /*
    CONFIRMAÇÃO DE PAGAMENTO
 */
-// $router->get('/pagamentos/confirmar', 'PagamentoController@confirmar', [3, 2, 1, 4]);
-// $router->post('/pagamentos/confirmar-contratante', 'PagamentoController@confirmarContratante', [3, 2, 1, 4]);
-// $router->post('/pagamentos/confirmar-freelancer', 'PagamentoController@confirmarFreelancer', [3, 2, 1, 4]);
-// $router->get('/pagamentos', 'PagamentoController@index', [3, 2, 1, 4]);
+$router->get('/pagamentos/confirmar', 'PagamentoController@confirmar', [3, 2, 1, 4]);
+$router->post('/pagamentos/confirmar-contratante', 'PagamentoController@confirmarContratante', [3, 2, 1, 4]);
+$router->post('/pagamentos/confirmar-freelancer', 'PagamentoController@confirmarFreelancer', [3, 2, 1, 4]);
+$router->get('/pagamentos', 'PagamentoController@index', [3, 2, 1, 4]);
 
 /*
    DISPUTAS
@@ -155,10 +155,10 @@ $router->get('/admin/dashboard', 'AdminController@dashboard', [1, 4]);
 // $router->post('/admin/disputas/resolver', 'AdminDisputaController@resolver', [1, 4]);
 
 // Admin - Categorias
-// $router->get('/admin/categorias', 'AdminCategoriaController@index', [1, 4]);
-// $router->post('/admin/categorias/salvar', 'AdminCategoriaController@salvar', [1, 4]);
-// $router->post('/admin/categorias/atualizar', 'AdminCategoriaController@atualizar', [1, 4]);
-// $router->get('/admin/categorias/excluir', 'AdminCategoriaController@excluir', [1, 4]);
+$router->get('/admin/categorias', 'AdminCategoriaController@index', [1, 4]);
+$router->post('/admin/categorias/salvar', 'AdminCategoriaController@salvar', [1, 4]);
+$router->post('/admin/categorias/atualizar', 'AdminCategoriaController@atualizar', [1, 4]);
+$router->get('/admin/categorias/excluir', 'AdminCategoriaController@excluir', [1, 4]);
 
 // Admin - Logs
 // $router->get('/admin/logs', 'AdminLogController@index', [1, 4]);

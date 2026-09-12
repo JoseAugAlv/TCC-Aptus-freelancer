@@ -7,6 +7,11 @@ class AdminController
 {
     private $dashboard;
 
+    public function index() {
+        header('Location: /Aptus/admin/dashboard');
+        exit;
+    }
+
     public function __construct()
     {
         $this->dashboard = new Dashboard();
