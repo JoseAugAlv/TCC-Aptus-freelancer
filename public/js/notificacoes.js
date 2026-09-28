@@ -1,8 +1,28 @@
 // public/js/notificacoes.js
-// [FIX-CRIT-2.3] Passa o CSRF token em todos os POST. Antes só o /contador
-//                tentava (e errado, via meta inexistente).
+// - Só faz requisições AJAX se o usuário estiver logado
+// - Lê o CSRF token do <meta name="csrf-token">
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    // ------------------------------------------------------------------
+    // Detecta se o usuário está logado lendo o <script id="usuarioData">
+    // (inserido por app/Views/layouts/nav.php)
+    // ------------------------------------------------------------------
+    var usuarioLogado = false;
+    try {
+        var el = document.getElementById('usuarioData');
+        if (el) {
+            var u = JSON.parse(el.textContent.trim() || 'null');
+            usuarioLogado = u && u.id;
+        }
+    } catch (e) {
+        usuarioLogado = false;
+    }
+
+    // Se não está logado, não faz NENHUMA chamada AJAX
+    if (!usuarioLogado) {
+        return;
+    }
 
     function getCsrfToken() {
         var meta = document.querySelector('meta[name="csrf-token"]');
@@ -10,35 +30,41 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function atualizarBadgeNotificacoes() {
-        fetch('/Aptus/notificacoes/contador')
-            .then(function(response) {
-                if (!response.ok) throw new Error('Erro na resposta do servidor');
-                return response.json();
-            })
-            .then(function(data) {
-                var total = data.total || 0;
+        fetch('/Aptus/notificacoes/contador', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(response) {
+            // Se voltar 401/403/redirect, não tenta parsear JSON
+            if (!response.ok) return null;
+            var ct = response.headers.get('content-type') || '';
+            if (ct.indexOf('application/json') === -1) return null;
+            return response.json();
+        })
+        .then(function(data) {
+            if (!data) return;
+            var total = data.total || 0;
 
-                var badgeNav = document.getElementById('badgeNotificacao');
-                if (badgeNav) {
-                    if (total > 0) { badgeNav.textContent = total; badgeNav.style.display = 'inline-flex'; }
-                    else { badgeNav.style.display = 'none'; }
-                }
+            var badgeNav = document.getElementById('badgeNotificacao');
+            if (badgeNav) {
+                if (total > 0) { badgeNav.textContent = total; badgeNav.style.display = 'inline-flex'; }
+                else { badgeNav.style.display = 'none'; }
+            }
 
-                var badgeMobile = document.getElementById('badgeMobile');
-                if (badgeMobile) {
-                    if (total > 0) { badgeMobile.textContent = total; badgeMobile.style.display = 'inline-flex'; }
-                    else { badgeMobile.style.display = 'none'; }
-                }
+            var badgeMobile = document.getElementById('badgeMobile');
+            if (badgeMobile) {
+                if (total > 0) { badgeMobile.textContent = total; badgeMobile.style.display = 'inline-flex'; }
+                else { badgeMobile.style.display = 'none'; }
+            }
 
-                var badgeMenu = document.getElementById('badgeMenu');
-                if (badgeMenu) {
-                    if (total > 0) { badgeMenu.textContent = total; badgeMenu.style.display = 'inline-flex'; }
-                    else { badgeMenu.style.display = 'none'; }
-                }
-            })
-            .catch(function(error) {
-                console.log('Erro ao buscar notificacoes:', error);
-            });
+            var badgeMenu = document.getElementById('badgeMenu');
+            if (badgeMenu) {
+                if (total > 0) { badgeMenu.textContent = total; badgeMenu.style.display = 'inline-flex'; }
+                else { badgeMenu.style.display = 'none'; }
+            }
+        })
+        .catch(function(error) {
+            console.log('Erro ao buscar notificacoes:', error);
+        });
     }
 
     function marcarNotificacaoLida(id, element) {
@@ -47,7 +73,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fetch('/Aptus/notificacoes/marcar-lida', {
             method: 'POST',
-            headers: { 'X-CSRF-Token': getCsrfToken() },
+            headers: {
+                'X-CSRF-Token': getCsrfToken(),
+                'X-Requested-With': 'XMLHttpRequest'
+            },
             body: formData
         })
         .then(function() {
@@ -71,7 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function marcarTodasLidas() {
         fetch('/Aptus/notificacoes/marcar-todas-lidas', {
             method: 'POST',
-            headers: { 'X-CSRF-Token': getCsrfToken() }
+            headers: {
+                'X-CSRF-Token': getCsrfToken(),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
         })
         .then(function() {
             document.querySelectorAll('.notificacao-item.nao-lida').forEach(function(item) {

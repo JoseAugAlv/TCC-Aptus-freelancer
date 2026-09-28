@@ -125,10 +125,8 @@ class AuthController
             );
         }
 
-        // Limpa dados da sessão
         $_SESSION = [];
 
-        // Expira o cookie de sessão
         if (ini_get('session.use_cookies')) {
             $p = session_get_cookie_params();
             setcookie(session_name(), '', [
@@ -143,7 +141,6 @@ class AuthController
 
         session_destroy();
 
-        // Expira o remember_token
         $appUrl = parse_url(\Config::get('APP_URL', '/Aptus'), PHP_URL_PATH) ?: '/Aptus';
 
         setcookie('remember_token', '', [
@@ -221,14 +218,18 @@ class AuthController
                 error_log('Falha ao enviar e-mail de aviso de cadastro duplicado: ' . $e->getMessage());
             }
         } else {
-            $token = bin2hex(random_bytes(32));
+            // [FIX] Sempre gera token + expiração de 24h de uma vez só.
+            //       O bloco duplicado anterior (if/else interno) era inútil.
+            $token     = bin2hex(random_bytes(32));
+            $expiracao = date('Y-m-d H:i:s', strtotime('+24 hours'));
 
             $dados = [
-                'id_perfil'         => 3,
-                'nome'              => $nome,
-                'email'             => $email,
-                'senha'             => $senha,
-                'token_verificacao' => $token,
+                'id_perfil'                 => 3,
+                'nome'                      => $nome,
+                'email'                     => $email,
+                'senha'                     => $senha,
+                'token_verificacao'         => $token,
+                'token_verificacao_expira'  => $expiracao,
             ];
 
             $resultado = $this->usuario->create($dados);
@@ -240,6 +241,8 @@ class AuthController
                 } catch (Throwable $e) {
                     error_log('Falha ao enviar e-mail de verificação: ' . $e->getMessage());
                 }
+            } else {
+                error_log('Falha ao criar usuário: ' . $email);
             }
         }
 
@@ -260,6 +263,17 @@ class AuthController
             exit;
         }
 
+        // Antes de tentar verificar, checa se o token existe e está expirado
+        $tokenData = $this->usuario->findTokenVerificacao($token);
+
+        if ($tokenData
+            && !$tokenData['email_verificado']
+            && !empty($tokenData['token_verificacao_expira'])
+            && strtotime($tokenData['token_verificacao_expira']) < time()) {
+            header('Location: /Aptus/login?status=erro&mensagem=Link+expirado.+Solicite+um+novo.');
+            exit;
+        }
+
         $resultado = $this->usuario->verificarEmail($token);
 
         if ($resultado) {
@@ -277,12 +291,9 @@ class AuthController
 
         $usuario = $this->usuario->findByEmail($email);
 
-        // Resposta neutra — sem revelar existência
         if ($usuario && !$usuario['email_verificado']) {
             $token = bin2hex(random_bytes(32));
-            $pdo   = Database::getConnection();
-            $stmt  = $pdo->prepare("UPDATE usuario SET token_verificacao = ? WHERE id_usuario = ?");
-            $stmt->execute([$token, $usuario['id_usuario']]);
+            $this->usuario->reenviarTokenVerificacao($usuario['id_usuario'], $token);
 
             try {
                 $mailer = new Mailer();

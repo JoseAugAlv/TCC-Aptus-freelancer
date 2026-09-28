@@ -163,26 +163,38 @@ class Interesse
         return ((int) ($r['total'] ?? 0)) >= 2;
     }
 
+    // app/Models/Interesse.php
+
     public function confirmarExecucaoCliente($interesseId, $usuarioId)
     {
+        // Regra: ambos precisam ter avaliado antes de qualquer confirmação
+        if (!$this->ambosJaAvaliaram($interesseId)) {
+            return false;
+        }
+
+        // Garante que o usuário que confirma é o contratante
         if (!$this->usuarioJaAvaliou($interesseId, $usuarioId)) {
             return false;
         }
 
         $sql  = "UPDATE interesse SET confirmado_contratante = TRUE
-                 WHERE id_interesse = ? AND id_contratante = ? AND situacao = 'ativo'";
+                WHERE id_interesse = ? AND id_contratante = ? AND situacao = 'ativo'";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$interesseId, $usuarioId]);
     }
 
     public function confirmarExecucaoFreelancer($interesseId, $usuarioId)
     {
+        if (!$this->ambosJaAvaliaram($interesseId)) {
+            return false;
+        }
+
         if (!$this->usuarioJaAvaliou($interesseId, $usuarioId)) {
             return false;
         }
 
         $sql  = "UPDATE interesse SET confirmado_freelancer = TRUE
-                 WHERE id_interesse = ? AND id_freelancer = ? AND situacao = 'ativo'";
+                WHERE id_interesse = ? AND id_freelancer = ? AND situacao = 'ativo'";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$interesseId, $usuarioId]);
     }

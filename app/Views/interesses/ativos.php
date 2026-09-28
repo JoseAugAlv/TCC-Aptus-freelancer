@@ -8,6 +8,8 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 $interesses = $interesses ?? [];
 $usuario    = $_SESSION['usuario'] ?? null;
+
+
 ?>
 
 <div class="interesses-container">
@@ -44,7 +46,11 @@ $usuario    = $_SESSION['usuario'] ?? null;
                 <?php foreach ($ativos as $interesse):
                     $isContratante = ($usuario && $interesse['id_contratante'] == $usuario['id']);
                     $isFreelancer  = ($usuario && $interesse['id_freelancer'] == $usuario['id']);
+                    $usuarioJaAvaliou = !empty($interesse['usuario_ja_avaliou']);
+                    $outroJaAvaliou    = !empty($interesse['outro_ja_avaliou']);
+                    $ambosJaAvaliaram  = $usuarioJaAvaliou && $outroJaAvaliou;
                     $outroNome     = $isContratante
+                    
                         ? ($interesse['freelancer_nome']  ?? 'Freelancer')
                         : ($interesse['contratante_nome'] ?? 'Cliente');
 
@@ -159,9 +165,20 @@ $usuario    = $_SESSION['usuario'] ?? null;
                                 <form method="POST" action="/Aptus/interesses/confirmar-execucao" style="display:inline;">
                                     <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
                                     <?= CsrfMiddleware::field() ?>
-                                    <button type="submit" class="btn-confirmar" onclick="return confirm('Confirmar que o serviço foi executado?')">
-                                        Confirmar Execução
-                                    </button>
+                                    <?php if ($ambosJaAvaliaram && !$jaConfirmou && !$pagamentoDivergente): ?>
+                                    <form method="POST" action="/Aptus/interesses/confirmar-execucao" style="display:inline;">
+                                        <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
+                                        <?= CsrfMiddleware::field() ?>
+                                        <button type="submit" class="btn-confirmar"
+                                                onclick="return confirm('Confirmar que o serviço foi executado?')">
+                                            Confirmar Execução
+                                        </button>
+                                    </form>
+                                <?php elseif ($usuarioJaAvaliou && !$outroJaAvaliou && !$pagamentoDivergente): ?>
+                                    <span class="aviso-aguardando" style="color:#f59e0b;">
+                                        Aguardando a outra parte avaliar…
+                                    </span>
+                                <?php endif; ?>
                                 </form>
                             <?php endif; ?>
 
