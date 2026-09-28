@@ -423,10 +423,26 @@ class InteresseController
             $isContratante = ((int) $interesse['id_contratante'] === $usuarioId);
             $isFreelancer  = ((int) $interesse['id_freelancer'] === $usuarioId);
 
-            if (!$interesseModel->usuarioJaAvaliou($interesseId, $usuarioId)) {
+            // REGRA NOVA: ambos precisam ter avaliado
+            if (!$interesseModel->ambosJaAvaliaram($interesseId)) {
                 $pdo->rollBack();
-                $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Você precisa avaliar o serviço antes de confirmar a execução.'];
-                header('Location: /Aptus/avaliacoes/criar/' . $interesseId);
+
+                // Se o próprio usuário ainda não avaliou, manda ele avaliar
+                if (!$interesseModel->usuarioJaAvaliou($interesseId, $usuarioId)) {
+                    $_SESSION['flash'] = [
+                        'tipo'     => 'aviso',
+                        'mensagem' => 'Você precisa avaliar o serviço antes de confirmar a execução.',
+                    ];
+                    header('Location: /Aptus/avaliacoes/criar/' . $interesseId);
+                    exit;
+                }
+
+                // Se ele já avaliou mas o outro ainda não
+                $_SESSION['flash'] = [
+                    'tipo'     => 'aviso',
+                    'mensagem' => 'Aguarde a outra parte avaliar o serviço antes de confirmar a execução.',
+                ];
+                header('Location: /Aptus/interesses/ativos');
                 exit;
             }
 

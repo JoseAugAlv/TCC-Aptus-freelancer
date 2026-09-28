@@ -321,13 +321,54 @@ CREATE TABLE reset_senha (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
--- ============================================================================
--- 7. USUÁRIOS PRÉ-CADASTRADOS PARA TESTE
--- Senha de TODOS: Aptus@2026
--- ============================================================================
+CREATE TABLE configuracao (
+    id_configuracao INT PRIMARY KEY AUTO_INCREMENT,
+    chave VARCHAR(80) NOT NULL UNIQUE,
+    valor TEXT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_chave (chave)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Valores iniciais (mesmos do Configuracao::getDefaults() no PHP)
+INSERT INTO configuracao (chave, valor) VALUES
+('site_nome',              'Aptus'),
+('site_descricao',         'Conectando Talentos'),
+('site_email',             'contato@aptus.com'),
+('site_telefone',          '(11) 99999-9999'),
+('site_endereco',          'Sao Paulo, SP'),
+
+('upload_max_size',        '5'),
+('upload_allow_types',     'jpg,jpeg,png,webp,gif'),
+
+('moderacao_automatica',   '0'),
+
+('sessao_tempo',           '3600'),
+('tentativas_login',       '5'),
+
+('email_host',             'smtp.gmail.com'),
+('email_port',             '587'),
+('email_user',             ''),
+('email_pass',             ''),
+('email_from_name',        'Aptus'),
+
+('pagamento_pix',          '1'),
+('pagamento_transferencia','1'),
+('pagamento_dinheiro',     '1'),
+('pagamento_cartao',       '0'),
+
+('manutencao',             '0'),
+('manutencao_mensagem',    'Sistema em manutencao. Volte em breve.');
 
 INSERT INTO usuario (id_perfil, nome, email, senha, email_verificado, ativo, banido) VALUES
 (3, 'Usuário Teste',       'usuario@aptus.com',   '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0),
 (2, 'Moderador Teste',     'moderador@aptus.com', '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0),
 (1, 'Administrador Teste', 'admin@aptus.com',     '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0),
 (4, 'Master Teste',        'master@aptus.com',    '$2y$10$IrRHFrbGBM1ro2gd/S8XKeqUPVcdsa6e6hhgtZW0kG32864jOw3jC', 1, 1, 0);
+
+ALTER TABLE usuario
+    ADD COLUMN token_verificacao_expira DATETIME NULL
+    AFTER token_verificacao;
+
+-- Índice para acelerar a verificação
+CREATE INDEX idx_token_verificacao ON usuario (token_verificacao);

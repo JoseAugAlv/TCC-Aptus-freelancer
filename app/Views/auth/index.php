@@ -160,6 +160,21 @@ $gruposDev = [
                     <a href="/Aptus/auth/esqueci-senha" class="link-esqueci">Esqueci a senha</a>
                 </div>
 
+                <div class="form-group termo-check" style="margin-top:6px;">
+                    <label class="checkbox-termos" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+                        <input type="checkbox" name="aceite_termos" id="aceite_termos_login"
+                            value="1" required
+                            style="margin-top:3px; width:16px; height:16px; accent-color:#006577; flex-shrink:0;">
+                        <span style="font-size:.85rem; color:#475569; line-height:1.5;">
+                            Li e concordo com os
+                            <a href="/Aptus/termos" target="_blank" style="color:#006577; text-decoration:underline;">Termos de Uso</a>,
+                            a <a href="/Aptus/termos#privacidade" target="_blank" style="color:#006577; text-decoration:underline;">Política de Privacidade</a>
+                            e a <a href="/Aptus/cookies" target="_blank" style="color:#006577; text-decoration:underline;">Política de Cookies</a>,
+                            conforme a LGPD (Lei nº 13.709/2018).
+                        </span>
+                    </label>
+                </div>
+
                 <button type="submit" class="btn btn-primary btn-full" id="btnLogin">
                     <i class="fas fa-sign-in-alt"></i> Entrar
                 </button>

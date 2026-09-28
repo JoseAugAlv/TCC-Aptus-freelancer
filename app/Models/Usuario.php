@@ -49,8 +49,9 @@ class Usuario
 
     public function create($data)
     {
-        $sql = "INSERT INTO usuario (id_perfil, nome, email, senha, token_verificacao, email_verificado, data_criacao)
-                VALUES (?, ?, ?, ?, ?, 0, NOW())";
+        $sql = "INSERT INTO usuario 
+                (id_perfil, nome, email, senha, token_verificacao, token_verificacao_expira, email_verificado, data_criacao)
+                VALUES (?, ?, ?, ?, ?, ?, 0, NOW())";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             $data['id_perfil'] ?? 3,
@@ -58,6 +59,7 @@ class Usuario
             $data['email'],
             password_hash($data['senha'], PASSWORD_DEFAULT),
             $data['token_verificacao'] ?? null,
+            $data['token_verificacao_expira'] ?? null,
         ]);
     }
 
@@ -69,11 +71,35 @@ class Usuario
         $sql = "UPDATE usuario
                 SET email_verificado = 1,
                     data_verificacao = NOW(),
-                    token_verificacao = NULL
-                WHERE token_verificacao = ? AND email_verificado = 0";
+                    token_verificacao = NULL,
+                    token_verificacao_expira = NULL
+                WHERE token_verificacao = ?
+                AND email_verificado = 0
+                AND token_verificacao_expira IS NOT NULL
+                AND token_verificacao_expira > NOW()";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([$token]);
         return $stmt->rowCount() > 0;
+    }
+    public function reenviarTokenVerificacao($usuarioId, $novoToken)
+    {
+        $expiracao = date('Y-m-d H:i:s', strtotime('+24 hours'));
+        $sql = "UPDATE usuario
+                SET token_verificacao = ?,
+                    token_verificacao_expira = ?
+                WHERE id_usuario = ? AND email_verificado = 0";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$novoToken, $expiracao, $usuarioId]);
+    }
+
+    public function findTokenVerificacao($token)
+    {
+        $sql = "SELECT id_usuario, nome, email, email_verificado, token_verificacao_expira
+                FROM usuario
+                WHERE token_verificacao = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$token]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function update($id, $data)

@@ -211,6 +211,59 @@
 
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 1024px) {
+
+    /* ========================================================
+       NAVBAR — 3 COLUNAS: [LOGO]  [ENTRAR/PERFIL]  [☰]
+       ======================================================== */
+    .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.7rem 1rem;
+        min-height: 64px;
+        flex-wrap: nowrap;
+    }
+
+    /* 1) LOGO à esquerda */
+    .navbar-logo {
+        order: 1;
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar-logo img,
+    #img-logo {
+        height: 40px;
+        width: auto;
+        display: block;
+        object-fit: contain;
+    }
+
+    /* 2) LOGIN / PERFIL ao centro */
+    .navbar-perfil {
+        order: 2;
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        position: static;
+        margin: 0;
+    }
+
+    /* 3) HAMBURGER à direita */
+    .hamburger {
+        order: 3;
+        display: flex !important;
+        flex: 0 0 auto;
+        margin: 0;
+    }
+
+    /* ========================================================
+       DRAWER LATERAL (regras originais mantidas)
+       ======================================================== */
     .navbar-links {
         position: fixed;
         top: 0;
@@ -242,14 +295,6 @@
         display: none;
     }
 
-    .hamburger {
-        display: flex !important;
-    }
-
-    .navbar-perfil {
-        gap: 0.8rem;
-    }
-
     .dropdown-menu {
         position: static;
         transform: none;
@@ -274,7 +319,7 @@
     .btn-perfil-navbar span {
         display: none;
     }
-    
+
     .btn-login-navbar {
         padding: 0.5rem 1rem;
         font-size: 0.85rem;
@@ -297,6 +342,7 @@
         display: block;
     }
 }
+
 /* ============================================================
    NOTIFICACAO BADGE
    ============================================================ */

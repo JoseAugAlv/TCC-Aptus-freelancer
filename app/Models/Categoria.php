@@ -18,9 +18,7 @@ class Categoria
     public function getAll()
     {
         $sql = "SELECT * FROM categoria WHERE ativo = TRUE ORDER BY nome";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return Database::fetchAll($sql, [], 300);
     }
 
     /**
@@ -30,16 +28,14 @@ class Categoria
     {
         $sql = "SELECT c.*, 
                 (SELECT COUNT(*) FROM anuncio_servico a 
-                 WHERE a.id_categoria = c.id_categoria 
-                 AND a.situacao = 'ativo' 
-                 AND a.id_situacao_moderacao = 2) as total_anuncios
+                WHERE a.id_categoria = c.id_categoria 
+                AND a.situacao = 'ativo' 
+                AND a.id_situacao_moderacao = 2) as total_anuncios
                 FROM categoria c 
                 WHERE c.ativo = TRUE 
                 ORDER BY total_anuncios DESC 
                 LIMIT ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$limit]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return Database::fetchAll($sql, [$limit], 120); // 2 min
     }
 
     /**

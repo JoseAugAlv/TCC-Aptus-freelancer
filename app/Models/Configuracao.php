@@ -18,15 +18,12 @@ class Configuracao
     public function getAll()
     {
         $sql = "SELECT * FROM configuracao";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+        $result = Database::fetchAll($sql, [], 300); // 5 min
+
         $configs = [];
         foreach ($result as $row) {
             $configs[$row['chave']] = $row['valor'];
         }
-        
         return $configs;
     }
 
@@ -47,10 +44,15 @@ class Configuracao
      */
     public function set($chave, $valor)
     {
-        $sql = "INSERT INTO configuracao (chave, valor) VALUES (?, ?) 
+        $sql  = "INSERT INTO configuracao (chave, valor) VALUES (?, ?) 
                 ON DUPLICATE KEY UPDATE valor = ?";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$chave, $valor, $valor]);
+        $ok   = $stmt->execute([$chave, $valor, $valor]);
+
+        // [FIX] Invalida cache para o modo manutenção refletir imediatamente
+        Database::clearCache();
+
+        return $ok;
     }
 
     /**
@@ -59,19 +61,23 @@ class Configuracao
     public function setMultiples($configs)
     {
         $this->conn->beginTransaction();
-        
+
         try {
-            $sql = "INSERT INTO configuracao (chave, valor) VALUES (?, ?) 
+            $sql  = "INSERT INTO configuracao (chave, valor) VALUES (?, ?) 
                     ON DUPLICATE KEY UPDATE valor = ?";
             $stmt = $this->conn->prepare($sql);
-            
+
             foreach ($configs as $chave => $valor) {
                 $stmt->execute([$chave, $valor, $valor]);
             }
-            
+
             $this->conn->commit();
+
+            // [FIX] Invalida cache — crítico para o modo manutenção
+            Database::clearCache();
+
             return true;
-            
+
         } catch (Exception $e) {
             $this->conn->rollBack();
             return false;

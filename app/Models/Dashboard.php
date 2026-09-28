@@ -41,11 +41,9 @@ class Dashboard
      */
     public function getTotalAnuncios()
     {
-        $sql = "SELECT COUNT(*) as total FROM anuncio_servico WHERE situacao = 'ativo' AND id_situacao_moderacao = 2";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total'] ?? 0;
+        $sql = "SELECT COUNT(*) as total FROM anuncio_servico 
+                WHERE situacao = 'ativo' AND id_situacao_moderacao = 2";
+        return (int) Database::fetchColumn($sql, [], 30);
     }
 
     /**
@@ -78,10 +76,7 @@ class Dashboard
     public function getTotalUsuarios()
     {
         $sql = "SELECT COUNT(*) as total FROM usuario WHERE ativo = TRUE AND banido = FALSE";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total'] ?? 0;
+        return (int) Database::fetchColumn($sql, [], 30);
     }
 
     /**
