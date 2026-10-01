@@ -203,6 +203,10 @@ $usuarioData = $usuarioData ?? [];
             <a href="/Aptus/perfil/editar">Editar perfil →</a>
         </div>
     </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/Aptus/" class="btn-primary">← Voltar ao Início</a>
+    </div>
 </div>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
