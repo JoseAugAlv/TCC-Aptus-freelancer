@@ -372,3 +372,5 @@ ALTER TABLE usuario
 
 -- Índice para acelerar a verificação
 CREATE INDEX idx_token_verificacao ON usuario (token_verificacao);
+
+ALTER TABLE usuario ADD COLUMN cep VARCHAR(9) NULL AFTER estado;
