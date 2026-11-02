@@ -29,7 +29,9 @@ class ContatoController
                 // ============================================================
                 // ALTERE ESTE E-MAIL PARA UM ENDEREÇO VÁLIDO
                 // ============================================================
-                $emailAdmin = 'seu_email@dominio.com';  // <-- ALTERE AQUI
+                require_once __DIR__ . '/../Models/Configuracao.php';
+                $cfg = new Configuracao();
+                $emailAdmin = $cfg->get('site_email') ?: 'contato@aptus.com';
                 // ============================================================
                 
                 // E-mail para o administrador

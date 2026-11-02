@@ -5,6 +5,7 @@ require_once __DIR__ . '/../Models/Anuncio.php';
 require_once __DIR__ . '/../Models/Categoria.php';
 require_once __DIR__ . '/../Models/Usuario.php';
 require_once __DIR__ . '/../Models/BuscaLog.php';
+require_once __DIR__ . '/../Helpers/MoneyHelper.php';
 
 class HomeController
 {
@@ -45,8 +46,8 @@ class HomeController
         $termo = trim($_GET['q'] ?? '');
         $categoriaId = (int)($_GET['categoria'] ?? 0);
         $avaliacao = (float)($_GET['avaliacao'] ?? 0);
-        $precoMin = (float)($_GET['preco_min'] ?? 0);
-        $precoMax = (float)($_GET['preco_max'] ?? 0);
+        $precoMin = MoneyHelper::parse($_GET['preco_min'] ?? 0);
+        $precoMax = MoneyHelper::parse($_GET['preco_max'] ?? 0);
         $ordenar = $_GET['ordenar'] ?? 'recentes';
 
         // Validar valores

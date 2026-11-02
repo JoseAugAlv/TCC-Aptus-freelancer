@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../Config/database.php';
 require_once __DIR__ . '/../Models/Interesse.php';
 require_once __DIR__ . '/../Models/ConfirmacaoPagamento.php';
+require_once __DIR__ . '/../Helpers/MoneyHelper.php';
 
 class PagamentoController
 {
@@ -13,10 +14,6 @@ class PagamentoController
         $this->conn = Database::getConnection();
     }
 
-    /**
-     * Lista os interesses em que o usuário é parte (contratante ou freelancer).
-     * Antes: carregava TODOS os interesses e o form mandava id=1 por padrão.
-     */
     public function index()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -45,13 +42,10 @@ class PagamentoController
         $interesses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $tituloPagina = 'Pagamentos - Aptus';
-        $cssPagina = 'pagamentos.css';
+        $cssPagina    = 'pagamentos.css';
         require '../app/Views/pagamentos/index.php';
     }
 
-    /**
-     * Tela de confirmação. Agora exige ?id= e ?papel= e valida a propriedade.
-     */
     public function confirmar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -87,13 +81,10 @@ class PagamentoController
         $confirmacao      = $confirmacaoModel->getByInteresse($interesseId);
 
         $tituloPagina = 'Confirmar Pagamento - Aptus';
-        $cssPagina = 'pagamentos.css';
+        $cssPagina    = 'pagamentos.css';
         require '../app/Views/pagamentos/confirmar.php';
     }
 
-    /**
-     * [FIX-CRIT-01] Verifica propriedade, coleta valor/forma/data e usa o Model.
-     */
     public function confirmarContratante()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -101,7 +92,7 @@ class PagamentoController
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
         $id        = (int) ($_POST['interesse_id'] ?? 0);
-        $valor     = (float) ($_POST['valor'] ?? 0);
+        $valor     = MoneyHelper::parse($_POST['valor'] ?? 0);
         $forma     = trim($_POST['forma_pagamento'] ?? '');
         $data      = $_POST['data_pagamento'] ?? date('Y-m-d');
         $obs       = trim($_POST['observacao'] ?? '') ?: null;
@@ -109,20 +100,40 @@ class PagamentoController
         $interesseModel = new Interesse();
         $interesse      = $interesseModel->findById($id);
 
-        // [FIX-CRIT-01] Verificação de propriedade — bloqueava a falha
         if (!$interesse || (int) $interesse['id_contratante'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para confirmar este pagamento.'];
             header('Location: /Aptus/pagamentos'); exit;
         }
 
+        // Só permite confirmar se o interesse está ativo
+        if (!in_array($interesse['situacao'], ['ativo'], true)) {
+            $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Este serviço não está ativo.'];
+            header('Location: /Aptus/pagamentos'); exit;
+        }
+
+        // Bloqueia reconfirmação
+        $confirmacao = new ConfirmacaoPagamento();
+        $existente   = $confirmacao->getByInteresse($id);
+
+        if ($existente && !empty($existente['confirmado_contratante'])) {
+            $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Você já confirmou este pagamento.'];
+            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante');
+            exit;
+        }
+
         if ($valor <= 0) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o valor pago.'];
-            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante'); exit;
+            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante');
+            exit;
+        }
+
+        if ($forma === '') {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Selecione a forma de pagamento.'];
+            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante');
+            exit;
         }
 
         try {
-            $confirmacao = new ConfirmacaoPagamento();
-            $existente   = $confirmacao->getByInteresse($id);
             if (!$existente) {
                 $confirmacao->create(['id_interesse' => $id]);
             }
@@ -132,15 +143,13 @@ class PagamentoController
             $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Pagamento registrado como contratante.'];
         } catch (Exception $e) {
             error_log('Erro ao confirmar pagamento (contratante): ' . $e->getMessage());
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível registrar o pagamento. Tente novamente.'];
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível registrar o pagamento.'];
         }
 
-        header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante'); exit;
+        header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante');
+        exit;
     }
 
-    /**
-     * [FIX-CRIT-01] Verifica propriedade, coleta valor/data e usa o Model.
-     */
     public function confirmarFreelancer()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -148,40 +157,52 @@ class PagamentoController
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
         $id        = (int) ($_POST['interesse_id'] ?? 0);
-        $valor     = (float) ($_POST['valor'] ?? 0);
+        $valor     = MoneyHelper::parse($_POST['valor'] ?? 0);
         $data      = $_POST['data_pagamento'] ?? date('Y-m-d');
         $obs       = trim($_POST['observacao'] ?? '') ?: null;
 
         $interesseModel = new Interesse();
         $interesse      = $interesseModel->findById($id);
 
-        // [FIX-CRIT-01] Verificação de propriedade
         if (!$interesse || (int) $interesse['id_freelancer'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para confirmar este pagamento.'];
             header('Location: /Aptus/pagamentos'); exit;
         }
 
+        if (!in_array($interesse['situacao'], ['ativo'], true)) {
+            $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Este serviço não está ativo.'];
+            header('Location: /Aptus/pagamentos'); exit;
+        }
+
+        $confirmacao = new ConfirmacaoPagamento();
+        $existente   = $confirmacao->getByInteresse($id);
+
+        if ($existente && !empty($existente['confirmado_freelancer'])) {
+            $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Você já confirmou este pagamento.'];
+            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=freelancer');
+            exit;
+        }
+
         if ($valor <= 0) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o valor recebido.'];
-            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=freelancer'); exit;
+            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=freelancer');
+            exit;
         }
 
         try {
-            $confirmacao = new ConfirmacaoPagamento();
-            $existente   = $confirmacao->getByInteresse($id);
             if (!$existente) {
                 $confirmacao->create(['id_interesse' => $id]);
             }
-            // Assinatura do Model: confirmarFreelancer($interesseId, $valor, $dataRecebimento, $observacao)
             $confirmacao->confirmarFreelancer($id, $valor, $data, $obs);
             $confirmacao->verificarEAtualizarSituacao($id);
 
             $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Pagamento registrado como freelancer.'];
         } catch (Exception $e) {
             error_log('Erro ao confirmar pagamento (freelancer): ' . $e->getMessage());
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível registrar o pagamento. Tente novamente.'];
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível registrar o pagamento.'];
         }
 
-        header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=freelancer'); exit;
+        header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=freelancer');
+        exit;
     }
 }

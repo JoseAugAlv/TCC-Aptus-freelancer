@@ -29,8 +29,6 @@ class CsrfMiddleware
 
         $tokenSessao = $_SESSION['csrf_token'] ?? null;
 
-        // Aceita body (form) OU header X-CSRF-Token (AJAX).
-        // O PHP converte "X-CSRF-Token: abc" em $_SERVER['HTTP_X_CSRF_TOKEN'].
         $tokenRequisicao = $_POST['_csrf_token']
                         ?? $_SERVER['HTTP_X_CSRF_TOKEN']
                         ?? null;
@@ -63,8 +61,19 @@ class CsrfMiddleware
                 'mensagem' => 'Token de segurança inválido. Tente novamente.',
             ];
 
-            $referer = $_SERVER['HTTP_REFERER'] ?? '/Aptus/login';
-            header('Location: ' . $referer);
+            // Valida o referer antes de redirecionar (anti-open-redirect)
+            $referer   = $_SERVER['HTTP_REFERER'] ?? '/Aptus/login';
+            $refererOk = false;
+
+            try {
+                $refHost = parse_url($referer, PHP_URL_HOST);
+                $ownHost = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? '');
+                $refererOk = $refHost && ($refHost === $ownHost);
+            } catch (Throwable $e) {
+                $refererOk = false;
+            }
+
+            header('Location: ' . ($refererOk ? $referer : '/Aptus/login'));
             exit;
         }
     }

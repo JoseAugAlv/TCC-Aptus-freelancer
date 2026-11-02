@@ -1,7 +1,7 @@
 <?php
 // app/Controllers/AdminUsuarioController.php
-
 require_once __DIR__ . '/../Config/database.php';
+require_once __DIR__ . '/../Models/Moderador.php';
 
 class AdminUsuarioController
 {
@@ -21,6 +21,22 @@ class AdminUsuarioController
         }
     }
 
+    /**
+     * Listagem de usuários (faltava rota GET)
+     */
+    public function index()
+    {
+        $this->verificaPermissao();
+
+        $model    = new Moderador();
+        $usuarios = $model->getUsuarios();
+
+        $tituloPagina = 'Usuários - Admin';
+        $cssPagina    = 'usuarios.css';
+
+        require '../app/Views/admin/usuarios/index.php';
+    }
+
     public function atualizar()
     {
         $this->verificaPermissao();
@@ -33,6 +49,7 @@ class AdminUsuarioController
             try {
                 $stmt = $this->conn->prepare("UPDATE usuario SET nome = ?, email = ? WHERE id_usuario = ?");
                 $stmt->execute([$nome, $email, $id]);
+                Database::clearCache();
                 $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Usuário atualizado.'];
             } catch (PDOException $e) {
                 error_log('Erro ao atualizar usuário (admin): ' . $e->getMessage());
@@ -40,24 +57,17 @@ class AdminUsuarioController
             }
         }
 
+        // CORRIGIDO: volta pro /admin/usuarios (rota que agora existe)
         header('Location: /Aptus/admin/usuarios');
         exit;
     }
 
-    /**
-     * Exclusão via POST (era GET, vulnerável a CSRF).
-     * O id agora vem do corpo do POST.
-     */
     public function excluir()
     {
         $this->verificaPermissao();
 
         $id = (int) ($_POST['id'] ?? 0);
-
-        if ($id <= 0) {
-            header('Location: /Aptus/admin/usuarios');
-            exit;
-        }
+        if ($id <= 0) { header('Location: /Aptus/admin/usuarios'); exit; }
 
         try {
             $stmt = $this->conn->prepare(
@@ -69,10 +79,11 @@ class AdminUsuarioController
                  WHERE id_usuario = ?"
             );
             $stmt->execute([$id]);
-            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Usuário removido com sucesso.'];
+            Database::clearCache();
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Usuário removido.'];
         } catch (PDOException $e) {
             error_log('Erro ao excluir usuário: ' . $e->getMessage());
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível excluir este usuário.'];
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível excluir.'];
         }
 
         header('Location: /Aptus/admin/usuarios');
@@ -87,10 +98,7 @@ class AdminUsuarioController
         $motivo      = trim($_POST['motivo'] ?? '');
         $moderadorId = (int) $_SESSION['usuario']['id'];
 
-        if ($id <= 0) {
-            header('Location: /Aptus/admin/usuarios');
-            exit;
-        }
+        if ($id <= 0) { header('Location: /Aptus/moderator/usuarios'); exit; }
 
         if ($motivo === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o motivo do banimento.'];
@@ -109,10 +117,11 @@ class AdminUsuarioController
                  WHERE id_usuario = ?"
             );
             $stmt->execute([$motivo, $moderadorId, $id]);
-            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Usuário banido com sucesso.'];
+            Database::clearCache();
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Usuário banido.'];
         } catch (PDOException $e) {
-            error_log('Erro ao banir usuário: ' . $e->getMessage());
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível banir este usuário.'];
+            error_log('Erro ao banir: ' . $e->getMessage());
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível banir.'];
         }
 
         header('Location: /Aptus/moderator/usuarios');
@@ -124,23 +133,20 @@ class AdminUsuarioController
         $this->verificaPermissao();
 
         $id = (int) ($_POST['id'] ?? 0);
-
         if ($id > 0) {
             try {
                 $stmt = $this->conn->prepare(
                     "UPDATE usuario
-                     SET banido = 0,
-                         motivo_banimento = NULL,
-                         data_banimento = NULL,
-                         id_moderador_banimento = NULL,
-                         ativo = 1
+                     SET banido = 0, motivo_banimento = NULL, data_banimento = NULL,
+                         id_moderador_banimento = NULL, ativo = 1
                      WHERE id_usuario = ?"
                 );
                 $stmt->execute([$id]);
+                Database::clearCache();
                 $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Usuário desbanido.'];
             } catch (PDOException $e) {
-                error_log('Erro ao desbanir usuário: ' . $e->getMessage());
-                $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível desbanir este usuário.'];
+                error_log('Erro ao desbanir: ' . $e->getMessage());
+                $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível desbanir.'];
             }
         }
 

@@ -1,17 +1,18 @@
 <?php
-require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/home/index.php
+require_once __DIR__ . '/../../Middleware/CsrfMiddleware.php';
+require_once __DIR__ . '/../../Models/Categoria.php';
 
 $tituloPagina = $tituloPagina ?? 'Aptus - Conectando Talentos';
-$cssPagina = $cssPagina ?? 'home.css';
+$cssPagina    = $cssPagina    ?? 'home.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
 $usuario = $_SESSION['usuario'] ?? null;
+$__categorias = (new Categoria())->getAll();
 ?>
 
 <main id="inicio">
-    <!-- HERO SECTION -->
     <section class="hero-section">
         <div class="hero-content">
             <h1>Conectando Talentos</h1>
@@ -20,19 +21,21 @@ $usuario = $_SESSION['usuario'] ?? null;
             <div class="search-section">
                 <form action="/Aptus/buscar" method="GET" class="search-container">
                     <input type="text" name="q" class="search-input" id="searchInput"
-                        placeholder="O que você está procurando?" aria-label="Campo de busca de serviços"
-                        value="<?php echo htmlspecialchars($_GET['q'] ?? ''); ?>">
+                           placeholder="O que você está procurando?"
+                           aria-label="Campo de busca de serviços"
+                           value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
                     <button type="button" class="btn-filtros" id="btnFiltros">
                         <i class="fas fa-sliders-h"></i> Filtros
                     </button>
                     <button type="submit" class="btn-search-submit">
                         <i class="fas fa-search"></i>
                     </button>
-                <?= CsrfMiddleware::field() ?>
-</form>
+                </form>
 
                 <div class="filtros-section" id="filtrosSection" style="display: none;">
                     <form id="formFiltros" action="/Aptus/buscar" method="GET">
+                        <input type="hidden" name="q" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
+
                         <h3><i class="fas fa-star"></i> Nível de Avaliação</h3>
                         <div class="filtro-grupo">
                             <label><input type="radio" name="avaliacao" value="5"> 5 estrelas</label>
@@ -40,39 +43,47 @@ $usuario = $_SESSION['usuario'] ?? null;
                             <label><input type="radio" name="avaliacao" value="3"> 3 estrelas ou mais</label>
                         </div>
 
-                        <h3><i class="fas fa-tools"></i> Tipo de Serviço</h3>
+                        <h3><i class="fas fa-tags"></i> Categoria</h3>
                         <div class="filtro-grupo">
-                            <label><input type="checkbox" name="servico[]" value="eletricista"> Eletricista</label>
-                            <label><input type="checkbox" name="servico[]" value="encanador"> Encanador</label>
-                            <label><input type="checkbox" name="servico[]" value="diarista"> Diarista</label>
-                            <label><input type="checkbox" name="servico[]" value="pedreiro"> Pedreiro</label>
-                            <label><input type="checkbox" name="servico[]" value="pintor"> Pintor</label>
-                            <label><input type="checkbox" name="servico[]" value="cuidador"> Cuidador de idosos</label>
-                            <label><input type="checkbox" name="servico[]" value="jardineiro"> Jardineiro</label>
-                            <label><input type="checkbox" name="servico[]" value="outros"> Outros</label>
+                            <select name="categoria" style="width:100%; padding:8px; border-radius:6px;">
+                                <option value="0">Todas</option>
+                                <?php foreach ($__categorias as $cat): ?>
+                                    <option value="<?= (int) $cat['id_categoria'] ?>">
+                                        <?= htmlspecialchars($cat['nome']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
-                        
+
+                        <h3><i class="fas fa-sort-amount-down"></i> Ordenar</h3>
+                        <div class="filtro-grupo">
+                            <select name="ordenar" style="width:100%; padding:8px; border-radius:6px;">
+                                <option value="recentes">Mais recentes</option>
+                                <option value="avaliacao">Melhor avaliados</option>
+                                <option value="preco_asc">Menor preço</option>
+                                <option value="preco_desc">Maior preço</option>
+                            </select>
+                        </div>
+
                         <div class="filtro-acoes">
                             <button type="submit" class="btn-aplicar-filtros">Aplicar Filtros</button>
                         </div>
-                    <?= CsrfMiddleware::field() ?>
-</form>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CATEGORIAS POPULARES -->
     <section class="categorias-section" id="servicos">
         <h2>Categorias Populares</h2>
         <div class="categorias-grid">
             <?php if (!empty($categoriasPopulares)): ?>
                 <?php foreach ($categoriasPopulares as $cat): ?>
-                    <a href="/Aptus/buscar?categoria=<?php echo $cat['id_categoria']; ?>" class="categoria-card">
+                    <a href="/Aptus/buscar?categoria=<?= (int) $cat['id_categoria'] ?>" class="categoria-card">
                         <div class="icone">
-                            <i class="<?php echo htmlspecialchars($cat['icone'] ?? 'fas fa-tag'); ?>"></i>
+                            <i class="<?= htmlspecialchars($cat['icone'] ?? 'fas fa-tag') ?>"></i>
                         </div>
-                        <h3><?php echo htmlspecialchars($cat['nome']); ?></h3>
+                        <h3><?= htmlspecialchars($cat['nome']) ?></h3>
                     </a>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -83,7 +94,6 @@ $usuario = $_SESSION['usuario'] ?? null;
         </div>
     </section>
 
-    <!-- SEÇÃO DE SERVIÇOS EM DESTAQUE -->
     <section class="profissionais-section" id="servicos-recentes">
         <div class="container">
             <h2><i class="fas fa-star"></i> Serviços em Destaque</h2>
@@ -92,25 +102,24 @@ $usuario = $_SESSION['usuario'] ?? null;
                     <?php foreach ($anunciosDestaque as $anuncio): ?>
                         <div class="profissional-card">
                             <div class="categoria-tag">
-                                <i class="<?php echo htmlspecialchars($anuncio['categoria_icone'] ?? 'fas fa-tag'); ?>"></i> 
-                                <?php echo htmlspecialchars($anuncio['categoria_nome'] ?? 'Geral'); ?>
+                                <i class="<?= htmlspecialchars($anuncio['categoria_icone'] ?? 'fas fa-tag') ?>"></i>
+                                <?= htmlspecialchars($anuncio['categoria_nome'] ?? 'Geral') ?>
                             </div>
-                            <h3><?php echo htmlspecialchars($anuncio['titulo']); ?></h3>
+                            <h3><?= htmlspecialchars($anuncio['titulo']) ?></h3>
                             <p class="descricao">
-                                <?php echo htmlspecialchars(mb_strimwidth($anuncio['descricao'], 0, 120, "...")); ?>
+                                <?= htmlspecialchars(mb_strimwidth($anuncio['descricao'], 0, 120, "...")) ?>
                             </p>
                             <div class="info-footer">
                                 <span class="autor">
-                                    <i class="fas fa-user-circle"></i> 
-                                    <?php echo htmlspecialchars($anuncio['freelancer_nome']); ?>
+                                    <i class="fas fa-user-circle"></i>
+                                    <?= htmlspecialchars($anuncio['freelancer_nome']) ?>
                                 </span>
                                 <span class="preco">
-                                    <i class="fas fa-tag"></i> 
-                                    R$ <?php echo number_format($anuncio['preco'], 2, ',', '.'); ?>
+                                    <i class="fas fa-tag"></i>
+                                    R$ <?= number_format($anuncio['preco'], 2, ',', '.') ?>
                                 </span>
                             </div>
-                            
-                            <!-- Avaliação com estrelas -->
+
                             <div style="margin: 0 1.5rem 0.5rem 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
                                     <?php if ($i <= round($anuncio['nota_media'] ?? 0)): ?>
@@ -120,12 +129,13 @@ $usuario = $_SESSION['usuario'] ?? null;
                                     <?php endif; ?>
                                 <?php endfor; ?>
                                 <span style="color: var(--cor-texto-secundario); font-size: 0.85rem;">
-                                    (<?php echo number_format($anuncio['nota_media'] ?? 0, 1); ?>)
+                                    (<?= number_format($anuncio['nota_media'] ?? 0, 1) ?>)
                                 </span>
                             </div>
-                            
+
                             <div style="display: flex; gap: 10px; margin-top: 5px;">
-                                <a href="/Aptus/anuncios/<?php echo htmlspecialchars($anuncio['slug']); ?>" class="btn-perfil" style="flex: 1; margin-top: 0;">
+                                <a href="/Aptus/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>"
+                                   class="btn-perfil" style="flex: 1; margin-top: 0;">
                                     <i class="fas fa-eye"></i> Ver Detalhes
                                 </a>
                             </div>
@@ -145,28 +155,14 @@ $usuario = $_SESSION['usuario'] ?? null;
             </div>
         </div>
     </section>
-
-    <!-- SEÇÃO DE PEDIDOS/PROJETOS DOS CLIENTES (desativada) -->
-    <section class="profissionais-section" id="pedidos-recentes" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(226, 251, 255, 0.3) 100%); display: none;">
-        <div class="container">
-            <h2><i class="fas fa-briefcase"></i> Pedidos dos Usuários</h2>
-            <p style="text-align: center; color: var(--cor-texto-secundario); margin-bottom: 2rem;">
-                Clientes procurando por profissionais qualificados. Envie sua proposta!
-            </p>
-            <div class="profissionais-grid">
-                <div class="msg-vazia">
-                    <i class="fas fa-briefcase" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                    <p>Funcionalidade em desenvolvimento. Em breve você poderá visualizar pedidos aqui!</p>
-                </div>
-            </div>
-        </div>
-    </section>
 </main>
 
-<!-- FLASH MESSAGES -->
 <?php if ($flash): ?>
-    <div class="flash-<?php echo $flash['tipo']; ?>" style="position: fixed; top: 80px; right: 20px; z-index: 9999; padding: 1rem 2rem; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 400px; animation: slideInRight 0.5s ease;">
-        <?php echo htmlspecialchars($flash['mensagem']); ?>
+    <div class="flash-<?= htmlspecialchars($flash['tipo']) ?>"
+         style="position: fixed; top: 80px; right: 20px; z-index: 9999; padding: 1rem 2rem;
+                border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                max-width: 400px; animation: slideInRight 0.5s ease;">
+        <?= htmlspecialchars($flash['mensagem']) ?>
     </div>
 <?php endif; ?>
 

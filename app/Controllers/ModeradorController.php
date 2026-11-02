@@ -12,189 +12,119 @@ class ModeradorController
     public function __construct()
     {
         $this->moderador = new Moderador();
-        $this->anuncio = new Anuncio();
+        $this->anuncio   = new Anuncio();
+    }
+
+    private function verificaPermissao()
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['usuario'])) {
+            header('Location: /Aptus/login');
+            exit;
+        }
+        $role = (int) $_SESSION['usuario']['role'];
+        if (!in_array($role, [1, 2, 4])) {
+            header('Location: /Aptus/');
+            exit;
+        }
     }
 
     public function index()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-        
-        $role = (int) $_SESSION['usuario']['role'];
-        
-        if (!in_array($role, [1, 2, 4])) {
-            echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
-            exit;
-        }
-        
-        $anunciosPendentes = count($this->moderador->getAnunciosPendentes());
-        $denunciasPendentes = count($this->moderador->getDenunciasPendentes());
-        $disputasPendentes = count($this->moderador->getDisputasPendentes());
-        $totalUsuarios = count($this->moderador->getUsuarios());
-        $totalCategorias = count($this->moderador->getCategorias());
-        
+        $this->verificaPermissao();
 
-        
+        $anunciosPendentes  = count($this->moderador->getAnunciosPendentes());
+        $denunciasPendentes = count($this->moderador->getDenunciasPendentes());
+        $disputasPendentes  = count($this->moderador->getDisputasPendentes());
+        $totalUsuarios      = count($this->moderador->getUsuarios());
+        $totalCategorias    = count($this->moderador->getCategorias());
+
         require '../app/Views/moderator/index.php';
     }
 
+    /**
+     * Lista TODOS os anúncios com filtro por status
+     */
     public function anuncios()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-        
-        $role = (int) $_SESSION['usuario']['role'];
-        
-        if (!in_array($role, [1, 2, 4])) {
-            echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
-            exit;
-        }
-        
-        $anuncios = $this->moderador->getAnunciosPendentes();
+        $this->verificaPermissao();
 
-        
+        $status   = $_GET['status'] ?? null;
+        $anuncios = $this->moderador->getTodosAnuncios($status);
+
         require '../app/Views/moderator/anuncios.php';
     }
 
-    /**
-     * Aprova um anúncio
-     * Rota: POST /moderator/anuncios/aprovar
-     */
     public function aprovarAnuncio()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-        
-        $role = (int) $_SESSION['usuario']['role'];
-        if (!in_array($role, [1, 2, 4])) {
-            echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
-            exit;
-        }
+        $this->verificaPermissao();
 
-        $id = (int)($_POST['id'] ?? 0);
-        
-        if ($id <= 0) {
-            header('Location: /Aptus/moderator/anuncios');
-            exit;
-        }
+        $id = (int) ($_POST['id'] ?? 0);
+        if ($id <= 0) { header('Location: /Aptus/moderator/anuncios'); exit; }
 
-        // Aprovar anúncio
         $this->anuncio->aprovar($id);
-        
-        // Notificar o freelancer
         $this->notificarFreelancer($id, 'aprovado');
-        
-        $_SESSION['flash'] = [
-            'tipo' => 'sucesso',
-            'mensagem' => 'Anuncio aprovado com sucesso!'
-        ];
-        
+
+        $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio aprovado com sucesso!'];
         header('Location: /Aptus/moderator/anuncios');
         exit;
     }
 
-    /**
-     * Rejeita um anúncio
-     * Rota: POST /moderator/anuncios/rejeitar
-     */
     public function rejeitarAnuncio()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-        
-        $role = (int) $_SESSION['usuario']['role'];
-        if (!in_array($role, [1, 2, 4])) {
-            echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
-            exit;
-        }
+        $this->verificaPermissao();
 
-        $id = (int)($_POST['id'] ?? 0);
-        $motivo = trim($_POST['motivo'] ?? 'Conteudo inadequado');
-        
-        if ($id <= 0) {
-            header('Location: /Aptus/moderator/anuncios');
-            exit;
-        }
+        $id     = (int) ($_POST['id'] ?? 0);
+        $motivo = trim($_POST['motivo'] ?? 'Conteúdo inadequado');
+        if ($id <= 0) { header('Location: /Aptus/moderator/anuncios'); exit; }
 
-        // Rejeitar anúncio
         $this->anuncio->rejeitar($id, $motivo);
-        
-        // Notificar o freelancer
         $this->notificarFreelancer($id, 'rejeitado', $motivo);
-        
-        $_SESSION['flash'] = [
-            'tipo' => 'sucesso',
-            'mensagem' => 'Anuncio rejeitado com sucesso!'
-        ];
-        
+
+        $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio rejeitado com sucesso!'];
         header('Location: /Aptus/moderator/anuncios');
         exit;
     }
 
     /**
-     * Notifica o freelancer sobre a moderação
+     * NOVO: suspender anúncio (pausar sem rejeitar)
      */
+    public function suspenderAnuncio()
+    {
+        $this->verificaPermissao();
+
+        $id = (int) ($_POST['id'] ?? 0);
+        if ($id <= 0) { header('Location: /Aptus/moderator/anuncios'); exit; }
+
+        $this->moderador->suspenderAnuncio($id);
+
+        $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio suspenso.'];
+        header('Location: /Aptus/moderator/anuncios');
+        exit;
+    }
+
     private function notificarFreelancer($anuncioId, $status, $motivo = null)
     {
         try {
-            $pdo = Database::getConnection();
-            
-            // Buscar dados do anúncio
-            $sql = "SELECT a.id_usuario, a.titulo FROM anuncio_servico a WHERE a.id_anuncio = ?";
+            $pdo  = Database::getConnection();
+            $sql  = "SELECT a.id_usuario, a.titulo FROM anuncio_servico a WHERE a.id_anuncio = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$anuncioId]);
             $anuncio = $stmt->fetch(PDO::FETCH_ASSOC);
-            
             if (!$anuncio) return;
-            
-            $tituloNotificacao = $status === 'aprovado' 
-                ? 'Seu anuncio foi aprovado!' 
-                : 'Seu anuncio foi rejeitado';
-            
-            $mensagemNotificacao = $status === 'aprovado'
-                ? "Seu anuncio '{$anuncio['titulo']}' foi aprovado e esta disponivel para visualizacao."
-                : "Seu anuncio '{$anuncio['titulo']}' foi rejeitado. Motivo: " . ($motivo ?? 'Nao informado');
-            
-            $sql = "INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id) 
-                    VALUES (?, ?, ?, ?, ?, ?)";
+
+            $titulo   = $status === 'aprovado' ? 'Seu anúncio foi aprovado!' : 'Seu anúncio foi rejeitado';
+            $mensagem = $status === 'aprovado'
+                ? "Seu anúncio '{$anuncio['titulo']}' foi aprovado e está disponível para visualização."
+                : "Seu anúncio '{$anuncio['titulo']}' foi rejeitado. Motivo: " . ($motivo ?? 'Não informado');
+
+            $sql  = "INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
+                     VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                $anuncio['id_usuario'],
-                'moderacao_anuncio',
-                $tituloNotificacao,
-                $mensagemNotificacao,
-                'anuncio_servico',
-                $anuncioId
+                $anuncio['id_usuario'], 'moderacao_anuncio', $titulo, $mensagem,
+                'anuncio_servico', $anuncioId
             ]);
-            
         } catch (Exception $e) {
             error_log('Erro ao notificar freelancer: ' . $e->getMessage());
         }
@@ -202,102 +132,114 @@ class ModeradorController
 
     public function denuncias()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-        
-        $role = (int) $_SESSION['usuario']['role'];
-        
-        if (!in_array($role, [1, 2, 4])) {
-            echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
-            exit;
-        }
-        
+        $this->verificaPermissao();
         $denuncias = $this->moderador->getDenunciasPendentes();
-        
-        
         require '../app/Views/moderator/denuncias.php';
     }
 
     public function disputas()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-        
-        $role = (int) $_SESSION['usuario']['role'];
-        
-        if (!in_array($role, [1, 2, 4])) {
-            echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
-            exit;
-        }
-        
+        $this->verificaPermissao();
         $disputas = $this->moderador->getDisputasPendentes();
-
-        
         require '../app/Views/moderator/disputas.php';
     }
 
     public function usuarios()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-        
-        $role = (int) $_SESSION['usuario']['role'];
-        
-        if (!in_array($role, [1, 2, 4])) {
-            echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
-            exit;
-        }
-        
+        $this->verificaPermissao();
         $usuarios = $this->moderador->getUsuarios();
-
-        
         require '../app/Views/moderator/usuarios.php';
     }
 
     public function categorias()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
-            exit;
-        }
-        
-        $role = (int) $_SESSION['usuario']['role'];
-        
-        if (!in_array($role, [1, 2, 4])) {
-            echo "<h1>403 - Acesso Negado</h1>";
-            echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
-            exit;
-        }
-        
+        $this->verificaPermissao();
         $categorias = $this->moderador->getCategorias();
-        
-   
-        
         require '../app/Views/moderator/categorias.php';
     }
+    public function salvarCategoria()
+    {
+        $this->verificaPermissao();
+
+        $nome      = trim($_POST['nome'] ?? '');
+        $descricao = trim($_POST['descricao'] ?? '');
+        $icone     = trim($_POST['icone'] ?? 'fas fa-tag');
+
+        if ($nome === '') {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o nome da categoria.'];
+            header('Location: /Aptus/moderator/categorias');
+            exit;
+        }
+
+        // Verifica duplicidade
+        require_once __DIR__ . '/../Models/Categoria.php';
+        $model = new Categoria();
+
+        if ($model->findByNome($nome)) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Já existe uma categoria com este nome.'];
+            header('Location: /Aptus/moderator/categorias');
+            exit;
+        }
+
+        if ($model->create(['nome' => $nome, 'descricao' => $descricao, 'icone' => $icone])) {
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Categoria criada com sucesso.'];
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível criar a categoria.'];
+        }
+
+        header('Location: /Aptus/moderator/categorias');
+        exit;
+    }
+
+    public function editarCategoria()
+    {
+        $this->verificaPermissao();
+
+        $id        = (int) ($_POST['id'] ?? 0);
+        $nome      = trim($_POST['nome'] ?? '');
+        $descricao = trim($_POST['descricao'] ?? '');
+        $icone     = trim($_POST['icone'] ?? 'fas fa-tag');
+
+        if ($id <= 0 || $nome === '') {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Dados inválidos.'];
+            header('Location: /Aptus/moderator/categorias');
+            exit;
+        }
+
+        require_once __DIR__ . '/../Models/Categoria.php';
+        $model = new Categoria();
+
+        if ($model->update($id, ['nome' => $nome, 'descricao' => $descricao, 'icone' => $icone])) {
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Categoria atualizada.'];
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível atualizar.'];
+        }
+
+        header('Location: /Aptus/moderator/categorias');
+        exit;
+    }
+
+    public function excluirCategoria()
+    {
+        $this->verificaPermissao();
+
+        $id = (int) ($_POST['id'] ?? 0);
+        if ($id <= 0) {
+            header('Location: /Aptus/moderator/categorias');
+            exit;
+        }
+
+        require_once __DIR__ . '/../Models/Categoria.php';
+        $model = new Categoria();
+
+        if ($model->delete($id)) {
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Categoria removida.'];
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível remover.'];
+        }
+
+        header('Location: /Aptus/moderator/categorias');
+        exit;
+    }
+
 }

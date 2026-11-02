@@ -6,12 +6,25 @@ require_once __DIR__ . '/../Models/Configuracao.php';
 
 class LoginAttempt
 {
+    private static $limiteCache = null;
+    private static $limiteCacheTime = 0;
+
     private static function getLimite(): int
     {
+        // Cache interno por 60s (evita ler config toda hora)
+        if (self::$limiteCache !== null && (time() - self::$limiteCacheTime) < 60) {
+            return self::$limiteCache;
+        }
+
         try {
             $config = new Configuracao();
             $valor  = $config->get('tentativas_login');
-            return $valor ? (int) $valor : 5;
+            $limite = $valor ? (int) $valor : 5;
+            if ($limite < 1) $limite = 5;
+
+            self::$limiteCache     = $limite;
+            self::$limiteCacheTime = time();
+            return $limite;
         } catch (Throwable $e) {
             return 5;
         }
@@ -37,7 +50,6 @@ class LoginAttempt
             $tentativas = (int) $stmt->fetchColumn();
             return $tentativas < self::getLimite();
         } catch (Throwable $e) {
-            // Fail-open: se a tabela não existe, não trava o usuário legítimo
             error_log('LoginAttempt::check falhou: ' . $e->getMessage());
             return true;
         }

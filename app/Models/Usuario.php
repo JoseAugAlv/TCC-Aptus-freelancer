@@ -110,6 +110,7 @@ class Usuario
         $allowedFields = [
             'nome', 'email', 'telefone', 'whatsapp', 'cpf_cnpj',
             'data_nascimento', 'foto_perfil', 'bio', 'cidade', 'estado',
+            'cep',   // ← ADICIONAR AQUI
         ];
 
         foreach ($allowedFields as $field) {

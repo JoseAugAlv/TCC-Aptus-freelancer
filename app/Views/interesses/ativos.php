@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
+// app/Views/interesses/ativos.php
+require_once __DIR__ . '/../../Middleware/CsrfMiddleware.php';
 
 $tituloPagina = $tituloPagina ?? 'Serviços Ativos - Aptus';
 $cssPagina    = $cssPagina    ?? 'ativos.css';
@@ -8,8 +9,6 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 $interesses = $interesses ?? [];
 $usuario    = $_SESSION['usuario'] ?? null;
-
-
 ?>
 
 <div class="interesses-container">
@@ -36,41 +35,35 @@ $usuario    = $_SESSION['usuario'] ?? null;
     <?php else: ?>
 
         <?php
-        $ativos    = array_filter($interesses, fn ($i) => $i['situacao'] == 'ativo');
-        $concluidos = array_filter($interesses, fn ($i) => $i['situacao'] == 'concluido');
+        $ativos     = array_filter($interesses, fn($i) => $i['situacao'] == 'ativo');
+        $concluidos = array_filter($interesses, fn($i) => $i['situacao'] == 'concluido');
         ?>
 
         <?php if (!empty($ativos)): ?>
             <h2>Em Andamento</h2>
             <div class="interesses-grid">
                 <?php foreach ($ativos as $interesse):
-                    $isContratante = ($usuario && $interesse['id_contratante'] == $usuario['id']);
-                    $isFreelancer  = ($usuario && $interesse['id_freelancer'] == $usuario['id']);
+                    $isContratante    = ($usuario && $interesse['id_contratante'] == $usuario['id']);
                     $usuarioJaAvaliou = !empty($interesse['usuario_ja_avaliou']);
-                    $outroJaAvaliou    = !empty($interesse['outro_ja_avaliou']);
-                    $ambosJaAvaliaram  = $usuarioJaAvaliou && $outroJaAvaliou;
-                    $outroNome     = $isContratante
-                    
+                    $outroJaAvaliou   = !empty($interesse['outro_ja_avaliou']);
+                    $ambosJaAvaliaram = $usuarioJaAvaliou && $outroJaAvaliou;
+                    $outroNome        = $isContratante
                         ? ($interesse['freelancer_nome']  ?? 'Freelancer')
                         : ($interesse['contratante_nome'] ?? 'Cliente');
 
                     $contratanteConfirmou = $interesse['confirmado_contratante'] ?? false;
                     $freelancerConfirmou  = $interesse['confirmado_freelancer']  ?? false;
-
-                    $jaConfirmou   = $isContratante ? $contratanteConfirmou : $freelancerConfirmou;
-                    $outroConfirmou = $isContratante ? $freelancerConfirmou : $contratanteConfirmou;
-
-                    $usuarioJaAvaliou = !empty($interesse['usuario_ja_avaliou']);
-
-                    $pagamentoDivergente = (isset($interesse['situacao_final']) && $interesse['situacao_final'] === 'divergente');
+                    $jaConfirmou          = $isContratante ? $contratanteConfirmou : $freelancerConfirmou;
+                    $outroConfirmou       = $isContratante ? $freelancerConfirmou  : $contratanteConfirmou;
+                    $pagamentoDivergente  = (isset($interesse['situacao_final']) && $interesse['situacao_final'] === 'divergente');
 
                     if ($jaConfirmou && $outroConfirmou) {
                         $statusConfirmacao = 'Ambos confirmaram - Concluído!';
                         $statusCor         = '#10b981';
-                    } elseif ($jaConfirmou && !$outroConfirmou) {
+                    } elseif ($jaConfirmou) {
                         $statusConfirmacao = 'Aguardando confirmação do ' . ($isContratante ? 'freelancer' : 'cliente');
                         $statusCor         = '#f59e0b';
-                    } elseif (!$jaConfirmou && $outroConfirmou) {
+                    } elseif ($outroConfirmou) {
                         $statusConfirmacao = ($isContratante ? 'Freelancer' : 'Cliente') . ' já confirmou. Confirme também!';
                         $statusCor         = '#3b82f6';
                     } else {
@@ -105,7 +98,7 @@ $usuario    = $_SESSION['usuario'] ?? null;
                                 <p class="interesse-confirmado">Você já confirmou a execução do serviço.</p>
                             <?php endif; ?>
                             <?php if ($pagamentoDivergente): ?>
-                                <p class="interesse-pagamento-divergente" style="color: #dc2626;">
+                                <p style="color:#dc2626;">
                                     <i class="fas fa-exclamation-triangle"></i>
                                     Pagamento divergente. Abra uma disputa para resolver.
                                 </p>
@@ -118,31 +111,27 @@ $usuario    = $_SESSION['usuario'] ?? null;
                                 <p>Avalie o serviço antes de confirmar a execução</p>
 
                                 <form method="POST" action="/Aptus/avaliacoes/salvar" class="avaliacao-form">
-                                    <input type="hidden" name="interesse_id" value="<?= $interesse['id_interesse'] ?>">
+                                    <input type="hidden" name="interesse_id" value="<?= (int) $interesse['id_interesse'] ?>">
 
                                     <div class="avaliacao-estrelas">
                                         <label>Nota</label>
                                         <div class="estrelas">
-                                            <input type="radio" name="nota" value="1" id="star1_<?= $interesse['id_interesse'] ?>" required>
-                                            <label for="star1_<?= $interesse['id_interesse'] ?>" title="1 estrela"><i class="fas fa-star"></i></label>
-
-                                            <input type="radio" name="nota" value="2" id="star2_<?= $interesse['id_interesse'] ?>">
-                                            <label for="star2_<?= $interesse['id_interesse'] ?>" title="2 estrelas"><i class="fas fa-star"></i></label>
-
-                                            <input type="radio" name="nota" value="3" id="star3_<?= $interesse['id_interesse'] ?>">
-                                            <label for="star3_<?= $interesse['id_interesse'] ?>" title="3 estrelas"><i class="fas fa-star"></i></label>
-
-                                            <input type="radio" name="nota" value="4" id="star4_<?= $interesse['id_interesse'] ?>">
-                                            <label for="star4_<?= $interesse['id_interesse'] ?>" title="4 estrelas"><i class="fas fa-star"></i></label>
-
-                                            <input type="radio" name="nota" value="5" id="star5_<?= $interesse['id_interesse'] ?>">
-                                            <label for="star5_<?= $interesse['id_interesse'] ?>" title="5 estrelas"><i class="fas fa-star"></i></label>
+                                            <?php for ($n = 1; $n <= 5; $n++): ?>
+                                                <input type="radio" name="nota" value="<?= $n ?>"
+                                                       id="star<?= $n ?>_<?= $interesse['id_interesse'] ?>"
+                                                       <?= $n === 1 ? 'required' : '' ?>>
+                                                <label for="star<?= $n ?>_<?= $interesse['id_interesse'] ?>">
+                                                    <i class="fas fa-star"></i>
+                                                </label>
+                                            <?php endfor; ?>
                                         </div>
                                     </div>
 
                                     <div class="avaliacao-comentario">
                                         <label for="comentario_<?= $interesse['id_interesse'] ?>">Comentário</label>
-                                        <textarea id="comentario_<?= $interesse['id_interesse'] ?>" name="comentario" rows="3" placeholder="Descreva sua experiência com o serviço..."></textarea>
+                                        <textarea id="comentario_<?= $interesse['id_interesse'] ?>"
+                                                  name="comentario" rows="3"
+                                                  placeholder="Descreva sua experiência..."></textarea>
                                     </div>
 
                                     <div class="avaliacao-acoes">
@@ -153,7 +142,7 @@ $usuario    = $_SESSION['usuario'] ?? null;
                             </div>
                         <?php elseif ($usuarioJaAvaliou && !$pagamentoDivergente): ?>
                             <div class="avaliacao-ja-feita">
-                                <p><i class="fas fa-check-circle" style="color: #10b981;"></i> Você já avaliou este serviço.</p>
+                                <p><i class="fas fa-check-circle" style="color:#10b981;"></i> Você já avaliou este serviço.</p>
                             </div>
                         <?php endif; ?>
 
@@ -161,31 +150,30 @@ $usuario    = $_SESSION['usuario'] ?? null;
                             <a href="/Aptus/chat/<?= $interesse['id_interesse'] ?>" class="btn-chat">Chat</a>
                             <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?>" class="btn-detalhes">Detalhes</a>
 
-                            <?php if ($usuarioJaAvaliou && !$jaConfirmou && !$pagamentoDivergente): ?>
-                                <form method="POST" action="/Aptus/interesses/confirmar-execucao" style="display:inline;">
-                                    <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
-                                    <?= CsrfMiddleware::field() ?>
-                                    <?php if ($ambosJaAvaliaram && !$jaConfirmou && !$pagamentoDivergente): ?>
+                            <?php if (!$pagamentoDivergente): ?>
+
+                                <?php if ($ambosJaAvaliaram && !$jaConfirmou): ?>
                                     <form method="POST" action="/Aptus/interesses/confirmar-execucao" style="display:inline;">
-                                        <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
+                                        <input type="hidden" name="id" value="<?= (int) $interesse['id_interesse'] ?>">
                                         <?= CsrfMiddleware::field() ?>
                                         <button type="submit" class="btn-confirmar"
                                                 onclick="return confirm('Confirmar que o serviço foi executado?')">
                                             Confirmar Execução
                                         </button>
                                     </form>
-                                <?php elseif ($usuarioJaAvaliou && !$outroJaAvaliou && !$pagamentoDivergente): ?>
-                                    <span class="aviso-aguardando" style="color:#f59e0b;">
+
+                                <?php elseif ($usuarioJaAvaliou && !$outroJaAvaliou): ?>
+                                    <span class="aviso-aguardando"
+                                          style="padding:10px 16px; background:#fef3c7; color:#92400e;
+                                                 border-radius:8px; font-size:.85rem; display:inline-block;">
+                                        <i class="fas fa-hourglass-half"></i>
                                         Aguardando a outra parte avaliar…
                                     </span>
                                 <?php endif; ?>
-                                </form>
-                            <?php endif; ?>
 
-                            <?php if ($pagamentoDivergente): ?>
-                                <a href="/Aptus/disputas/criar?interesse_id=<?= $interesse['id_interesse'] ?>" class="btn-disputa">
-                                    Abrir Disputa
-                                </a>
+                            <?php else: ?>
+                                <a href="/Aptus/disputas/criar?interesse_id=<?= $interesse['id_interesse'] ?>"
+                                   class="btn-disputa">Abrir Disputa</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -201,7 +189,6 @@ $usuario    = $_SESSION['usuario'] ?? null;
                     $outroNome     = $isContratante
                         ? ($interesse['freelancer_nome']  ?? 'Freelancer')
                         : ($interesse['contratante_nome'] ?? 'Cliente');
-
                     $usuarioJaAvaliou = !empty($interesse['usuario_ja_avaliou']);
                 ?>
                     <div class="interesse-card concluido">
@@ -221,11 +208,6 @@ $usuario    = $_SESSION['usuario'] ?? null;
                             <p class="interesse-preco">
                                 R$ <?= number_format($interesse['anuncio_preco'] ?? 0, 2, ',', '.') ?>
                             </p>
-                            <?php if (!$usuarioJaAvaliou): ?>
-                                <p class="interesse-avaliacao-pendente" style="color: #f59e0b;">
-                                    Avalie o serviço para concluir o processo.
-                                </p>
-                            <?php endif; ?>
                         </div>
 
                         <?php if (!$usuarioJaAvaliou): ?>
@@ -234,31 +216,27 @@ $usuario    = $_SESSION['usuario'] ?? null;
                                 <p>Deixe sua avaliação sobre o serviço</p>
 
                                 <form method="POST" action="/Aptus/avaliacoes/salvar" class="avaliacao-form">
-                                    <input type="hidden" name="interesse_id" value="<?= $interesse['id_interesse'] ?>">
+                                    <input type="hidden" name="interesse_id" value="<?= (int) $interesse['id_interesse'] ?>">
 
                                     <div class="avaliacao-estrelas">
                                         <label>Nota</label>
                                         <div class="estrelas">
-                                            <input type="radio" name="nota" value="1" id="star1_c_<?= $interesse['id_interesse'] ?>" required>
-                                            <label for="star1_c_<?= $interesse['id_interesse'] ?>"><i class="fas fa-star"></i></label>
-
-                                            <input type="radio" name="nota" value="2" id="star2_c_<?= $interesse['id_interesse'] ?>">
-                                            <label for="star2_c_<?= $interesse['id_interesse'] ?>"><i class="fas fa-star"></i></label>
-
-                                            <input type="radio" name="nota" value="3" id="star3_c_<?= $interesse['id_interesse'] ?>">
-                                            <label for="star3_c_<?= $interesse['id_interesse'] ?>"><i class="fas fa-star"></i></label>
-
-                                            <input type="radio" name="nota" value="4" id="star4_c_<?= $interesse['id_interesse'] ?>">
-                                            <label for="star4_c_<?= $interesse['id_interesse'] ?>"><i class="fas fa-star"></i></label>
-
-                                            <input type="radio" name="nota" value="5" id="star5_c_<?= $interesse['id_interesse'] ?>">
-                                            <label for="star5_c_<?= $interesse['id_interesse'] ?>"><i class="fas fa-star"></i></label>
+                                            <?php for ($n = 1; $n <= 5; $n++): ?>
+                                                <input type="radio" name="nota" value="<?= $n ?>"
+                                                       id="starC<?= $n ?>_<?= $interesse['id_interesse'] ?>"
+                                                       <?= $n === 1 ? 'required' : '' ?>>
+                                                <label for="starC<?= $n ?>_<?= $interesse['id_interesse'] ?>">
+                                                    <i class="fas fa-star"></i>
+                                                </label>
+                                            <?php endfor; ?>
                                         </div>
                                     </div>
 
                                     <div class="avaliacao-comentario">
-                                        <label for="comentario_c_<?= $interesse['id_interesse'] ?>">Comentário</label>
-                                        <textarea id="comentario_c_<?= $interesse['id_interesse'] ?>" name="comentario" rows="3" placeholder="Descreva sua experiência com o serviço..."></textarea>
+                                        <label for="comentarioC_<?= $interesse['id_interesse'] ?>">Comentário</label>
+                                        <textarea id="comentarioC_<?= $interesse['id_interesse'] ?>"
+                                                  name="comentario" rows="3"
+                                                  placeholder="Descreva sua experiência..."></textarea>
                                     </div>
 
                                     <div class="avaliacao-acoes">
@@ -266,10 +244,6 @@ $usuario    = $_SESSION['usuario'] ?? null;
                                     </div>
                                     <?= CsrfMiddleware::field() ?>
                                 </form>
-                            </div>
-                        <?php else: ?>
-                            <div class="avaliacao-ja-feita">
-                                <p><i class="fas fa-check-circle" style="color: #10b981;"></i> Você já avaliou este serviço.</p>
                             </div>
                         <?php endif; ?>
 

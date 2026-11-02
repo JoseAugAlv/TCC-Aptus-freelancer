@@ -7,6 +7,7 @@ class Router
         'GET'  => [],
         'POST' => [],
     ];
+
     private static $routeCache = [];
 
     public function get($uri, $action, $roles = [])
@@ -14,10 +15,7 @@ class Router
         if (isset($this->routes['GET'][$uri])) {
             throw new \RuntimeException("Rota GET duplicada: {$uri}");
         }
-        $this->routes['GET'][$uri] = [
-            'action' => $action,
-            'roles'  => $roles,
-        ];
+        $this->routes['GET'][$uri] = ['action' => $action, 'roles' => $roles];
     }
 
     public function post($uri, $action, $roles = [])
@@ -25,60 +23,56 @@ class Router
         if (isset($this->routes['POST'][$uri])) {
             throw new \RuntimeException("Rota POST duplicada: {$uri}");
         }
-        $this->routes['POST'][$uri] = [
-            'action' => $action,
-            'roles'  => $roles,
-        ];
+        $this->routes['POST'][$uri] = ['action' => $action, 'roles' => $roles];
     }
 
     public function dispatch($requestUri)
     {
         $path = parse_url($requestUri, PHP_URL_PATH);
-        $basePath = '/Aptus';
-        $path = str_replace($basePath, '', $path);
 
-        if ($path === '') {
+        // BasePath dinâmico
+        $appUrl   = \Config::get('APP_URL', '/Aptus');
+        $basePath = parse_url($appUrl, PHP_URL_PATH) ?: '/Aptus';
+        $basePath = rtrim($basePath, '/');
+
+        if ($basePath !== '' && strpos($path, $basePath) === 0) {
+            $path = substr($path, strlen($basePath));
+        }
+
+        if ($path === '' || $path === false) {
             $path = '/';
         }
 
         $method = $_SERVER['REQUEST_METHOD'];
 
         $cacheKey = $method . ':' . $path;
-        if (isset(self::$routeCache[$cacheKey])) {
-            $route  = self::$routeCache[$cacheKey];
-            $params = [];
+        $params   = [];
+        $route    = null;
+
+        // 1) Rota estática (com ou sem cache)
+        if (isset($this->routes[$method][$path])) {
+            $route = $this->routes[$method][$path];
         } else {
-            $route  = $this->routes[$method][$path] ?? null;
-            $params = [];
+            // 2) Rota dinâmica (com params)
+            foreach ($this->routes[$method] as $routePath => $routeData) {
+                if (!str_contains($routePath, '{')) continue;
 
-            if (!$route) {
-                foreach ($this->routes[$method] as $routePath => $routeData) {
-                    if (str_contains($routePath, '{')) {
-                        $pattern = preg_replace(
-                            '#\{[a-zA-Z0-9_]+\}#',
-                            '([a-zA-Z0-9\-]+)',
-                            $routePath
-                        );
-                        $pattern = "#^" . $pattern . "$#";
+                $pattern = preg_replace('#\{[a-zA-Z0-9_]+\}#', '([a-zA-Z0-9\-]+)', $routePath);
+                $pattern = "#^" . $pattern . "$#";
 
-                        if (preg_match($pattern, $path, $matches)) {
-                            array_shift($matches);
-                            $route  = $routeData;
-                            $params = $matches;
-                            break;
-                        }
-                    }
+                if (preg_match($pattern, $path, $matches)) {
+                    array_shift($matches);
+                    $route            = $routeData;
+                    $route['pattern'] = $pattern;
+                    $params           = $matches;
+                    break;
                 }
-            }
-
-            if ($route) {
-                self::$routeCache[$cacheKey] = $route;
             }
         }
 
         if (!$route) {
             http_response_code(404);
-            $tituloPagina = 'Pagina nao encontrada - Aptus';
+            $tituloPagina = 'Página não encontrada - Aptus';
             $cssPagina    = 'erro.css';
             require_once __DIR__ . '/../Views/errors/404.php';
             return;
@@ -87,6 +81,7 @@ class Router
         $action = $route['action'];
         $roles  = $route['roles'];
 
+        // 3) Controle de acesso
         if (!empty($roles)) {
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
@@ -94,7 +89,17 @@ class Router
 
             $usuario = $_SESSION['usuario'] ?? null;
 
+            $querJson = (strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') !== false)
+                     || (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest')
+                     || (strpos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') !== false);
+
             if (!$usuario) {
+                if ($querJson) {
+                    http_response_code(401);
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo json_encode(['success' => false, 'error' => 'Não autenticado']);
+                    exit;
+                }
                 header('Location: /Aptus/login');
                 exit;
             }
@@ -103,16 +108,22 @@ class Router
             $rolesPermitidos = array_map('intval', $roles);
 
             if ($roleUsuario !== 4 && !in_array($roleUsuario, $rolesPermitidos, true)) {
+                if ($querJson) {
+                    http_response_code(403);
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo json_encode(['success' => false, 'error' => 'Acesso negado']);
+                    exit;
+                }
                 http_response_code(403);
                 echo "<h1>403 - Acesso Negado</h1>";
-                echo '<p><a href="/Aptus/">Voltar para o inicio</a></p>';
+                echo '<p><a href="/Aptus/">Voltar para o início</a></p>';
                 exit;
             }
         }
 
         if (!str_contains($action, '@')) {
             http_response_code(500);
-            echo "<h1>Rota invalida</h1>";
+            echo "<h1>Rota inválida</h1>";
             return;
         }
 
@@ -122,7 +133,7 @@ class Router
 
         if (!file_exists($controllerPath)) {
             http_response_code(500);
-            echo "<h1>Controller nao encontrado: {$controller}</h1>";
+            echo "<h1>Controller não encontrado: {$controller}</h1>";
             return;
         }
 
@@ -132,11 +143,11 @@ class Router
 
         if (!method_exists($controllerInstance, $methodName)) {
             http_response_code(500);
-            echo "<h1>Metodo nao encontrado: {$methodName}</h1>";
+            echo "<h1>Método não encontrado: {$methodName}</h1>";
             return;
         }
 
-        if ($method === "POST") {
+        if ($method === 'POST') {
             require_once __DIR__ . '/../Middleware/CsrfMiddleware.php';
             CsrfMiddleware::validate();
         }

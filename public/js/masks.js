@@ -1,42 +1,36 @@
 // public/js/masks.js
 // Máscaras e normalização de campos do Aptus.
-// Aplicado automaticamente por name/id. Sem dependências externas.
 
 (function () {
     'use strict';
 
-    // ============================================================
-    // Helpers
-    // ============================================================
     function onlyDigits(str) {
         return String(str || '').replace(/\D/g, '');
     }
 
     function toIsoDate(str) {
-        // Aceita 01012000, 01/01/2000, 2000-01-01
         var d = onlyDigits(str);
         if (d.length !== 8) return str;
         return d.slice(4, 8) + '-' + d.slice(2, 4) + '-' + d.slice(0, 2);
     }
 
     function toBrDate(str) {
-        // Aceita 2000-01-01
         var m = String(str || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
         if (!m) return str;
         return m[3] + '/' + m[2] + '/' + m[1];
     }
 
     // ============================================================
-    // MONEY — formata no blur, normaliza no submit
-    // Aceita: "1500", "1500.50", "1.500,50", "R$ 1500,00", "R$1500"
+    // MONEY
     // ============================================================
     function parseMoney(v) {
         var s = String(v || '').trim()
             .replace(/R\$\s?/gi, '')
             .replace(/\s/g, '');
+
         if (s === '') return 0;
 
-        // Se tem vírgula, é formato BR: 1.500,50
+        // Formato BR (1.500,50)
         if (s.indexOf(',') !== -1) {
             s = s.replace(/\./g, '').replace(',', '.');
         }
@@ -52,38 +46,35 @@
     }
 
     function setupMoney(input) {
-        // Formata o valor inicial (se já vier preenchido do banco)
         if (input.value && input.value.trim() !== '') {
             var inicial = parseMoney(input.value);
             input.value = inicial > 0 ? formatMoney(inicial) : '';
         }
 
-        // Aceita apenas dígitos e separadores enquanto digita
         input.addEventListener('input', function () {
             this.value = this.value.replace(/[^\d.,]/g, '');
         });
 
-        // Ao perder o foco, formata bonitinho
         input.addEventListener('blur', function () {
             var n = parseMoney(this.value);
             this.value = n > 0 ? formatMoney(n) : '';
         });
 
-        // No submit, manda o valor puro tipo "1500.00"
         var form = input.closest('form');
         if (form && !form.dataset.maskBound) {
             form.dataset.maskBound = '1';
             form.addEventListener('submit', function () {
                 form.querySelectorAll('[data-mask="money"]').forEach(function (el) {
                     var n = parseMoney(el.value);
-                    el.value = n > 0 ? n.toFixed(2) : '';
+                    // Manda o número puro SEM "R$" e SEM vírgula
+                    el.value = n > 0 ? n.toFixed(2).replace('.', ',') : '';
                 });
             }, true);
         }
     }
 
     // ============================================================
-    // PHONE — (11) 98765-4321 / (11) 3456-7890
+    // PHONE
     // ============================================================
     function maskPhone(v) {
         var d = onlyDigits(v).slice(0, 11);
@@ -136,7 +127,7 @@
     }
 
     // ============================================================
-    // CEP — 00000-000
+    // CEP
     // ============================================================
     function maskCep(v) {
         var d = onlyDigits(v).slice(0, 8);
@@ -152,7 +143,7 @@
     }
 
     // ============================================================
-    // DATA — dd/mm/aaaa <-> aaaa-mm-dd (hidden)
+    // DATA
     // ============================================================
     function maskDate(v) {
         var d = onlyDigits(v).slice(0, 8);
@@ -164,7 +155,6 @@
 
     function setupDate(input) {
         if (input.value) {
-            // Se já está em formato ISO (2000-01-01), mostra BR
             if (/^\d{4}-\d{2}-\d{2}/.test(input.value)) {
                 input.value = toBrDate(input.value);
             } else {
@@ -175,7 +165,6 @@
             this.value = maskDate(this.value);
         });
 
-        // No submit, converte para ISO
         var form = input.closest('form');
         if (form && !form.dataset.dateBound) {
             form.dataset.dateBound = '1';
@@ -188,60 +177,46 @@
     }
 
     // ============================================================
-    // NUMBER puro (só dígitos, com min/max)
-    // ============================================================
-    function setupNumber(input) {
-        input.addEventListener('input', function () {
-            this.value = onlyDigits(this.value);
-        });
-    }
-
-    // ============================================================
-    // AUTO-APLICAÇÃO por name e/ou data-mask
+    // AUTO-APLICAÇÃO
     // ============================================================
     var regras = {
         money: {
-            names: ['preco', 'valor', 'preco_min', 'preco_max', 'valor_informado_contratante', 'valor_informado_freelancer'],
-            setup: setupMoney,
+            names: ['preco', 'valor', 'preco_min', 'preco_max'],
+            setup: setupMoney
         },
         phone: {
             names: ['telefone', 'whatsapp', 'site_telefone'],
-            setup: setupPhone,
+            setup: setupPhone
         },
         cpf_cnpj: {
             names: ['cpf_cnpj', 'cpf', 'cnpj'],
-            setup: setupCpfCnpj,
+            setup: setupCpfCnpj
         },
         cep: {
             names: ['cep'],
-            setup: setupCep,
+            setup: setupCep
         },
         date: {
             names: ['data_nascimento'],
-            setup: setupDate,
-        },
+            setup: setupDate
+        }
     };
 
     function aplicar(el, tipo) {
         if (!el || el.dataset.maskApplied === '1') return;
         var regra = regras[tipo];
         if (!regra) return;
-        if (el.type === 'number' && tipo !== 'number') {
-            // Converte pra texto antes de aplicar (money, phone, etc.)
-            el.type = 'text';
-        }
+        if (el.type === 'number') el.type = 'text';
         el.dataset.maskApplied = '1';
         el.dataset.mask = tipo;
         regra.setup(el);
     }
 
     function init() {
-        // 1) Explicitamente marcados com data-mask
         document.querySelectorAll('[data-mask]').forEach(function (el) {
             aplicar(el, el.dataset.mask);
         });
 
-        // 2) Auto por name
         Object.keys(regras).forEach(function (tipo) {
             regras[tipo].names.forEach(function (nome) {
                 document.querySelectorAll('input[name="' + nome + '"]').forEach(function (el) {
@@ -257,7 +232,6 @@
         init();
     }
 
-    // Expõe utilitários para uso avulso
     window.AptusMasks = {
         init: init,
         parseMoney: parseMoney,
@@ -265,6 +239,6 @@
         maskPhone: maskPhone,
         maskCpfCnpj: maskCpfCnpj,
         maskCep: maskCep,
-        maskDate: maskDate,
+        maskDate: maskDate
     };
 })();

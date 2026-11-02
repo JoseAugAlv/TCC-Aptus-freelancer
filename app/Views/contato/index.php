@@ -86,7 +86,7 @@ $erro = $erro ?? '';
         <?php endif; ?>
 
         <form method="POST" action="/Aptus/contato" novalidate id="formContato">
-            
+            <?= CsrfMiddleware::field() ?>
             <div class="form-row">
                 <div class="form-group">
                     <label for="nome">Nome completo <span class="obrigatorio">*</span></label>

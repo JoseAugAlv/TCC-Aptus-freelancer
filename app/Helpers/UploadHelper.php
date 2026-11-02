@@ -26,6 +26,21 @@ class UploadHelper
         }
         return $dir;
     }
+    private static function getConfigLimits(string $categoria): array
+    {
+        require_once __DIR__ . '/../Models/Configuracao.php';
+        $cfg = new Configuracao();
+
+        $maxMB = (int) ($cfg->get('upload_max_size') ?: 5);
+        $typesCsv = (string) ($cfg->get('upload_allow_types') ?: 'jpg,jpeg,png,webp,gif');
+        $types = array_filter(array_map('trim', explode(',', strtolower($typesCsv))));
+
+        return [
+            'max_bytes' => $maxMB * 1048576,
+            'types'     => $types,
+        ];
+    }
+
 
     private static function baseUrl(): string
     {
@@ -35,6 +50,17 @@ class UploadHelper
 
     public static function upload($arquivo, $categoria, $subpasta = '')
     {
+        $limits = self::getConfigLimits($categoria);
+
+        if ($arquivo['size'] > $limits['max_bytes']) {
+            $maxMB = $limits['max_bytes'] / 1048576;
+            return ['success' => false, 'message' => "Arquivo muito grande. Máximo: {$maxMB}MB"];
+        }
+
+        if (!in_array($extensao, $limits['types'], true)) {
+            return ['success' => false, 'message' => 'Formato não permitido. Use: ' . implode(', ', $limits['types'])];
+        }
+
         if (!isset(self::$tiposPermitidos[$categoria])) {
             return ['success' => false, 'message' => 'Categoria de upload invalida.'];
         }

@@ -1,20 +1,29 @@
+<?php
+// app/Views/layouts/footer.php
+require_once __DIR__ . '/../../Models/Configuracao.php';
+$__cfg = new Configuracao();
+$__siteNome     = $__cfg->get('site_nome')     ?: 'Aptus';
+$__siteTelefone = $__cfg->get('site_telefone') ?: '(11) 99999-9999';
+$__siteEmail    = $__cfg->get('site_email')    ?: 'contato@aptus.com';
+$__siteEndereco = $__cfg->get('site_endereco') ?: 'São Paulo, SP';
+?>
 <footer class="footer-moderno">
     <div class="footer-container">
         <div class="footer-grid">
             <div class="footer-col">
                 <h3 class="footer-titulo">Sobre</h3>
                 <ul class="footer-links">
-                    <li><a href="/Aptus/sobre">Sobre Nos</a></li>
+                    <li><a href="/Aptus/sobre">Sobre Nós</a></li>
                     <li><a href="/Aptus/sobre#como-funciona">Como Funciona</a></li>
-                    <li><a href="/Aptus/anuncios">Servicos</a></li>
+                    <li><a href="/Aptus/anuncios">Serviços</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h3 class="footer-titulo">Recursos</h3>
                 <ul class="footer-links">
-                    <li><a href="/Aptus/buscar">Buscar Servicos</a></li>
-                    <li><a href="/Aptus/anuncios/criar">Anunciar Servico</a></li>
+                    <li><a href="/Aptus/buscar">Buscar Serviços</a></li>
+                    <li><a href="/Aptus/anuncios/criar">Anunciar Serviço</a></li>
                     <li><a href="/Aptus/favoritos">Meus Favoritos</a></li>
                 </ul>
             </div>
@@ -23,21 +32,22 @@
                 <h3 class="footer-titulo">Suporte</h3>
                 <ul class="footer-links">
                     <li><a href="/Aptus/contato">Central de Ajuda</a></li>
-                    <li><a href="/Aptus/termos">Politica de Privacidade</a></li>
+                    <li><a href="/Aptus/termos">Política de Privacidade</a></li>
                     <li><a href="/Aptus/termos">Termos de Uso</a></li>
+                    <li><a href="/Aptus/cookies">Política de Cookies</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h3 class="footer-titulo">Contato</h3>
                 <div class="footer-contato">
-                    <i class="fas fa-phone-alt"></i> (11) 99999-9999
+                    <i class="fas fa-phone-alt"></i> <?= htmlspecialchars($__siteTelefone) ?>
                 </div>
                 <div class="footer-contato">
-                    <i class="fas fa-envelope"></i> contato@aptus.com
+                    <i class="fas fa-envelope"></i> <?= htmlspecialchars($__siteEmail) ?>
                 </div>
                 <div class="footer-contato">
-                    <i class="fas fa-map-marker-alt"></i> Sao Paulo, SP
+                    <i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($__siteEndereco) ?>
                 </div>
                 <div class="footer-social">
                     <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -48,9 +58,9 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; <?php echo date('Y'); ?> Aptus. Todos os direitos reservados.</p>
+            <p>&copy; <?= date('Y') ?> <?= htmlspecialchars($__siteNome) ?>. Todos os direitos reservados.</p>
             <div class="footer-selo">
-                <i class="fas fa-shield-alt"></i> Tecnologia com seguranca
+                <i class="fas fa-shield-alt"></i> Tecnologia com segurança
             </div>
         </div>
     </div>
@@ -58,5 +68,20 @@
 
 <script src="/Aptus/public/js/main.js"></script>
 <script src="/Aptus/public/js/masks.js"></script>
+
+
+  <!-- VLibras Widget -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    <!-- Fim do VLibras Widget -->
+     
 </body>
 </html>

@@ -71,36 +71,46 @@ class ConfiguracaoController
             'email_user'      => trim($_POST['email_user'] ?? ''),
             'email_from_name' => trim($_POST['email_from_name'] ?? 'Aptus'),
 
-            'pagamento_pix'           => isset($_POST['pagamento_pix']) ? '1' : '0',
+            'pagamento_pix'           => isset($_POST['pagamento_pix'])           ? '1' : '0',
             'pagamento_transferencia' => isset($_POST['pagamento_transferencia']) ? '1' : '0',
-            'pagamento_dinheiro'      => isset($_POST['pagamento_dinheiro']) ? '1' : '0',
-            'pagamento_cartao'        => isset($_POST['pagamento_cartao']) ? '1' : '0',
+            'pagamento_dinheiro'      => isset($_POST['pagamento_dinheiro'])      ? '1' : '0',
+            'pagamento_cartao'        => isset($_POST['pagamento_cartao'])        ? '1' : '0',
 
             'manutencao'          => isset($_POST['manutencao']) ? '1' : '0',
             'manutencao_mensagem' => trim($_POST['manutencao_mensagem'] ?? ''),
         ];
 
-        // FIX: só sobrescreve email_pass se o campo vier preenchido.
-        // Se o admin deixar em branco, mantém a senha atual.
+        // Validar numéricos
+        $numericos = ['upload_max_size', 'sessao_tempo', 'tentativas_login'];
+        foreach ($numericos as $key) {
+            if (!isset($configs[$key]) || !is_numeric($configs[$key]) || (int) $configs[$key] < 1) {
+                $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => "Valor inválido em '{$key}' (deve ser número maior que 0)."];
+                header('Location: /Aptus/admin/configuracoes');
+                exit;
+            }
+            $configs[$key] = (string) (int) $configs[$key];
+        }
+
+        // Validar e-mail
+        if (!empty($configs['site_email']) && !filter_var($configs['site_email'], FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'E-mail inválido.'];
+            header('Location: /Aptus/admin/configuracoes');
+            exit;
+        }
+
+        // Senha do e-mail: só sobrescreve se vier preenchida
         $novaSenha = trim($_POST['email_pass'] ?? '');
         $atual     = $this->config->getAll();
         if ($novaSenha !== '' || empty($atual['email_pass'])) {
             $configs['email_pass'] = $novaSenha;
         }
-        // senão: não inclui a chave → setMultiples ignora
-
-        if (!empty($configs['site_email']) && !filter_var($configs['site_email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Email invalido.'];
-            header('Location: /Aptus/admin/configuracoes');
-            exit;
-        }
 
         $resultado = $this->config->setMultiples($configs);
 
         if ($resultado) {
-            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Configuracoes salvas com sucesso!'];
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Configurações salvas com sucesso!'];
         } else {
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao salvar configuracoes.'];
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao salvar configurações.'];
         }
 
         header('Location: /Aptus/admin/configuracoes');

@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/Aptus/public/css/responsive.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js" charset="UTF-8"></script>
 
     <!-- CSS Específico da Página -->
     <?php if (isset($cssPagina)): ?>

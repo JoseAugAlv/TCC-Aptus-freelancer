@@ -12,35 +12,27 @@ class Categoria
         $this->conn = Database::getConnection();
     }
 
-    /**
-     * Busca todas as categorias ativas
-     */
     public function getAll()
     {
         $sql = "SELECT * FROM categoria WHERE ativo = TRUE ORDER BY nome";
         return Database::fetchAll($sql, [], 300);
     }
 
-    /**
-     * Busca categorias com contagem de anúncios (populares)
-     */
     public function getPopulares($limit = 8)
     {
-        $sql = "SELECT c.*, 
-                (SELECT COUNT(*) FROM anuncio_servico a 
-                WHERE a.id_categoria = c.id_categoria 
-                AND a.situacao = 'ativo' 
+        $limit = max(1, (int) $limit);
+        $sql = "SELECT c.*,
+                (SELECT COUNT(*) FROM anuncio_servico a
+                WHERE a.id_categoria = c.id_categoria
+                AND a.situacao = 'ativo'
                 AND a.id_situacao_moderacao = 2) as total_anuncios
-                FROM categoria c 
-                WHERE c.ativo = TRUE 
-                ORDER BY total_anuncios DESC 
+                FROM categoria c
+                WHERE c.ativo = TRUE
+                ORDER BY total_anuncios DESC
                 LIMIT ?";
-        return Database::fetchAll($sql, [$limit], 120); // 2 min
+        return Database::fetchAll($sql, [$limit], 120);
     }
 
-    /**
-     * Busca categoria por ID
-     */
     public function findById($id)
     {
         $sql = "SELECT * FROM categoria WHERE id_categoria = ? AND ativo = TRUE";
@@ -49,9 +41,6 @@ class Categoria
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Busca categoria por nome
-     */
     public function findByNome($nome)
     {
         $sql = "SELECT * FROM categoria WHERE nome = ? AND ativo = TRUE";
@@ -60,66 +49,57 @@ class Categoria
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Cria uma nova categoria (RF18 - Moderador/Admin)
-     */
     public function create($data)
     {
         $sql = "INSERT INTO categoria (nome, descricao, icone) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
+        $ok   = $stmt->execute([
             $data['nome'],
             $data['descricao'] ?? null,
             $data['icone'] ?? 'fas fa-tag'
         ]);
+        Database::clearCache();
+        return $ok;
     }
 
-    /**
-     * Atualiza uma categoria (RF18 - Moderador/Admin)
-     */
     public function update($id, $data)
     {
         $fields = [];
         $params = [];
-        
+
         $allowedFields = ['nome', 'descricao', 'icone', 'ativo'];
-        
+
         foreach ($allowedFields as $field) {
             if (isset($data[$field])) {
                 $fields[] = "$field = ?";
                 $params[] = $data[$field];
             }
         }
-        
+
         if (empty($fields)) {
             return false;
         }
-        
+
         $params[] = $id;
-        $sql = "UPDATE categoria SET " . implode(", ", $fields) . " WHERE id_categoria = ?";
+        $sql  = "UPDATE categoria SET " . implode(", ", $fields) . " WHERE id_categoria = ?";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute($params);
+        $ok   = $stmt->execute($params);
+        Database::clearCache();
+        return $ok;
     }
 
-    /**
-     * Exclui (desativa) uma categoria (RF18 - Moderador/Admin)
-     */
     public function delete($id)
     {
-        $sql = "UPDATE categoria SET ativo = FALSE WHERE id_categoria = ?";
+        $sql  = "UPDATE categoria SET ativo = FALSE WHERE id_categoria = ?";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$id]);
+        $ok   = $stmt->execute([$id]);
+        Database::clearCache();
+        return $ok;
     }
 
-    /**
-     * Total de categorias ativas
-     */
     public function getTotal()
     {
         $sql = "SELECT COUNT(*) as total FROM categoria WHERE ativo = TRUE";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total'] ?? 0;
+        return (int) Database::fetchColumn($sql, [], 60);
     }
 }
