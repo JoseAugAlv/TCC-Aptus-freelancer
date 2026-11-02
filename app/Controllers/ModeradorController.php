@@ -157,4 +157,89 @@ class ModeradorController
         $categorias = $this->moderador->getCategorias();
         require '../app/Views/moderator/categorias.php';
     }
+    public function salvarCategoria()
+    {
+        $this->verificaPermissao();
+
+        $nome      = trim($_POST['nome'] ?? '');
+        $descricao = trim($_POST['descricao'] ?? '');
+        $icone     = trim($_POST['icone'] ?? 'fas fa-tag');
+
+        if ($nome === '') {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o nome da categoria.'];
+            header('Location: /Aptus/moderator/categorias');
+            exit;
+        }
+
+        // Verifica duplicidade
+        require_once __DIR__ . '/../Models/Categoria.php';
+        $model = new Categoria();
+
+        if ($model->findByNome($nome)) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Já existe uma categoria com este nome.'];
+            header('Location: /Aptus/moderator/categorias');
+            exit;
+        }
+
+        if ($model->create(['nome' => $nome, 'descricao' => $descricao, 'icone' => $icone])) {
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Categoria criada com sucesso.'];
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível criar a categoria.'];
+        }
+
+        header('Location: /Aptus/moderator/categorias');
+        exit;
+    }
+
+    public function editarCategoria()
+    {
+        $this->verificaPermissao();
+
+        $id        = (int) ($_POST['id'] ?? 0);
+        $nome      = trim($_POST['nome'] ?? '');
+        $descricao = trim($_POST['descricao'] ?? '');
+        $icone     = trim($_POST['icone'] ?? 'fas fa-tag');
+
+        if ($id <= 0 || $nome === '') {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Dados inválidos.'];
+            header('Location: /Aptus/moderator/categorias');
+            exit;
+        }
+
+        require_once __DIR__ . '/../Models/Categoria.php';
+        $model = new Categoria();
+
+        if ($model->update($id, ['nome' => $nome, 'descricao' => $descricao, 'icone' => $icone])) {
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Categoria atualizada.'];
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível atualizar.'];
+        }
+
+        header('Location: /Aptus/moderator/categorias');
+        exit;
+    }
+
+    public function excluirCategoria()
+    {
+        $this->verificaPermissao();
+
+        $id = (int) ($_POST['id'] ?? 0);
+        if ($id <= 0) {
+            header('Location: /Aptus/moderator/categorias');
+            exit;
+        }
+
+        require_once __DIR__ . '/../Models/Categoria.php';
+        $model = new Categoria();
+
+        if ($model->delete($id)) {
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Categoria removida.'];
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível remover.'];
+        }
+
+        header('Location: /Aptus/moderator/categorias');
+        exit;
+    }
+
 }

@@ -1,9 +1,7 @@
 <?php
-require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/pagamentos/confirmar.php
-// [FIX-CRIT-01] Reescrita: mostra dados reais (nome da outra parte, título,
-//               valor), coleta valor/forma/data, e o botão aponta para o
-//               endpoint correto conforme o papel (?papel=).
+require_once __DIR__ . '/../../Middleware/CsrfMiddleware.php';
+require_once __DIR__ . '/../../Models/Configuracao.php';
 
 $tituloPagina = $tituloPagina ?? 'Confirmar Pagamento - Aptus';
 $cssPagina    = $cssPagina    ?? 'pagamentos.css';
@@ -39,6 +37,19 @@ if ($confirmacao) {
     $jaConfirmou = ($papel === 'freelancer')
         ? !empty($confirmacao['confirmado_freelancer'])
         : !empty($confirmacao['confirmado_contratante']);
+}
+
+// Formas de pagamento habilitadas nas configurações
+$cfgPag = new Configuracao();
+$formasHabilitadas = [
+    'pix'           => $cfgPag->get('pagamento_pix')           === '1',
+    'transferencia' => $cfgPag->get('pagamento_transferencia') === '1',
+    'dinheiro'      => $cfgPag->get('pagamento_dinheiro')      === '1',
+    'cartao'        => $cfgPag->get('pagamento_cartao')        === '1',
+];
+
+if (!array_filter($formasHabilitadas)) {
+    $formasHabilitadas['outro'] = true; // fallback
 }
 ?>
 
@@ -94,8 +105,9 @@ if ($confirmacao) {
 
                 <div class="form-group">
                     <label for="valor">Valor <?= $papel === 'freelancer' ? 'recebido' : 'pago' ?> (R$)</label>
-                    <input type="number" step="0.01" min="0.01" name="valor" id="valor" required
-                           value="<?= htmlspecialchars(number_format($valorSugerido, 2, '.', ''), ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="text" name="valor" id="valor" required
+                           data-mask="money"
+                           value="<?= htmlspecialchars(number_format($valorSugerido, 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?>">
                 </div>
 
                 <?php if ($papel !== 'freelancer'): ?>
@@ -103,10 +115,18 @@ if ($confirmacao) {
                         <label for="forma_pagamento">Forma de pagamento</label>
                         <select name="forma_pagamento" id="forma_pagamento" required>
                             <option value="">Selecione...</option>
-                            <option value="pix">PIX</option>
-                            <option value="transferencia">Transferência bancária</option>
-                            <option value="dinheiro">Dinheiro</option>
-                            <option value="cartao">Cartão</option>
+                            <?php if ($formasHabilitadas['pix'] ?? false): ?>
+                                <option value="pix">PIX</option>
+                            <?php endif; ?>
+                            <?php if ($formasHabilitadas['transferencia'] ?? false): ?>
+                                <option value="transferencia">Transferência bancária</option>
+                            <?php endif; ?>
+                            <?php if ($formasHabilitadas['dinheiro'] ?? false): ?>
+                                <option value="dinheiro">Dinheiro</option>
+                            <?php endif; ?>
+                            <?php if ($formasHabilitadas['cartao'] ?? false): ?>
+                                <option value="cartao">Cartão</option>
+                            <?php endif; ?>
                             <option value="outro">Outro</option>
                         </select>
                     </div>

@@ -146,9 +146,12 @@ if ($usuario) {
                 </a>
             <?php endif; ?>
 
-            <button class="btn-logout-dropdown" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> Sair da Conta
-            </button>
+            <form method="POST" action="/Aptus/logout" style="margin:0;">
+                <?= \CsrfMiddleware::field() ?>
+                <button type="submit" class="btn-logout-dropdown">
+                    <i class="fas fa-sign-out-alt"></i> Sair da Conta
+                </button>
+            </form>
         </div>
     </div>
 

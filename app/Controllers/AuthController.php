@@ -29,7 +29,7 @@ class AuthController
     {
         if (isset($_SESSION['usuario'])) { header('Location: /Aptus/'); exit; }
 
-        $email = $_POST['email'] ?? '';
+        $email = trim($_POST['email'] ?? '');
         $senha = $_POST['senha'] ?? '';
 
         if (empty($email) || empty($senha)) {
@@ -67,21 +67,29 @@ class AuthController
             header('Location: /Aptus/login'); exit;
         }
 
-        // Mitiga session fixation
         session_regenerate_id(true);
 
+        // ---------- TOKEN "LEMBRAR DE MIM" (hash + expiração) ----------
         if ($lembrar) {
-            $token = bin2hex(random_bytes(32));
-            $pdo   = Database::getConnection();
-            $stmt  = $pdo->prepare("UPDATE usuario SET remember_token = ? WHERE id_usuario = ?");
-            $stmt->execute([$token, $usuario['id_usuario']]);
+            $token      = bin2hex(random_bytes(32));
+            $tokenHash  = hash('sha256', $token);
+            $expira     = date('Y-m-d H:i:s', time() + 30 * 24 * 3600);
+
+            $pdo  = Database::getConnection();
+            $stmt = $pdo->prepare(
+                "UPDATE usuario
+                SET remember_token = ?, remember_token_expira = ?
+                WHERE id_usuario = ?"
+            );
+            $stmt->execute([$tokenHash, $expira, $usuario['id_usuario']]);
 
             $appUrl = parse_url(\Config::get('APP_URL', '/Aptus'), PHP_URL_PATH) ?: '/Aptus';
+            $domain = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? 'localhost');
 
             setcookie('remember_token', $token, [
                 'expires'  => time() + 30 * 24 * 3600,
                 'path'     => rtrim($appUrl, '/') . '/',
-                'domain'   => $_SERVER['HTTP_HOST'] ?? 'localhost',
+                'domain'   => $domain,
                 'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
                 'httponly' => true,
                 'samesite' => 'Lax',
@@ -103,7 +111,7 @@ class AuthController
         SecurityHelper::logAuditoria(
             'login_usuario',
             $usuario['id_usuario'],
-            'Login realizado com sucesso - Email: ' . $email,
+            'Login realizado - Email: ' . $email,
             'info'
         );
 
@@ -116,6 +124,19 @@ class AuthController
         if (session_status() === PHP_SESSION_NONE) session_start();
 
         if (isset($_SESSION['usuario'])) {
+            // Revoga o token de "lembrar de mim" no banco
+            try {
+                $pdo  = Database::getConnection();
+                $stmt = $pdo->prepare(
+                    "UPDATE usuario
+                    SET remember_token = NULL, remember_token_expira = NULL
+                    WHERE id_usuario = ?"
+                );
+                $stmt->execute([$_SESSION['usuario']['id']]);
+            } catch (Throwable $e) {
+                error_log('Erro ao revogar token no logout: ' . $e->getMessage());
+            }
+
             require_once __DIR__ . '/../Helpers/SecurityHelper.php';
             SecurityHelper::logAuditoria(
                 'logout_usuario',
@@ -142,11 +163,12 @@ class AuthController
         session_destroy();
 
         $appUrl = parse_url(\Config::get('APP_URL', '/Aptus'), PHP_URL_PATH) ?: '/Aptus';
+        $domain = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? 'localhost');
 
         setcookie('remember_token', '', [
             'expires'  => time() - 3600,
             'path'     => rtrim($appUrl, '/') . '/',
-            'domain'   => $_SERVER['HTTP_HOST'] ?? 'localhost',
+            'domain'   => $domain,
             'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
             'httponly' => true,
             'samesite' => 'Lax',
@@ -155,7 +177,6 @@ class AuthController
         header('Location: /Aptus/login');
         exit;
     }
-
     public function cadastrar()
     {
         if (isset($_SESSION['usuario'])) { header('Location: /Aptus/'); exit; }
@@ -259,35 +280,48 @@ class AuthController
     {
         $token = $_GET['token'] ?? '';
         if (empty($token)) {
-            header('Location: /Aptus/login?status=erro&mensagem=Token+invalido');
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Token inválido.'];
+            header('Location: /Aptus/login');
             exit;
         }
 
-        // Antes de tentar verificar, checa se o token existe e está expirado
         $tokenData = $this->usuario->findTokenVerificacao($token);
 
         if ($tokenData
             && !$tokenData['email_verificado']
             && !empty($tokenData['token_verificacao_expira'])
             && strtotime($tokenData['token_verificacao_expira']) < time()) {
-            header('Location: /Aptus/login?status=erro&mensagem=Link+expirado.+Solicite+um+novo.');
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Link expirado. Solicite um novo.'];
+            header('Location: /Aptus/login');
             exit;
         }
 
         $resultado = $this->usuario->verificarEmail($token);
 
         if ($resultado) {
-            header('Location: /Aptus/login?status=sucesso&mensagem=E-mail+verificado+com+sucesso!');
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'E-mail verificado com sucesso!'];
         } else {
-            header('Location: /Aptus/login?status=erro&mensagem=Token+invalido+ou+expirado');
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Token inválido ou expirado.'];
         }
+
+        header('Location: /Aptus/login');
         exit;
     }
 
     public function reenviarVerificacao()
     {
-        $email = $_GET['email'] ?? '';
+        $email = trim($_POST['email'] ?? '');
         if (empty($email)) { header('Location: /Aptus/login'); exit; }
+
+        require_once __DIR__ . '/../Helpers/LoginAttempt.php';
+
+        // Rate limit por IP
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        if (!LoginAttempt::check('reenvio_' . $ip, $ip)) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Muitas tentativas. Aguarde alguns minutos.'];
+            header('Location: /Aptus/login'); exit;
+        }
+        LoginAttempt::increment('reenvio_' . $ip, $ip);
 
         $usuario = $this->usuario->findByEmail($email);
 
@@ -311,15 +345,6 @@ class AuthController
         exit;
     }
 
-    public function esqueciSenha()
-    {
-        if (isset($_SESSION['usuario'])) { header('Location: /Aptus/'); exit; }
-
-        $tituloPagina = 'Esqueci a Senha - Aptus';
-        $cssPagina = 'login.css';
-        require '../app/Views/auth/esqueci_senha.php';
-    }
-
     public function enviarToken()
     {
         if (isset($_SESSION['usuario'])) { header('Location: /Aptus/'); exit; }
@@ -330,6 +355,16 @@ class AuthController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'E-mail inválido.'];
             header('Location: /Aptus/auth/esqueci-senha'); exit;
         }
+
+        require_once __DIR__ . '/../Helpers/LoginAttempt.php';
+
+        // Rate limit por IP
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        if (!LoginAttempt::check('reset_' . $ip, $ip)) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Muitas tentativas. Aguarde alguns minutos.'];
+            header('Location: /Aptus/login'); exit;
+        }
+        LoginAttempt::increment('reset_' . $ip, $ip);
 
         $usuario = $this->usuario->findByEmail($email);
 
@@ -344,8 +379,6 @@ class AuthController
                 } catch (Throwable $e) {
                     error_log('Falha ao enviar e-mail de reset: ' . $e->getMessage());
                 }
-            } else {
-                error_log('Falha ao salvar token de reset para: ' . $email);
             }
         }
 
@@ -355,6 +388,15 @@ class AuthController
         ];
         header('Location: /Aptus/login');
         exit;
+    }
+
+    public function esqueciSenha()
+    {
+        if (isset($_SESSION['usuario'])) { header('Location: /Aptus/'); exit; }
+
+        $tituloPagina = 'Esqueci a Senha - Aptus';
+        $cssPagina = 'login.css';
+        require '../app/Views/auth/esqueci_senha.php';
     }
 
     public function redefinir()
@@ -390,6 +432,18 @@ class AuthController
 
         if (strlen($senha) < 8) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'A senha deve ter no mínimo 8 caracteres.'];
+            header('Location: /Aptus/auth/redefinir?token=' . urlencode($token)); exit;
+        }
+        if (strlen($senha) < 8) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'A senha deve ter no mínimo 8 caracteres.'];
+            header('Location: /Aptus/auth/redefinir?token=' . urlencode($token)); exit;
+        }
+
+        // NOVO: validação de força
+        require_once __DIR__ . '/../Helpers/SecurityHelper.php';
+        $forca = SecurityHelper::validarForcaSenha($senha);
+        if (!$forca['valida']) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Senha fraca: ' . implode(', ', $forca['erros'])];
             header('Location: /Aptus/auth/redefinir?token=' . urlencode($token)); exit;
         }
 

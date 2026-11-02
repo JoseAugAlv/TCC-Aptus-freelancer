@@ -68,5 +68,20 @@ $__siteEndereco = $__cfg->get('site_endereco') ?: 'São Paulo, SP';
 
 <script src="/Aptus/public/js/main.js"></script>
 <script src="/Aptus/public/js/masks.js"></script>
+
+
+  <!-- VLibras Widget -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    <!-- Fim do VLibras Widget -->
+     
 </body>
 </html>

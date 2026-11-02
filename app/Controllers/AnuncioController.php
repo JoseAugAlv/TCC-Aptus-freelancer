@@ -4,6 +4,8 @@
 require_once __DIR__ . '/../Models/Anuncio.php';
 require_once __DIR__ . '/../Models/Categoria.php';
 require_once __DIR__ . '/../Helpers/UploadHelper.php';
+require_once __DIR__ . '/../Helpers/MoneyHelper.php';
+
 
 class AnuncioController
 {
@@ -124,7 +126,7 @@ class AnuncioController
         $titulo      = trim($_POST['titulo'] ?? '');
         $descricao   = trim($_POST['descricao'] ?? '');
         $categoriaId = (int) ($_POST['categoria_id'] ?? 0);
-        $preco       = (float) str_replace(',', '.', $_POST['preco'] ?? '0');
+        $preco = MoneyHelper::parse($_POST['preco'] ?? 0);
         $situacao    = $_POST['situacao'] ?? 'ativo';
 
         if (empty($titulo) || empty($descricao) || $categoriaId <= 0 || $preco <= 0) {
@@ -254,11 +256,13 @@ class AnuncioController
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
 
+        require_once __DIR__ . '/../Helpers/MoneyHelper.php';
+
         $usuarioId   = $_SESSION['usuario']['id'];
         $titulo      = trim($_POST['titulo'] ?? '');
         $descricao   = trim($_POST['descricao'] ?? '');
         $categoriaId = (int) ($_POST['categoria_id'] ?? 0);
-        $preco       = (float) str_replace(',', '.', $_POST['preco'] ?? '0');
+        $preco       = MoneyHelper::parse($_POST['preco'] ?? 0);
 
         if (empty($titulo) || empty($descricao) || $categoriaId <= 0 || $preco <= 0) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Preencha todos os campos corretamente.'];
@@ -292,10 +296,23 @@ class AnuncioController
         $id = $this->anuncio->create($dados);
 
         if ($id) {
-            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio criado! Aguarde aprovação.'];
+            // Aplica moderação automática se configurada
+            try {
+                require_once __DIR__ . '/../Models/Configuracao.php';
+                $cfg = new Configuracao();
+                if ($cfg->get('moderacao_automatica') === '1') {
+                    $this->anuncio->aprovar((int) $id);
+                    $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio criado e aprovado automaticamente!'];
+                } else {
+                    $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio criado! Aguarde a aprovação do moderador.'];
+                }
+            } catch (Throwable $e) {
+                error_log('Erro na moderação automática: ' . $e->getMessage());
+                $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio criado! Aguarde aprovação.'];
+            }
             header('Location: /Aptus/anuncios/meus');
         } else {
-            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao criar anúncio.'];
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao criar anúncio. Tente novamente.'];
             header('Location: /Aptus/anuncios/criar');
         }
         exit;

@@ -5,7 +5,7 @@
 require_once __DIR__ . '/../app/Config/config.php';
 Config::load();
 
-$appEnv = Config::get('APP_ENV') ?: 'development';
+$appEnv = Config::get('APP_ENV') ?: 'production';
 
 // 2) Bootstrap de erros
 if ($appEnv === 'production') {
@@ -17,7 +17,6 @@ if ($appEnv === 'production') {
     error_reporting(E_ALL);
 }
 
-// Handler global
 set_exception_handler(function (Throwable $e) use ($appEnv) {
     error_log('Exceção não capturada: ' . $e->getMessage() . ' em ' . $e->getFile() . ':' . $e->getLine());
     http_response_code(500);
@@ -26,7 +25,7 @@ set_exception_handler(function (Throwable $e) use ($appEnv) {
         echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">';
         echo '<title>Erro - Aptus</title></head><body>';
         echo '<h1>Algo deu errado</h1>';
-        echo '<p>Ocorreu um erro inesperado. Nossa equipe foi notificada.</p>';
+        echo '<p>Ocorreu um erro inesperado.</p>';
         echo '<p><a href="/Aptus/">Voltar ao início</a></p>';
         echo '</body></html>';
     } else {
@@ -44,21 +43,23 @@ SessionConfig::configure();
 require_once __DIR__ . '/../app/Config/database.php';
 require_once __DIR__ . '/../app/Core/Router.php';
 
-// 5) Auto-login via remember_token
+// 5) Auto-login via remember_token (hash + expiração)
 if (!isset($_SESSION['usuario'])
     && isset($_COOKIE['remember_token'])
     && $_COOKIE['remember_token'] !== '') {
 
     try {
-        $pdo = Database::getConnection();
+        $pdo       = Database::getConnection();
+        $tokenHash = hash('sha256', $_COOKIE['remember_token']);
 
         $stmt = $pdo->prepare(
             "SELECT id_usuario, nome, email, id_perfil, ativo, banido
              FROM usuario
              WHERE remember_token = ?
+               AND remember_token_expira > NOW()
              LIMIT 1"
         );
-        $stmt->execute([$_COOKIE['remember_token']]);
+        $stmt->execute([$tokenHash]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && (int) $user['ativo'] === 1 && (int) $user['banido'] === 0) {
@@ -71,21 +72,23 @@ if (!isset($_SESSION['usuario'])
             ];
         } else {
             $appUrlPath = parse_url(Config::get('APP_URL', '/Aptus'), PHP_URL_PATH) ?: '/Aptus';
+            $domain     = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? 'localhost');
+
             setcookie('remember_token', '', [
                 'expires'  => time() - 3600,
                 'path'     => rtrim($appUrlPath, '/') . '/',
-                'domain'   => $_SERVER['HTTP_HOST'] ?? 'localhost',
+                'domain'   => $domain,
                 'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
                 'httponly' => true,
                 'samesite' => 'Lax',
             ]);
         }
     } catch (Throwable $e) {
-        error_log('Falha no auto-login por remember_token: ' . $e->getMessage());
+        error_log('Falha no auto-login: ' . $e->getMessage());
     }
 }
 
-// 6) [NOVO] Verificação de Modo Manutenção
+// 6) Modo manutenção
 try {
     require_once __DIR__ . '/../app/Models/Configuracao.php';
     $configModel     = new Configuracao();
@@ -96,7 +99,6 @@ try {
         $isAdmin   = in_array($role, [1, 4], true);
         $rotaAtual = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
-        // Rotas liberadas mesmo em manutenção
         $rotasLiberadas = [
             '/Aptus/login',
             '/Aptus/logout',

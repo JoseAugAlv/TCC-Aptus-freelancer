@@ -65,7 +65,12 @@ $categorias = $categorias ?? [];
                             <td><?= $categoria['total_anuncios'] ?? 0 ?></td>
                             <td>
                                 <a href="/Aptus/moderator/categorias/editar/<?= $categoria['id_categoria'] ?>" class="btn-editar">Editar</a>
-                                <a href="/Aptus/moderator/categorias/excluir/<?= $categoria['id_categoria'] ?>" class="btn-excluir" onclick="return confirm('Tem certeza?')">Excluir</a>
+                                <form method="POST" action="/Aptus/moderator/categorias/excluir" style="display:inline;"
+                                    onsubmit="return confirm('Excluir esta categoria?')">
+                                    <input type="hidden" name="id" value="<?= (int) $categoria['id_categoria'] ?>">
+                                    <?= CsrfMiddleware::field() ?>
+                                    <button type="submit" class="btn-excluir">Excluir</button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>

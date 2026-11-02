@@ -16,15 +16,16 @@ $router->get('/anuncios/{slug}', 'AnuncioController@show');
 /* AUTENTICAÇÃO */
 $router->get('/login', 'AuthController@index');
 $router->post('/login', 'AuthController@login');
-$router->get('/logout', 'AuthController@logout');
+$router->post('/logout', 'AuthController@logout');
 $router->get('/login/cadastrar', 'AuthController@cadastrar');
 $router->post('/login/salvar', 'AuthController@salvar');
 $router->get('/auth/verificar', 'AuthController@verificar');
-$router->get('/auth/reenviar-verificacao', 'AuthController@reenviarVerificacao');
+$router->post('/auth/reenviar-verificacao', 'AuthController@reenviarVerificacao');
 $router->get('/auth/esqueci-senha', 'AuthController@esqueciSenha');
 $router->post('/auth/enviar-token', 'AuthController@enviarToken');
 $router->get('/auth/redefinir', 'AuthController@redefinir');
 $router->post('/auth/redefinir-senha', 'AuthController@redefinirSenha');
+$router->get('/admin/usuarios', 'AdminUsuarioController@index', [1, 4]);
 
 /* PERFIL */
 $router->get('/perfil', 'PerfilController@index', [3, 2, 1, 4]);
@@ -159,3 +160,7 @@ $router->post('/chat/marcar-lida', 'ChatController@marcarLida', [3, 2, 1, 4]);
 $router->get('/relatorios', 'RelatorioController@index', [1, 2, 4]);
 $router->get('/relatorios/categorias-pdf', 'RelatorioController@categoriasPdf', [1, 2, 4]);
 $router->get('/relatorios/termos-pdf', 'RelatorioController@termosPdf', [1, 2, 4]);
+
+$router->post('/moderator/categorias/salvar', 'ModeradorController@salvarCategoria', [1, 2, 4]);
+$router->post('/moderator/categorias/editar', 'ModeradorController@editarCategoria', [1, 2, 4]);
+$router->post('/moderator/categorias/excluir', 'ModeradorController@excluirCategoria', [1, 2, 4]);
