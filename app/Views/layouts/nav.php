@@ -28,7 +28,7 @@ if ($usuario) {
     </a>
 
     <ul class="navbar-links">
-        <li><a href="/Aptus/"><i class="fas fa-home"></i> Inicio</a></li>
+        <li><a href="/Aptus/"><i class="fas fa-home"></i> Início</a></li>
         <li><a href="/Aptus/anuncios"><i class="fas fa-tools"></i> Serviços</a></li>
         <li><a href="/Aptus/sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>
         <li><a href="/Aptus/contato"><i class="fas fa-envelope"></i> Contato</a></li>
@@ -36,11 +36,11 @@ if ($usuario) {
         <?php if ($usuario && $role == 3): ?>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle">
-                    <i class="fas fa-plus-circle"></i> Anunciar <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-plus-circle"></i> Anúnciar <i class="fas fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/Aptus/anuncios/criar"><i class="fas fa-plus"></i> Criar Anuncio</a></li>
-                    <li><a href="/Aptus/anuncios/meus"><i class="fas fa-list"></i> Meus Anuncios</a></li>
+                    <li><a href="/Aptus/anuncios/criar"><i class="fas fa-plus"></i> Criar Anúncio</a></li>
+                    <li><a href="/Aptus/anuncios/meus"><i class="fas fa-list"></i> Meus Anúncios</a></li>
                 </ul>
             </li>
         <?php endif; ?>
@@ -90,7 +90,7 @@ if ($usuario) {
 
     <div class="navbar-perfil">
         <?php if ($usuario): ?>
-            <button class="btn-perfil-navbar" id="btnPerfilNavbar">
+            <button type="button" class="btn-perfil-navbar" id="btnPerfilNavbar">
                 <i class="fas fa-user"></i>
                 <span><?php echo htmlspecialchars(explode(' ', $nomeUsuario)[0]); ?></span>
                 <?php if ($totalNotificacoes > 0): ?>
@@ -139,7 +139,7 @@ if ($usuario) {
                     <i class="fas fa-clock"></i> Propostas Pendentes
                 </a>
                 <a href="/Aptus/interesses/ativos" class="menu-item">
-                    <i class="fas fa-check-circle"></i> Servicos Ativos
+                    <i class="fas fa-check-circle"></i> Serviços Ativos
                 </a>
                 <a href="/Aptus/interesses/meus" class="menu-item">
                     <i class="fas fa-paper-plane"></i> Meus Interesses

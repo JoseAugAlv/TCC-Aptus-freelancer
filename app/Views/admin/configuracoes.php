@@ -3,7 +3,7 @@ require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/admin/configuracoes.php
 
 $tituloPagina = $tituloPagina ?? 'Configuracoes - Aptus';
-$cssPagina = $cssPagina ?? 'admin.css';
+$cssPagina =  'configuracoes.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
 
@@ -12,7 +12,7 @@ $configs = $configs ?? [];
 
 <div class="config-container">
     <div class="config-header">
-        <h1><i class="fas fa-cogs"></i> Configuracoes</h1>
+        <h1><i class="fas fa-cogs"></i> Configurações</h1>
         <p>Gerencie as configurações do sistema</p>
     </div>
 

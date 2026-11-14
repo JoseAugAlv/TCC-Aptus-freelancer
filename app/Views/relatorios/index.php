@@ -9,8 +9,8 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 <div class="relatorios-container">
     <div class="relatorios-header">
-        <h1><i class="fas fa-chart-bar"></i> Relatorios</h1>
-        <p>Estatisticas e metricas do sistema</p>
+        <h1><i class="fas fa-chart-bar"></i> Relatórios</h1>
+        <p>Estatísticas e métricas do sistema</p>
     </div>
 
     <hr>
@@ -42,12 +42,12 @@ require_once __DIR__ . '/../layouts/nav.php';
         <div class="kpi-card">
             <div class="kpi-icon"><i class="fas fa-briefcase" style="color: #10b981;"></i></div>
             <div class="kpi-value"><?= $totalAnuncios ?? 0 ?></div>
-            <div class="kpi-label">Anuncios Ativos</div>
+            <div class="kpi-label">Anúncios Ativos</div>
         </div>
         <div class="kpi-card">
             <div class="kpi-icon"><i class="fas fa-users" style="color: #8b5cf6;"></i></div>
             <div class="kpi-value"><?= $totalUsuarios ?? 0 ?></div>
-            <div class="kpi-label">Usuarios Ativos</div>
+            <div class="kpi-label">Usuários Ativos</div>
         </div>
         <div class="kpi-card">
             <div class="kpi-icon"><i class="fas fa-handshake" style="color: #ec4899;"></i></div>
@@ -162,13 +162,13 @@ require_once __DIR__ . '/../layouts/nav.php';
 
     <!-- Usuarios que mais buscam -->
     <div class="card">
-        <h3><i class="fas fa-user"></i> Usuarios que Mais Buscaram</h3>
+        <h3><i class="fas fa-user"></i> Usuários que Mais Buscaram</h3>
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Usuario</th>
+                        <th>Usuário</th>
                         <th>Email</th>
                         <th>Total de Buscas</th>
                     </tr>
