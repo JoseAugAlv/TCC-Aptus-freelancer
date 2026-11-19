@@ -2,22 +2,22 @@
      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.65);
             z-index:99999; align-items:center; justify-content:center; padding:20px;">
 
-  <div class="lgpd-box" style="background:#fff; max-width:520px; width:100%;
+  <div class="lgpd-box" style="background:var(--tema-superficie, #fff); max-width:520px; width:100%;
        border-radius:16px; padding:28px 26px; box-shadow:0 20px 60px rgba(0,0,0,.25);">
 
-    <h2 style="font-size:1.25rem; color:#0f172a; margin:0 0 .6rem;">
-      <i class="fas fa-shield-alt" style="color:#006577;"></i> Confirmar aceitação
+    <h2 style="font-size:1.25rem; color:var(--tema-texto, #0f172a); margin:0 0 .6rem;">
+      <i class="fas fa-shield-alt" style="color:var(--tema-primaria-texto, var(--cor-primaria));"></i> Confirmar aceitação
     </h2>
 
-    <p style="color:#334155; margin:0 0 1rem; line-height:1.6;">
+    <p style="color:color-mix(in srgb, #334155 var(--tema-tinta, 100%), #ffffff); margin:0 0 1rem; line-height:1.6;">
       Ao continuar, você concorda com nossos
-      <a href="/Aptus/termos" style="color:#006577; text-decoration:underline;">Termos de Uso</a>,
-      <a href="/Aptus/termos#privacidade" style="color:#006577; text-decoration:underline;">Política de Privacidade</a>
-      e <a href="/Aptus/cookies" style="color:#006577; text-decoration:underline;">Política de Cookies</a>,
+      <a href="<?= aptus_base() ?>/termos" style="color:var(--tema-primaria-texto, var(--cor-primaria)); text-decoration:underline;">Termos de Uso</a>,
+      <a href="<?= aptus_base() ?>/termos#privacidade" style="color:var(--tema-primaria-texto, var(--cor-primaria)); text-decoration:underline;">Política de Privacidade</a>
+      e <a href="<?= aptus_base() ?>/cookies" style="color:var(--tema-primaria-texto, var(--cor-primaria)); text-decoration:underline;">Política de Cookies</a>,
       conforme a LGPD (Lei nº 13.709/2018).
     </p>
 
-    <ul style="padding-left:1.2rem; color:#334155; margin:0 0 1.2rem; font-size:.9rem; line-height:1.7;">
+    <ul style="padding-left:1.2rem; color:color-mix(in srgb, #334155 var(--tema-tinta, 100%), #ffffff); margin:0 0 1.2rem; font-size:.9rem; line-height:1.7;">
       <li>Seus dados são protegidos e não compartilhados com terceiros.</li>
       <li>Você pode revogar o consentimento a qualquer momento.</li>
       <li>Cookies essenciais garantem o funcionamento e a segurança do site.</li>
@@ -25,13 +25,13 @@
 
     <div style="display:flex; gap:.75rem; flex-wrap:wrap;">
       <button type="button" onclick="aceitarLgpd()"
-              style="padding:11px 24px; background:#006577; color:#fff; border:none;
+              style="padding:11px 24px; background:var(--cor-primaria); color:#fff; border:none;
                      border-radius:8px; font-weight:700; cursor:pointer;">
         <i class="fas fa-check"></i> Concordo — Continuar
       </button>
-      <a href="/Aptus/termos"
-         style="padding:11px 22px; background:#f1f5f9; color:#1a2f3e; text-decoration:none;
-                border-radius:8px; font-weight:600; border:1px solid #e2e8f0;">
+      <a href="<?= aptus_base() ?>/termos"
+         style="padding:11px 22px; background:var(--tema-fundo-alt, #f1f5f9); color:var(--tema-texto, #1a2f3e); text-decoration:none;
+                border-radius:8px; font-weight:600; border:1px solid var(--tema-borda, #e2e8f0);">
         Ler Termos
       </a>
     </div>
@@ -40,7 +40,7 @@
 
 <script>
 (function () {
-  var PATH = '/Aptus/';
+  var PATH = '<?= aptus_base() ?>/';
 
   function setCookie(name, value, days) {
     var d = new Date();

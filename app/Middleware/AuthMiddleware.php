@@ -15,7 +15,7 @@ class AuthMiddleware
     public static function handle(array $rolesPermitidos = [])
     {
         if (!Auth::check()) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
@@ -28,9 +28,7 @@ class AuthMiddleware
 
         if (!empty($rolesPermitidos) && !in_array($role, array_map('intval', $rolesPermitidos), true)) {
             http_response_code(403);
-            echo '<h1>403 - Acesso Negado</h1>';
-            echo '<p>Você não tem permissão para acessar esta página.</p>';
-            echo '<p><a href="/Aptus/">Voltar ao início</a></p>';
+            require __DIR__ . '/../Views/errors/403.php';
             exit;
         }
     }

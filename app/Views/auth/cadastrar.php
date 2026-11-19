@@ -23,21 +23,58 @@ require_once __DIR__ . '/../layouts/nav.php';
                 <?php unset($_SESSION['flash']); ?>
             <?php endif; ?>
 
-            <form method="POST" action="/Aptus/login/salvar" class="auth-form"
+            <?php $googleTexto = 'Cadastrar com Google'; $googleDivisoriaAntes = false; require __DIR__ . '/../partials/botao_google.php'; ?>
+
+            <form method="POST" action="<?= aptus_base() ?>/login/salvar" class="auth-form"
                 onsubmit="return validarSenha() && aceitarLgpdEContinuarCadastrar(event)">
                 <div class="form-group">
                     <label for="nome">Nome completo</label>
-                    <input type="text" id="nome" name="nome" class="form-control" placeholder="Seu nome completo" required>
+                    <input type="text" id="nome" name="nome" class="form-control" placeholder="Seu nome completo" required
+                           value="<?= htmlspecialchars((string) ($_SESSION['cadastro_old']['nome'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                </div>
+
+                <?php $__old = $_SESSION['cadastro_old'] ?? []; unset($_SESSION['cadastro_old']);
+                      $__o = fn($k) => htmlspecialchars((string) ($__old[$k] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
+
+                <div class="form-group">
+                    <label for="username">Nome de usuário</label>
+                    <div class="input-prefixo">
+                        <span aria-hidden="true">@</span>
+                        <input type="text" id="username" name="username" class="form-control" required
+                               minlength="3" maxlength="30" pattern="[a-z0-9._]{3,30}" autocomplete="username"
+                               placeholder="seu.usuario" value="<?= $__o('username') ?>" data-username-check
+                               aria-describedby="usernameAjuda usernameStatus">
+                    </div>
+                    <small id="usernameAjuda" class="campo-ajuda">Único, como no Instagram: letras minúsculas, números, ponto ou sublinhado. Diferencia você de pessoas com o mesmo nome.</small>
+                    <small id="usernameStatus" class="campo-status" role="status" aria-live="polite"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="email">E-mail</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com" required>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com" required value="<?= $__o('email') ?>">
                 </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" name="cpf" class="form-control" inputmode="numeric" required
+                               placeholder="000.000.000-00" maxlength="14" value="<?= $__o('cpf') ?>" data-cpf-check>
+                        <small class="campo-status" data-cpf-status role="status" aria-live="polite"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="data_nascimento">Data de nascimento</label>
+                        <input type="text" id="data_nascimento" name="data_nascimento" class="form-control" required
+                               inputmode="numeric" placeholder="dd/mm/aaaa" maxlength="10" value="<?= $__o('data_nascimento') ?>" data-idade-check>
+                        <small class="campo-status" data-idade-status role="status" aria-live="polite"></small>
+                    </div>
+                </div>
+                <p class="campo-ajuda">É preciso ter 18 anos ou mais para usar a Aptus. CPF e data de nascimento são verificados e nunca aparecem no seu perfil.</p>
+
+                <?php $endereco = $__old; $enderecoObrigatorio = true; require __DIR__ . '/../partials/endereco.php'; ?>
 
                 <div class="form-group">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="senha" class="form-control" placeholder="Minimo 8 caracteres" required minlength="8" onkeyup="verificarRequisitosSenha()">
+                    <input type="password" id="senha" name="senha" class="form-control" placeholder="Mínimo 8 caracteres" required minlength="8" onkeyup="verificarRequisitosSenha()">
                     <div id="requisitos-senha" style="margin-top: 8px; font-size: 0.85rem;"></div>
                 </div>
 
@@ -52,7 +89,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 </form>
 
             <div class="auth-footer">
-                <p>Já tem conta? <a href="/Aptus/login">Faça login</a></p>
+                <p>Já tem conta? <a href="<?= aptus_base() ?>/login">Faça login</a></p>
             </div>
         </div>
     </div>
@@ -117,9 +154,9 @@ function verificarConfirmacaoSenha() {
     }
     
     if (senha === confirm) {
-        div.innerHTML = '<span style="color: #10b981;">✓ As senhas coincidem</span>';
+        div.innerHTML = '<span style="color: var(--cor-sucesso);">✓ As senhas coincidem</span>';
     } else {
-        div.innerHTML = '<span style="color: #ef4444;">✗ As senhas nao coincidem</span>';
+        div.innerHTML = '<span style="color: var(--cor-erro);">✗ As senhas não coincidem</span>';
     }
 }
 
@@ -142,12 +179,12 @@ function validarSenha() {
     var todosOk = criterios.every(function(c) { return c.ok; });
     
     if (!todosOk) {
-        alert('A senha deve atender a todos os criterios de seguranca:\n- Minimo 8 caracteres\n- Pelo menos 1 letra maiuscula\n- Pelo menos 1 letra minuscula\n- Pelo menos 1 numero\n- Pelo menos 1 caractere especial');
+        alert('A senha deve atender a todos os critérios de segurança:\n- Mínimo 8 caracteres\n- Pelo menos 1 letra maiúscula\n- Pelo menos 1 letra minúscula\n- Pelo menos 1 número\n- Pelo menos 1 caractere especial');
         return false;
     }
     
     if (senha !== confirm) {
-        alert('As senhas nao coincidem!');
+        alert('As senhas não coincidem!');
         return false;
     }
     
@@ -164,10 +201,10 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 /* Estilos para os requisitos */
 #requisitos-senha ul {
-    background: #f8fafc;
+    background: var(--tema-fundo-alt, #f8fafc);
     padding: 8px 12px;
     border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tema-borda, #e2e8f0);
 }
 
 #requisitos-senha li {
@@ -186,4 +223,4 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
+<?php $jsPagina = ['cep.js', 'cadastro.js']; require_once __DIR__ . '/../layouts/footer.php'; ?>

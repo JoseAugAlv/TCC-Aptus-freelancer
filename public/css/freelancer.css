@@ -1,17 +1,3 @@
-:root {
-    --cor-primaria: #006577;
-    --cor-secundaria: #C9A227;
-    --cor-fundo: #e2fbff;
-    --cor-dourado: #C9A227;
-    --cor-branco: #ffffff;
-    --cor-texto-principal: #1a1a1a;
-    --cor-texto-secundario: #555555;
-    --cor-sombra: rgba(0, 101, 119, 0.1);
-    --cor-hover: #004d5c;
-    --cor-borda: #b3e5fc;
-    --transicao-padrao: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -20,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, var(--tema-fundo-alt, #f5f7fa) 0%, var(--tema-fundo-gradiente, #c3cfe2) 100%);
     color: var(--cor-texto-principal);
     line-height: 1.6;
     overflow-x: hidden;
@@ -63,7 +49,7 @@ body {
 .dashboard-header h1 {
     font-size: 2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -110,7 +96,7 @@ body {
 }
 
 .kpi-card {
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 15px;
     padding: 1.5rem 1rem;
     text-align: center;
@@ -139,14 +125,14 @@ body {
 
 .kpi-icon {
     font-size: 1.8rem;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 0.6rem;
 }
 
 .kpi-value {
     font-size: 1.8rem;
     font-weight: 800;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     line-height: 1.2;
 }
 
@@ -158,7 +144,7 @@ body {
 }
 
 .avaliacao-card {
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 15px;
     padding: 1.5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
@@ -182,7 +168,7 @@ body {
 .avaliacao-label {
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -208,7 +194,7 @@ body {
 }
 
 .card {
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 15px;
     padding: 1.5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
@@ -222,7 +208,7 @@ body {
 }
 
 .card h3 {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 1.2rem;
@@ -254,14 +240,14 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     border-bottom: 2px solid rgba(0, 101, 119, 0.1);
 }
 
 .card table td {
     padding: 0.8rem 0.6rem;
     color: var(--cor-texto-principal);
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--tema-borda, #f1f5f9);
     vertical-align: middle;
 }
 
@@ -278,7 +264,7 @@ body {
 }
 
 .card table td a {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     text-decoration: none;
     font-weight: 600;
     margin-right: 0.8rem;
@@ -295,21 +281,21 @@ body {
     font-size: 0.95rem;
     text-align: center;
     padding: 2rem 1rem;
-    background: #f8fafc;
+    background: var(--tema-fundo-alt, #f8fafc);
     border-radius: 10px;
-    border: 2px dashed #d1d5db;
+    border: 2px dashed var(--tema-borda, #d1d5db);
     margin-bottom: 1rem;
 }
 
 .card-footer {
     margin-top: 1.2rem;
     padding-top: 1rem;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--tema-borda, #f1f5f9);
     text-align: right;
 }
 
 .card-footer a {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     text-decoration: none;
     font-weight: 600;
     font-size: 0.9rem;
@@ -349,7 +335,7 @@ body {
 .perfil-info-grid .label {
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }

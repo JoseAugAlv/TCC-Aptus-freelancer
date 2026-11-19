@@ -19,7 +19,12 @@ $router->post('/login', 'AuthController@login');
 $router->post('/logout', 'AuthController@logout');
 $router->get('/login/cadastrar', 'AuthController@cadastrar');
 $router->post('/login/salvar', 'AuthController@salvar');
+$router->get('/usuarios/username-disponivel', 'AuthController@usernameDisponivel');
 $router->get('/auth/verificar', 'AuthController@verificar');
+$router->get('/auth/google', 'AuthController@google');
+$router->get('/auth/google/callback', 'AuthController@googleCallback');
+$router->get('/auth/google/completar', 'AuthController@googleCompletar');
+$router->post('/auth/google/finalizar', 'AuthController@googleFinalizar');
 $router->post('/auth/reenviar-verificacao', 'AuthController@reenviarVerificacao');
 $router->get('/auth/esqueci-senha', 'AuthController@esqueciSenha');
 $router->post('/auth/enviar-token', 'AuthController@enviarToken');
@@ -33,6 +38,14 @@ $router->get('/perfil/editar', 'PerfilController@editar', [3, 2, 1, 4]);
 $router->post('/perfil/atualizar', 'PerfilController@atualizar', [3, 2, 1, 4]);
 $router->get('/perfil/portfolio', 'PerfilController@portfolio', [3, 2, 1, 4]);
 $router->get('/perfil/publico/{id}', 'PerfilController@publico');
+$router->get('/perfil/bloqueados', 'PerfilController@bloqueados', [3, 2, 1, 4]);
+$router->post('/perfil/email/codigo', 'PerfilController@enviarCodigoEmail', [3, 2, 1, 4]);
+$router->post('/perfil/email/confirmar', 'PerfilController@confirmarCodigoEmail', [3, 2, 1, 4]);
+$router->post('/perfil/email/cancelar', 'PerfilController@cancelarTrocaEmail', [3, 2, 1, 4]);
+$router->post('/perfil/senha', 'PerfilController@alterarSenha', [3, 2, 1, 4]);
+$router->post('/perfil/google/desvincular', 'PerfilController@desvincularGoogle', [3, 2, 1, 4]);
+$router->post('/usuarios/bloquear', 'PerfilController@bloquear', [3, 2, 1, 4]);
+$router->post('/usuarios/desbloquear', 'PerfilController@desbloquear', [3, 2, 1, 4]);
 
 /* PORTFÓLIO */
 $router->get('/perfil/portfolio/criar', 'PortfolioController@criar', [3, 2, 1, 4]);
@@ -87,6 +100,8 @@ $router->post('/avaliacoes/salvar-resposta', 'AvaliacaoController@salvarResposta
 /* DENÚNCIAS */
 $router->get('/denuncias/criar', 'DenunciaController@criar', [3, 2, 1, 4]);
 $router->post('/denuncias/salvar', 'DenunciaController@salvar', [3, 2, 1, 4]);
+$router->get('/denuncias', 'DenunciaController@minhas', [3, 2, 1, 4]);
+$router->get('/denuncias/anexo/{id}', 'DenunciaController@anexo', [3, 2, 1, 4]);
 
 /* NOTIFICAÇÕES */
 $router->get('/notificacoes', 'NotificacaoController@index', [3, 2, 1, 4]);
@@ -106,6 +121,9 @@ $router->post('/admin/usuarios/atualizar', 'AdminUsuarioController@atualizar', [
 $router->post('/admin/usuarios/excluir', 'AdminUsuarioController@excluir', [1, 4]);
 $router->post('/admin/usuarios/banir', 'AdminUsuarioController@banir', [1, 4]);
 $router->post('/admin/usuarios/desbanir', 'AdminUsuarioController@desbanir', [1, 4]);
+$router->post('/admin/usuarios/perfil', 'AdminUsuarioController@alterarPerfil', [4]);
+$router->post('/admin/usuarios/suspender', 'AdminUsuarioController@suspender', [1, 4]);
+$router->post('/admin/usuarios/remover-suspensao', 'AdminUsuarioController@removerSuspensao', [1, 4]);
 
 /* ADMIN - CATEGORIAS */
 $router->get('/admin/categorias', 'AdminCategoriaController@index', [1, 4]);
@@ -127,20 +145,22 @@ $router->get('/moderator/anuncios', 'ModeradorController@anuncios', [1, 2, 4]);
 $router->post('/moderator/anuncios/aprovar', 'ModeradorController@aprovarAnuncio', [1, 2, 4]);
 $router->post('/moderator/anuncios/rejeitar', 'ModeradorController@rejeitarAnuncio', [1, 2, 4]);
 $router->post('/moderator/anuncios/suspender', 'ModeradorController@suspenderAnuncio', [1, 2, 4]);
+$router->post('/moderator/anuncios/revogar', 'ModeradorController@revogarAnuncio', [1, 2, 4]);
 $router->get('/moderator/denuncias', 'ModeradorController@denuncias', [1, 2, 4]);
 $router->get('/moderator/denuncias/visualizar/{id}', 'DenunciaController@visualizar', [1, 2, 4]);
 $router->post('/moderator/denuncias/aprovar', 'DenunciaController@aprovar', [1, 2, 4]);
 $router->post('/moderator/denuncias/rejeitar', 'DenunciaController@rejeitar', [1, 2, 4]);
 
 /* FREELANCER / CLIENTE */
-$router->get('/freelancer', 'FreelancerController@dashboard', [2, 3, 4]);
-$router->get('/cliente', 'ClienteController@dashboard', [2, 3, 4]);
+$router->get('/freelancer', 'FreelancerController@dashboard', [1, 2, 3, 4]);
+$router->get('/cliente', 'ClienteController@dashboard', [1, 2, 3, 4]);
 
 /* LOGS */
 $router->get('/logs', 'LogController@index', [1, 2, 4]);
 
 /* TERMOS / COOKIES */
 $router->get('/termos', 'TermosController@index');
+$router->get('/politica-anuncios', 'TermosController@politicaAnuncios');
 $router->get('/cookies', 'CookieController@index');
 
 /* FAVORITOS */

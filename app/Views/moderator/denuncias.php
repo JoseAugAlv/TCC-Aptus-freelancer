@@ -12,10 +12,10 @@ $denuncias = $denuncias ?? [];
 
 <div class="denuncias-container">
     <div class="denuncias-header">
-        <h1></i> Denúncias</h1>
-        <p>Gerencie as denúncias da plataforma</p>
-        <?php if (!empty($denuncias)): ?>
-            <span class="badge-count"><?= count($denuncias) ?> pendente(s)</span>
+        <h1>Denúncias</h1>
+        <p>Histórico completo de denúncias da plataforma</p>
+        <?php if (!empty($totalPendentes)): ?>
+            <span class="badge-count"><?= (int) $totalPendentes ?> pendente(s)</span>
         <?php endif; ?>
     </div>
 
@@ -28,27 +28,16 @@ $denuncias = $denuncias ?? [];
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
 
-    <?php if (empty($denuncias)): ?>
-        <!-- EMPTY STATE -->
-        <div class="empty-state">
-            <i class="fas fa-inbox"></i>
-            <h3>Nenhuma denúncia pendente</h3>
-            <p>Não há denúncias aguardando análise no momento.</p>
-            <a href="/Aptus/moderator" class="btn-voltar-empty">
-                 Voltar ao Dashboard
-            </a>
-        </div>
-    <?php else: ?>
         <!-- FILTROS -->
         <div class="filtros-denuncias">
-            <form method="GET" action="/Aptus/moderator/denuncias" class="filtros-form">
+            <form method="GET" action="<?= aptus_base() ?>/moderator/denuncias" class="filtros-form">
                 <div class="filtro-group">
                     <label for="status"><i class="fas fa-filter"></i> Status</label>
                     <select id="status" name="status">
-                        <option value="">Todos</option>
+                        <option value="">Todas</option>
                         <option value="pendente" <?= isset($_GET['status']) && $_GET['status'] === 'pendente' ? 'selected' : '' ?>>Pendentes</option>
-                        <option value="aprovado" <?= isset($_GET['status']) && $_GET['status'] === 'aprovado' ? 'selected' : '' ?>>Aprovados</option>
-                        <option value="rejeitado" <?= isset($_GET['status']) && $_GET['status'] === 'rejeitado' ? 'selected' : '' ?>>Rejeitados</option>
+                        <option value="aprovado" <?= isset($_GET['status']) && $_GET['status'] === 'aprovado' ? 'selected' : '' ?>>Aprovadas</option>
+                        <option value="rejeitado" <?= isset($_GET['status']) && $_GET['status'] === 'rejeitado' ? 'selected' : '' ?>>Rejeitadas</option>
                     </select>
                 </div>
                 <div class="filtro-group">
@@ -63,14 +52,24 @@ $denuncias = $denuncias ?? [];
                     <button type="submit" class="btn-filtrar">
                         <i class="fas fa-search"></i> Filtrar
                     </button> 
-                    <a href="/Aptus/moderator/denuncias" class="btn-limpar-filtros">
+                    <a href="<?= aptus_base() ?>/moderator/denuncias" class="btn-limpar-filtros">
                         <i class="fas fa-undo"></i> Limpar
                     </a>
                 </div>
-            <?= CsrfMiddleware::field() ?>
-</form>
+            </form>
         </div>
 
+    <?php if (empty($denuncias)): ?>
+        <!-- EMPTY STATE -->
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>Nenhuma denúncia encontrada</h3>
+            <p>Nenhuma denúncia corresponde aos filtros escolhidos.</p>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar-empty">
+                 Voltar ao Dashboard
+            </a>
+        </div>
+    <?php else: ?>
         <!-- TABELA -->
         <div class="tabela-wrapper">
             <table class="tabela-denuncias">
@@ -81,6 +80,7 @@ $denuncias = $denuncias ?? [];
                         <th><i class="fas fa-exclamation-triangle"></i> Motivo</th>
                         <th><i class="fas fa-ad"></i> Anúncio</th>
                         <th><i class="fas fa-calendar-alt"></i> Data</th>
+                        <th><i class="fas fa-flag"></i> Status</th>
                         <th><i class="fas fa-cog"></i> Ações</th>
                     </tr>
                 </thead>
@@ -104,10 +104,22 @@ $denuncias = $denuncias ?? [];
                             <td data-label="Data">
                                 <?= date('d/m/Y H:i', strtotime($denuncia['data_criacao'])) ?>
                             </td>
+                            <td data-label="Status">
+                                <?php $__st = (int) $denuncia['id_situacao']; ?>
+                                <span class="status-badge <?= $__st === 1 ? 'pendente' : ($__st === 2 ? 'aprovado' : 'rejeitado') ?>">
+                                    <?= htmlspecialchars($denuncia['situacao_nome']) ?>
+                                </span>
+                                <?php if ($__st !== 1 && !empty($denuncia['moderador_nome'])): ?>
+                                    <small class="denuncia-analise">por <?= htmlspecialchars($denuncia['moderador_nome']) ?></small>
+                                <?php endif; ?>
+                                <?php if ((int) ($denuncia['total_anexos'] ?? 0) > 0): ?>
+                                    <small class="denuncia-analise"><i class="fas fa-paperclip"></i> <?= (int) $denuncia['total_anexos'] ?></small>
+                                <?php endif; ?>
+                            </td>
                             <td data-label="Ações">
                                 <div class="acoes-cell">
-                                    <a href="/Aptus/moderator/denuncias/visualizar/<?= $denuncia['id_denuncia'] ?>" class="btn-analisar">
-                                        <i class="fas fa-eye"></i> Analisar
+                                    <a href="<?= aptus_base() ?>/moderator/denuncias/visualizar/<?= url_id($denuncia['id_denuncia']) ?>" class="btn-analisar">
+                                        <i class="fas fa-eye"></i> <?= (int) $denuncia['id_situacao'] === 1 ? 'Analisar' : 'Ver' ?>
                                     </a>
                                 </div>
                             </td>
@@ -119,7 +131,7 @@ $denuncias = $denuncias ?? [];
 
         <!-- RODAPÉ -->
         <div class="denuncias-footer">
-            <a href="/Aptus/moderator" class="btn-voltar-footer">
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar-footer">
                 <i class="fas fa-arrow-left"></i> Voltar ao Dashboard
             </a>
         </div>

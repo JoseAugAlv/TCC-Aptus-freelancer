@@ -72,3 +72,25 @@ class Config
         return isset(self::$config[$key]);
     }
 }
+
+if (!function_exists('aptus_base')) {
+    /**
+     * Caminho base das URLs do sistema, lido do APP_URL no .env.
+     *   APP_URL=http://localhost/Aptus                    -> "/Aptus"
+     *   APP_URL=https://josealvesdev.com/projetos/Aptus   -> "/projetos/Aptus"
+     *   APP_URL=https://aptus.com.br                      -> ""
+     * Mudar o endereço do sistema = mudar só o APP_URL.
+     */
+    function aptus_base(): string
+    {
+        static $base = null;
+        if ($base === null) {
+            $caminho = parse_url((string) Config::get('APP_URL', '/Aptus'), PHP_URL_PATH);
+            $base = rtrim((string) $caminho, '/');
+        }
+        return $base;
+    }
+}
+
+// Para usar dentro de strings com variáveis: "{$GLOBALS['APTUS_BASE']}/rota"
+$GLOBALS['APTUS_BASE'] = aptus_base();

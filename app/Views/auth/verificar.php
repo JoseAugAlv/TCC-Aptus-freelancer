@@ -1,9 +1,10 @@
 <?php
+// Título e CSS precisam ser definidos ANTES do header.php, que os usa.
+$tituloPagina = 'Verificação de E-mail - Aptus';
+$cssPagina    = 'login.css';
+
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
-
-$tituloPagina = 'Verificação de E-mail - Aptus';
-$cssPagina    = 'auth.css';
 
 $status   = $_GET['status']   ?? '';
 $mensagem = $_GET['mensagem'] ?? '';
@@ -17,21 +18,21 @@ $isError   = ($status === 'erro' || empty($status));
         <div class="auth-card" style="text-align: center; max-width: 500px;">
 
             <?php if ($isSuccess): ?>
-                <div style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;">
+                <div style="font-size: 4rem; color: var(--cor-sucesso); margin-bottom: 1rem;">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <h1 style="color: #065f46; margin-bottom: 0.5rem;">E-mail Verificado!</h1>
+                <h1 style="color: var(--cor-sucesso-text); margin-bottom: 0.5rem;">E-mail Verificado!</h1>
                 <p style="color: var(--color-text); margin-bottom: 1.5rem;">
                     Seu e-mail foi verificado com sucesso. Agora você já pode fazer login na sua conta.
                 </p>
-                <a href="/Aptus/login" class="btn btn-new">
+                <a href="<?= aptus_base() ?>/login" class="btn btn-new">
                     <i class="fas fa-sign-in-alt"></i> Fazer Login
                 </a>
             <?php else: ?>
-                <div style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;">
+                <div style="font-size: 4rem; color: var(--cor-erro); margin-bottom: 1rem;">
                     <i class="fas fa-times-circle"></i>
                 </div>
-                <h1 style="color: #991b1b; margin-bottom: 0.5rem;">Erro na Verificação</h1>
+                <h1 style="color: var(--cor-erro-text); margin-bottom: 0.5rem;">Erro na Verificação</h1>
                 <p style="color: var(--color-text); margin-bottom: 1.5rem;">
                     <?= htmlspecialchars($mensagem ?: 'Token inválido ou expirado.') ?>
                 </p>
@@ -40,7 +41,7 @@ $isError   = ($status === 'erro' || empty($status));
                     Se você perdeu o prazo, faça login e solicite um novo link.
                 </p>
                 <div style="display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="/Aptus/login" class="btn">
+                    <a href="<?= aptus_base() ?>/login" class="btn">
                         <i class="fas fa-arrow-left"></i> Voltar ao Login
                     </a>
                 </div>
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
         allowOutsideClick: false,
         allowEscapeKey: false
     }).then(function(result) {
-        if (result.isConfirmed) window.location.href = '/Aptus/login';
+        if (result.isConfirmed) window.location.href = '<?= aptus_base() ?>/login';
     });
 });
 </script>
@@ -80,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
         allowOutsideClick: false,
         allowEscapeKey: false
     }).then(function(result) {
-        if (result.isConfirmed) window.location.href = '/Aptus/login';
+        if (result.isConfirmed) window.location.href = '<?= aptus_base() ?>/login';
     });
 });
 </script>

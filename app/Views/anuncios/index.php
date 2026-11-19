@@ -19,16 +19,22 @@ $catAtual      = $catAtual      ?? 0;
 
 <main class="servicos-container">
     <div class="stats-info">
-        <p><strong><?= (int) $totalAnuncios ?></strong> serviço(s) disponível(eis)</p>
+        <?php if (!empty($freelancerInfo)): ?>
+            <p>Serviços de <strong><?= htmlspecialchars($freelancerInfo['nome']) ?></strong>
+               <span class="username-tag">@<?= htmlspecialchars($freelancerInfo['username']) ?></span>
+               · <strong><?= (int) $totalAnuncios ?></strong> anúncio(s)</p>
+        <?php else: ?>
+            <p><strong><?= (int) $totalAnuncios ?></strong> serviço(s) disponível(eis)</p>
+        <?php endif; ?>
     </div>
 
     <div class="filtro-bar" style="display:flex; flex-wrap:wrap; gap:8px;">
-        <a href="/Aptus/anuncios"
+        <a href="<?= aptus_base() ?>/anuncios"
            class="filtro-btn <?= $catAtual === 0 ? 'ativo' : '' ?>">
             Todos
         </a>
         <?php foreach ($categorias as $cat): ?>
-            <a href="/Aptus/anuncios?categoria=<?= (int) $cat['id_categoria'] ?>"
+            <a href="<?= aptus_base() ?>/anuncios?categoria=<?= url_id($cat['id_categoria']) ?>"
                class="filtro-btn <?= $catAtual === (int) $cat['id_categoria'] ? 'ativo' : '' ?>">
                 <i class="<?= htmlspecialchars($cat['icone'] ?? 'fas fa-tag') ?>"></i>
                 <?= htmlspecialchars($cat['nome']) ?>
@@ -38,49 +44,28 @@ $catAtual      = $catAtual      ?? 0;
 
     <div class="profissionais-grid">
         <?php if (!empty($anuncios)): ?>
-            <?php foreach ($anuncios as $anuncio): ?>
-                <div class="profissional-card">
-                    <div class="categoria-tag">
-                        <i class="<?= htmlspecialchars($anuncio['categoria_icone'] ?? 'fas fa-tag') ?>"></i>
-                        <?= htmlspecialchars($anuncio['categoria_nome'] ?? 'Geral') ?>
-                    </div>
-
-                    <h3><?= htmlspecialchars($anuncio['titulo']) ?></h3>
-
-                    <p class="descricao">
-                        <?= htmlspecialchars(mb_strimwidth($anuncio['descricao'], 0, 150, '...')) ?>
-                    </p>
-
-                    <div class="info-footer">
-                        <span class="autor">
-                            <i class="fas fa-user-circle"></i>
-                            <?= htmlspecialchars($anuncio['freelancer_nome']) ?>
-                        </span>
-                        <span class="preco">
-                            <i class="fas fa-tag"></i>
-                            R$ <?= number_format($anuncio['preco'], 2, ',', '.') ?>
-                        </span>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <a href="/Aptus/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>"
-                           class="btn-perfil" style="flex: 1; margin-top: 0;">
-                            <i class="fas fa-eye"></i> Ver Detalhes
-                        </a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+            <?php require __DIR__ . '/_cards.php'; ?>
         <?php else: ?>
             <div class="msg-vazia">
                 <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
                 <h3>Nenhum serviço <?= $catAtual > 0 ? 'nesta categoria' : 'disponível' ?></h3>
                 <p>Volte em breve para ver novos serviços!</p>
-                <a href="/Aptus/" class="btn-perfil" style="display: inline-block; width: auto; margin-top: 1rem;">
+                <a href="<?= aptus_base() ?>/" class="btn-perfil" style="display: inline-block; width: auto; margin-top: 1rem;">
                     <i class="fas fa-arrow-left"></i> Voltar ao Início
                 </a>
             </div>
         <?php endif; ?>
     </div>
+
+    <?php if (!empty($temMais)): ?>
+        <div class="ver-mais-wrap">
+            <button type="button" class="btn-ver-mais" data-ver-mais
+                    data-alvo=".profissionais-grid" data-url="<?= htmlspecialchars($proximaUrl, ENT_QUOTES, 'UTF-8') ?>"
+                    data-pagina="1">
+                <i class="fas fa-plus" aria-hidden="true"></i> Ver mais
+            </button>
+        </div>
+    <?php endif; ?>
 </main>
 
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
+<?php $jsPagina = 'ver-mais.js'; require_once __DIR__ . '/../layouts/footer.php'; ?>

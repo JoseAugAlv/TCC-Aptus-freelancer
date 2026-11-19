@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../Helpers/UploadHelper.php';
+require_once __DIR__ . '/../../Helpers/GoogleAuth.php';
 // app/Views/perfil/index.php
 
 $tituloPagina = $tituloPagina ?? 'Meu Perfil - Aptus';
@@ -24,14 +25,22 @@ if (isset($usuario['id_perfil'])) {
     <div class="perfil-header">
         <h1><i class="fas fa-user-circle"></i> Meu Perfil</h1>
         <div class="perfil-actions">
-            <a href="/Aptus/perfil/editar" class="btn-editar">
+            <a href="<?= aptus_base() ?>/perfil/editar" class="btn-editar">
                 <i class="fas fa-edit"></i> Editar Perfil
             </a>
-            <a href="/Aptus/perfil/portfolio" class="btn-portfolio">
+            <a href="<?= aptus_base() ?>/perfil/portfolio" class="btn-portfolio">
                 <i class="fas fa-images"></i> Portfólio
             </a>
         </div>
     </div>
+
+    <?php if (GoogleAuth::configurado() && empty($usuario['google_id'])): ?>
+        <div class="aviso-google">
+            <?= GoogleAuth::iconeSvg(22) ?>
+            <p><strong>Entre mais rápido com o Google.</strong> Conecte sua conta Google e, nos próximos acessos, é só clicar em "Entrar com Google".</p>
+            <a href="<?= aptus_base() ?>/auth/google?conectar=1" class="btn-google-mini">Conectar</a>
+        </div>
+    <?php endif; ?>
 
     <div class="perfil-card">
         <div class="perfil-avatar">
@@ -72,11 +81,11 @@ if (isset($usuario['id_perfil'])) {
 
     <div class="perfil-stats">
         <div class="stat-item">
-            <span class="stat-number"><?= $usuario['quantidade_servicos'] ?? 0 ?></span>
-            <span class="stat-label">Serviços Realizados</span>
+            <span class="stat-number"><?= (int) ($servicosConcluidos ?? 0) ?></span>
+            <span class="stat-label">Serviços Concluídos</span>
         </div>
         <div class="stat-item">
-            <span class="stat-number"><?= number_format($usuario['nota_media'] ?? 0, 1) ?></span>
+            <span class="stat-number"><?= (int) ($usuario['total_avaliacoes'] ?? 0) > 0 ? number_format((float) $usuario['nota_media'], 1, ',', '') : '—' ?></span>
             <span class="stat-label">Avaliação Média</span>
         </div>
         <div class="stat-item">

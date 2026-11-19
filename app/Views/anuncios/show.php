@@ -15,11 +15,19 @@ $usuarioInteressado = $usuarioInteressado ?? false;
 $favoritado         = $favoritado         ?? false;
 $totalFavoritos     = $totalFavoritos     ?? 0;
 $idInteresseAtual   = $idInteresseAtual   ?? 0;
+$limiteSimultaneos  = $limiteSimultaneos  ?? 1;
+$ativosAgora        = $ativosAgora        ?? 0;
+$agendaCheia        = $agendaCheia        ?? false;
 ?>
 
 <h1>Detalhes do Serviço</h1>
 <hr>
 
+<?php if (!empty($previewNaoPublicado)): ?>
+    <div class="flash-aviso">
+        Pré-visualização: este anúncio ainda não está publicado (pendente, rejeitado ou pausado) e só você e a equipe de moderação podem vê-lo.
+    </div>
+<?php endif; ?>
 <?php if (isset($_SESSION['flash'])): ?>
     <div class="flash-<?= htmlspecialchars($_SESSION['flash']['tipo']) ?>">
         <?= htmlspecialchars($_SESSION['flash']['mensagem']) ?>
@@ -30,8 +38,11 @@ $idInteresseAtual   = $idInteresseAtual   ?? 0;
 <div class="detalhes-container">
     <div class="detalhes-imagem">
         <?php if (!empty($anuncio['foto_capa'])): ?>
-            <img src="<?= htmlspecialchars(\UploadHelper::getUrl($anuncio['foto_capa']), ENT_QUOTES, 'UTF-8') ?>"
-                 alt="<?= htmlspecialchars($anuncio['titulo'] ?? 'Imagem do serviço', ENT_QUOTES, 'UTF-8') ?>">
+            <button type="button" class="foto-ampliar" data-abrir-galeria aria-label="Ampliar foto do serviço">
+                <img id="fotoPrincipal" src="<?= htmlspecialchars(\UploadHelper::capaUrl($anuncio['foto_capa']), ENT_QUOTES, 'UTF-8') ?>"
+                     alt="<?= htmlspecialchars($anuncio['titulo'] ?? 'Imagem do serviço', ENT_QUOTES, 'UTF-8') ?>">
+                <span class="foto-ampliar-dica" aria-hidden="true"><i class="fas fa-expand"></i> Ampliar</span>
+            </button>
         <?php else: ?>
             <i class="fas fa-briefcase"></i>
         <?php endif; ?>
@@ -63,15 +74,7 @@ $idInteresseAtual   = $idInteresseAtual   ?? 0;
         </p>
 
         <div class="avaliacao-detalhes">
-            <?php for ($i = 1; $i <= 5; $i++): ?>
-                <?php if ($i <= round($anuncio['nota_media'] ?? 0)): ?>
-                    <i class="fas fa-star"></i>
-                <?php else: ?>
-                    <i class="far fa-star"></i>
-                <?php endif; ?>
-            <?php endfor; ?>
-            <span class="nota"><?= number_format($anuncio['nota_media'] ?? 0, 1) ?></span>
-            <span class="total-avaliacoes">(<?= (int) ($anuncio['total_avaliacoes'] ?? 0) ?> avaliações)</span>
+            <?php $estrelasNota = $anuncio['nota_anuncio'] ?? 0; $estrelasTotal = $anuncio['total_avaliacoes_anuncio'] ?? 0; require __DIR__ . '/../partials/estrelas.php'; ?>
         </div>
 
         <p class="descricao-completa">
@@ -82,6 +85,9 @@ $idInteresseAtual   = $idInteresseAtual   ?? 0;
             <span><i class="fas fa-eye"></i> <?= (int) ($anuncio['visualizacoes'] ?? 0) ?> visualizações</span>
             <span><i class="fas fa-heart"></i> <?= (int) $totalFavoritos ?> favoritos</span>
             <span><i class="fas fa-handshake"></i> <?= (int) ($anuncio['total_interesses'] ?? 0) ?> interesses</span>
+            <span><i class="fas fa-users"></i>
+                <?= $limiteSimultaneos === 1 ? 'Atende 1 cliente por vez' : 'Atende até ' . (int) $limiteSimultaneos . ' clientes ao mesmo tempo' ?>
+            </span>
         </div>
 
         <div class="freelancer-card">
@@ -96,10 +102,9 @@ $idInteresseAtual   = $idInteresseAtual   ?? 0;
                 </div>
                 <div class="freelancer-info">
                     <h3><?= htmlspecialchars($anuncio['freelancer_nome']) ?></h3>
-                    <p>
-                        <i class="fas fa-star"></i>
-                        <?= number_format($anuncio['nota_media'] ?? 0, 1) ?> / 5.0
-                        (<?= (int) ($anuncio['total_avaliacoes'] ?? 0) ?> avaliações)
+                    <p class="reputacao-prestador">
+                        <span class="reputacao-rotulo">Como prestador:</span>
+                        <?php $estrelasNota = $anuncio['nota_media'] ?? 0; $estrelasTotal = $anuncio['total_avaliacoes'] ?? 0; $estrelasCompacto = true; require __DIR__ . '/../partials/estrelas.php'; $estrelasCompacto = false; ?>
                     </p>
                     <?php if (!empty($anuncio['cidade']) || !empty($anuncio['estado'])): ?>
                         <p>
@@ -121,13 +126,28 @@ $idInteresseAtual   = $idInteresseAtual   ?? 0;
                         <i class="fas fa-check-circle"></i> Proposta Enviada
                     </button>
                     <?php if ($idInteresseAtual > 0): ?>
-                        <a href="/Aptus/chat/<?= (int) $idInteresseAtual ?>" class="btn-interesse"
-                           style="background:#10b981;">
+                        <a href="<?= aptus_base() ?>/chat/<?= url_id((int) $idInteresseAtual) ?>" class="btn-interesse"
+                           style="background:var(--cor-sucesso);">
                             <i class="fas fa-comments"></i> Ir para o Chat
                         </a>
                     <?php endif; ?>
+                <?php elseif ($agendaCheia): ?>
+                    <button class="btn-interesse btn-agenda-cheia" disabled aria-describedby="motivoAgendaCheia">
+                        <i class="fas fa-calendar-times"></i> Agenda cheia no momento
+                    </button>
+                    <p class="impedimento-msg" id="motivoAgendaCheia">
+                        <?= $limiteSimultaneos === 1
+                            ? 'Este prestador já está atendendo outro cliente neste serviço.'
+                            : 'Este prestador já está atendendo ' . (int) $ativosAgora . ' clientes neste serviço, o máximo ao mesmo tempo.' ?>
+                        Volte mais tarde: quando um atendimento terminar, a vaga é liberada.
+                    </p>
+                <?php elseif (!empty($impedimento)): ?>
+                    <button class="btn-interesse btn-enviado" disabled aria-describedby="motivoImpedimento">
+                        <i class="fas fa-lock"></i> Contratação indisponível
+                    </button>
+                    <p class="impedimento-msg" id="motivoImpedimento"><?= htmlspecialchars($impedimento) ?></p>
                 <?php else: ?>
-                    <form method="POST" action="/Aptus/interesses/criar?anuncio=<?= $anuncio['id_anuncio'] ?>" id="formInteresse">
+                    <form method="POST" action="<?= aptus_base() ?>/interesses/criar?anuncio=<?= url_id($anuncio['id_anuncio']) ?>" id="formInteresse">
                         <input type="hidden" name="mensagem" value="Olá! Tenho interesse no seu serviço.">
                         <button type="submit" class="btn-interesse" id="btnInteresse">
                             <i class="fas fa-handshake"></i> Tenho Interesse
@@ -136,23 +156,27 @@ $idInteresseAtual   = $idInteresseAtual   ?? 0;
                     </form>
                 <?php endif; ?>
             <?php elseif (!$usuario): ?>
-                <a href="/Aptus/login" class="btn-interesse">
+                <a href="<?= aptus_base() ?>/login" class="btn-interesse">
                     <i class="fas fa-sign-in-alt"></i> Faça login para ter interesse
                 </a>
             <?php endif; ?>
 
             <?php if ($usuario && $usuario['id'] == $anuncio['id_usuario']): ?>
-                <a href="/Aptus/anuncios/editar/<?= $anuncio['id_anuncio'] ?>" class="btn-editar">
+                <p class="vagas-dono">
+                    <i class="fas fa-users"></i>
+                    Atendimentos em andamento: <?= (int) $ativosAgora ?> de <?= (int) $limiteSimultaneos ?><?= $agendaCheia ? ' (agenda cheia: novas propostas pausadas)' : '' ?>
+                </p>
+                <a href="<?= aptus_base() ?>/anuncios/editar/<?= url_id($anuncio['id_anuncio']) ?>" class="btn-editar">
                     <i class="fas fa-edit"></i> Editar
                 </a>
             <?php endif; ?>
 
-            <a href="/Aptus/perfil/publico/<?= $anuncio['id_usuario'] ?>" class="btn-perfil-publico">
+            <a href="<?= aptus_base() ?>/perfil/publico/<?= url_id($anuncio['id_usuario']) ?>" class="btn-perfil-publico">
                 <i class="fas fa-user"></i> Ver Perfil
             </a>
 
             <?php if ($usuario && $usuario['id'] != $anuncio['id_usuario']): ?>
-                <a href="/Aptus/denuncias/criar?tipo=anuncio&id=<?= $anuncio['id_anuncio'] ?>" class="btn-denunciar">
+                <a href="<?= aptus_base() ?>/denuncias/criar?tipo=anuncio&amp;id=<?= url_id($anuncio['id_anuncio']) ?>" class="btn-denunciar">
                     <i class="fas fa-flag"></i> Denunciar
                 </a>
             <?php endif; ?>
@@ -160,22 +184,77 @@ $idInteresseAtual   = $idInteresseAtual   ?? 0;
     </div>
 </div>
 
+<?php $avaliacoesAnuncio = $avaliacoesAnuncio ?? []; $distribuicao = $distribuicao ?? []; ?>
+<section class="avaliacoes-anuncio" aria-labelledby="tituloAvaliacoes">
+    <h3 id="tituloAvaliacoes">Avaliações deste serviço</h3>
+    <?php if (empty($avaliacoesAnuncio)): ?>
+        <p class="avaliacoes-vazio">
+            Este serviço ainda não recebeu avaliações. Só quem contrata e conclui o serviço pela Aptus pode avaliar.
+        </p>
+    <?php else: ?>
+        <div class="avaliacoes-resumo">
+            <div class="avaliacoes-media">
+                <strong><?= number_format((float) $anuncio['nota_anuncio'], 1, ',', '') ?></strong>
+                <?php $estrelasNota = $anuncio['nota_anuncio']; $estrelasTotal = $anuncio['total_avaliacoes_anuncio']; require __DIR__ . '/../partials/estrelas.php'; ?>
+            </div>
+            <ul class="avaliacoes-barras">
+                <?php $__tot = max(1, (int) $anuncio['total_avaliacoes_anuncio']); ?>
+                <?php foreach ($distribuicao as $__n => $__q): ?>
+                    <li>
+                        <span><?= $__n ?> <i class="fas fa-star" aria-hidden="true"></i></span>
+                        <span class="barra"><span style="width: <?= round($__q / $__tot * 100) ?>%"></span></span>
+                        <span><?= (int) $__q ?></span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <ul class="avaliacoes-lista">
+            <?php foreach ($avaliacoesAnuncio as $av): ?>
+                <li class="avaliacao-item">
+                    <div class="avaliacao-topo">
+                        <strong><?= htmlspecialchars($av['avaliador_nome']) ?></strong>
+                        <span class="nota-estrelas">
+                            <?php for ($__i = 1; $__i <= 5; $__i++): ?>
+                                <i class="<?= $__i <= (int) $av['nota'] ? 'fas' : 'far' ?> fa-star" aria-hidden="true"></i>
+                            <?php endfor; ?>
+                            <span class="sr-only">Nota <?= (int) $av['nota'] ?> de 5</span>
+                        </span>
+                        <time datetime="<?= htmlspecialchars($av['data_avaliacao']) ?>"><?= date('d/m/Y', strtotime($av['data_avaliacao'])) ?></time>
+                    </div>
+                    <?php if (trim((string) $av['comentario']) !== ''): ?>
+                        <p><?= nl2br(htmlspecialchars($av['comentario'])) ?></p>
+                    <?php endif; ?>
+                    <?php if (!empty($av['resposta_avaliado'])): ?>
+                        <div class="avaliacao-resposta">
+                            <strong>Resposta de <?= htmlspecialchars(strtok($anuncio['freelancer_nome'], ' ')) ?>:</strong>
+                            <?= nl2br(htmlspecialchars($av['resposta_avaliado'])) ?>
+                        </div>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</section>
+
 <?php if (!empty($fotos)): ?>
     <h3>Fotos do Serviço</h3>
-    <div class="fotos-grid">
+    <div class="fotos-grid galeria-anuncio">
         <?php foreach ($fotos as $foto): ?>
-            <div class="foto-item">
-                <img src="<?= htmlspecialchars(\UploadHelper::getUrl('uploads/anuncio/' . basename($foto['arquivo'])), ENT_QUOTES, 'UTF-8') ?>"
-                     alt="Foto do serviço">
-            </div>
+            <?php $__url = \UploadHelper::capaUrl($foto['arquivo']); $__capa = $foto['arquivo'] === ($anuncio['foto_capa'] ?? ''); ?>
+            <button type="button" class="foto-item <?= $__capa ? 'ativa' : '' ?>"
+                    data-foto="<?= htmlspecialchars($__url, ENT_QUOTES, 'UTF-8') ?>" aria-label="Ampliar esta foto">
+                <img src="<?= htmlspecialchars($__url, ENT_QUOTES, 'UTF-8') ?>" alt="Foto do serviço" loading="lazy">
+                <?php if ($__capa): ?><span class="foto-selo-capa">Capa</span><?php endif; ?>
+            </button>
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
+<script src="<?= aptus_asset('js/galeria.js') ?>"></script>
 
-<p><a href="/Aptus/anuncios"><i class="fas fa-arrow-left"></i> Voltar para Serviços</a></p>
+<p><a href="<?= aptus_base() ?>/anuncios"><i class="fas fa-arrow-left"></i> Voltar para Serviços</a></p>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/Aptus/public/js/favoritos.js"></script>
+<script src="<?= aptus_base() ?>/public/js/favoritos.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -25,7 +25,7 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--color-bg);
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     line-height: 1.6;
     padding: 0 20px;
 }
@@ -95,20 +95,20 @@ body {
 
 .flash-sucesso {
     border-left-color: var(--color-success);
-    color: #065f46;
-    background: #d1fae5;
+    color: var(--cor-sucesso-text);
+    background: var(--cor-sucesso-bg);
 }
 
 .flash-erro {
     border-left-color: var(--color-danger);
-    color: #991b1b;
-    background: #fee2e2;
+    color: var(--cor-erro-text);
+    background: var(--cor-erro-bg);
 }
 
 .flash-aviso {
-    border-left-color: #f59e0b;
-    color: #92400e;
-    background: #fef3c7;
+    border-left-color: var(--cor-aviso);
+    color: var(--cor-aviso-text);
+    background: var(--cor-aviso-bg);
 }
 
 .empty-state {
@@ -253,7 +253,7 @@ td[colspan] {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: var(--color-primary);
+    color: var(--tema-primaria-texto, var(--color-primary));
     text-decoration: none;
     font-weight: 500;
     font-size: 0.9rem;
@@ -273,8 +273,8 @@ td[colspan] {
 
 .btn-voltar:hover {
     background: var(--color-primary-light);
-    border-color: var(--color-primary);
-    color: var(--color-primary-dark);
+    border-color: var(--tema-primaria-texto, var(--color-primary));
+    color: var(--tema-hover-texto, var(--color-primary-dark));
     transform: translateX(-4px);
 }
 

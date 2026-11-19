@@ -32,7 +32,7 @@
 body {
     font-family: var(--font-family);
     background: var(--color-bg);
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     line-height: 1.6;
     margin: 0;
     padding: 0;
@@ -114,14 +114,14 @@ body {
 
 .kpi-icon {
     font-size: 2rem;
-    color: var(--color-primary);
+    color: var(--tema-primaria-texto, var(--color-primary));
     margin-bottom: 6px;
 }
 
 .kpi-value {
     font-size: 1.8rem;
     font-weight: 800;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     line-height: 1.2;
 }
 
@@ -142,7 +142,7 @@ body {
 .card h3 {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--tema-primaria-texto, var(--color-primary));
     margin: 0 0 16px 0;
     display: flex;
     align-items: center;
@@ -166,14 +166,14 @@ body {
     text-align: right;
 }
 .card-footer a {
-    color: var(--color-primary);
+    color: var(--tema-primaria-texto, var(--color-primary));
     text-decoration: none;
     font-weight: 600;
     font-size: 0.9rem;
     transition: 0.2s ease;
 }
 .card-footer a:hover {
-    color: var(--color-primary-dark);
+    color: var(--tema-hover-texto, var(--color-primary-dark));
     transform: translateX(4px);
 }
 
@@ -277,7 +277,7 @@ table .acoes form button:hover {
 }
 .favorito-imagem i {
     font-size: 3rem;
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
 }
 
 .favorito-info {
@@ -286,7 +286,7 @@ table .acoes form button:hover {
 .favorito-info h4 {
     font-size: 1rem;
     font-weight: 700;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     margin: 0 0 6px 0;
 }
 .favorito-info p {
@@ -335,7 +335,7 @@ table .acoes form button:hover {
 .perfil-info-grid .value {
     font-size: 1rem;
     font-weight: 500;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     margin-top: 2px;
 }
 

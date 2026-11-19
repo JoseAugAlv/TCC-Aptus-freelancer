@@ -23,12 +23,12 @@ $token = $_GET['token'] ?? '';
                 <?php unset($_SESSION['flash']); ?>
             <?php endif; ?>
 
-            <form method="POST" action="/Aptus/auth/redefinir-senha" class="auth-form" id="formRedefinir" onsubmit="return validarSenha()">
+            <form method="POST" action="<?= aptus_base() ?>/auth/redefinir-senha" class="auth-form" id="formRedefinir" onsubmit="return validarSenha()">
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
                 <div class="form-group">
                     <label for="senha">Nova Senha <span class="obrigatorio">*</span></label>
-                    <input type="password" id="senha" name="senha" class="form-control" placeholder="Minimo 8 caracteres" required minlength="8" onkeyup="verificarRequisitosSenha()">
+                    <input type="password" id="senha" name="senha" class="form-control" placeholder="Mínimo 8 caracteres" required minlength="8" onkeyup="verificarRequisitosSenha()">
                     <div id="requisitos-senha" style="margin-top: 8px; font-size: 0.85rem;"></div>
                 </div>
 
@@ -43,7 +43,7 @@ $token = $_GET['token'] ?? '';
 </form>
 
             <div class="auth-footer">
-                <p><a href="/Aptus/login">Voltar para o login</a></p>
+                <p><a href="<?= aptus_base() ?>/login">Voltar para o login</a></p>
             </div>
         </div>
     </div>
@@ -61,13 +61,13 @@ function verificarRequisitosSenha() {
     
     var criterios = [
         { regex: /.{8,}/, label: 'Minimo 8 caracteres', ok: false },
-        { regex: /[A-Z]/, label: 'Pelo menos 1 letra maiuscula', ok: false },
-        { regex: /[a-z]/, label: 'Pelo menos 1 letra minuscula', ok: false },
+        { regex: /[A-Z]/, label: 'Pelo menos 1 letra maiúscula', ok: false },
+        { regex: /[a-z]/, label: 'Pelo menos 1 letra minúscula', ok: false },
         { regex: /[0-9]/, label: 'Pelo menos 1 numero', ok: false },
         { regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, label: 'Pelo menos 1 caractere especial', ok: false }
     ];
     
-    var html = '<ul style="list-style: none; padding: 8px 12px; margin: 0; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">';
+    var html = '<ul style="list-style: none; padding: 8px 12px; margin: 0; background: var(--tema-fundo-alt, #f8fafc); border-radius: 8px; border: 1px solid var(--tema-borda, #e2e8f0);">';
     var todosOk = true;
     
     criterios.forEach(function(c) {
@@ -109,9 +109,9 @@ function verificarConfirmacaoSenha() {
     }
     
     if (senha === confirm) {
-        div.innerHTML = '<span style="color: #10b981; font-weight: 500;">✓ As senhas coincidem</span>';
+        div.innerHTML = '<span style="color: var(--cor-sucesso); font-weight: 500;">✓ As senhas coincidem</span>';
     } else {
-        div.innerHTML = '<span style="color: #ef4444; font-weight: 500;">✗ As senhas nao coincidem</span>';
+        div.innerHTML = '<span style="color: var(--cor-erro); font-weight: 500;">✗ As senhas não coincidem</span>';
     }
 }
 
@@ -140,11 +140,11 @@ function validarSenha() {
         Swal.fire({
             icon: 'warning',
             title: 'Senha fraca!',
-            html: 'A senha deve atender a todos os criterios de seguranca:<br><br>' +
-                  '• Minimo 8 caracteres<br>' +
-                  '• Pelo menos 1 letra maiuscula<br>' +
-                  '• Pelo menos 1 letra minuscula<br>' +
-                  '• Pelo menos 1 numero<br>' +
+            html: 'A senha deve atender a todos os critérios de segurança:<br><br>' +
+                  '• Mínimo 8 caracteres<br>' +
+                  '• Pelo menos 1 letra maiúscula<br>' +
+                  '• Pelo menos 1 letra minúscula<br>' +
+                  '• Pelo menos 1 número<br>' +
                   '• Pelo menos 1 caractere especial',
             confirmButtonColor: '#006577',
             confirmButtonText: 'OK'
@@ -155,8 +155,8 @@ function validarSenha() {
     if (senha !== confirm) {
         Swal.fire({
             icon: 'warning',
-            title: 'Senhas nao coincidem!',
-            text: 'As senhas digitadas nao sao iguais.',
+            title: 'Senhas não coincidem!',
+            text: 'As senhas digitadas não são iguais.',
             confirmButtonColor: '#006577',
             confirmButtonText: 'OK'
         });
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonColor: '#006577',
                 confirmButtonText: 'OK'
             }).then(function() {
-                window.location.href = '/Aptus/login';
+                window.location.href = '<?= aptus_base() ?>/login';
             });
         } else if (tipo === 'erro') {
             Swal.fire({
@@ -221,9 +221,9 @@ document.addEventListener('DOMContentLoaded', function() {
     list-style: none;
     padding: 8px 12px;
     margin: 0;
-    background: #f8fafc;
+    background: var(--tema-fundo-alt, #f8fafc);
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tema-borda, #e2e8f0);
 }
 
 #requisitos-senha li {
@@ -249,13 +249,13 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .form-control.error {
-    border-color: #ef4444;
-    background: #fef2f2;
+    border-color: var(--cor-erro);
+    background: var(--tema-erro-bg, #fef2f2);
 }
 
 .form-control.success {
-    border-color: #10b981;
-    background: #ecfdf5;
+    border-color: var(--cor-sucesso);
+    background: color-mix(in srgb, #ecfdf5 var(--tema-pastel, 100%), var(--cor-superficie));
 }
 </style>
 

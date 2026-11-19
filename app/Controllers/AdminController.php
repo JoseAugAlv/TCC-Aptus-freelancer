@@ -14,30 +14,30 @@ class AdminController
 
     public function index()
     {
-        header('Location: /Aptus/admin/dashboard');
+        header(('Location: ' . aptus_base() . '/admin/dashboard'));
         exit;
     }
 
     /**
-     * NOVO: rota /master → redireciona Master (role 4) pro dashboard
+     * Área Master: gestão de usuários com troca de perfil (exclusiva do Master)
      */
     public function master()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
 
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
         if ((int) $_SESSION['usuario']['role'] !== 4) {
             http_response_code(403);
             echo '<h1>403 - Acesso restrito ao Master</h1>';
-            echo '<p><a href="/Aptus/">Voltar ao início</a></p>';
+            echo ('<p><a href="' . aptus_base() . '/">Voltar ao início</a></p>');
             exit;
         }
 
-        header('Location: /Aptus/admin/dashboard');
+        header(('Location: ' . aptus_base() . '/admin/usuarios'));
         exit;
     }
 
@@ -46,7 +46,7 @@ class AdminController
         if (session_status() === PHP_SESSION_NONE) session_start();
 
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
@@ -54,7 +54,7 @@ class AdminController
         if (!in_array($role, [1, 4])) {
             echo "<h1>403 - Acesso Negado</h1>";
             echo "<p>Perfis permitidos: Admin (1) ou Master (4)</p>";
-            echo '<p><a href="/Aptus/">Voltar para o início</a></p>';
+            echo ('<p><a href="' . aptus_base() . '/">Voltar para o início</a></p>');
             exit;
         }
 

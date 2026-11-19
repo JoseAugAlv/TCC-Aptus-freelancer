@@ -15,21 +15,15 @@ html {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    color: #1a1a1a;
+    background: linear-gradient(135deg, var(--tema-fundo-alt, #f5f7fa) 0%, var(--tema-fundo-gradiente, #c3cfe2) 100%);
+    color: var(--tema-texto, #1a1a1a);
     line-height: 1.6;
     overflow-x: hidden;
 }
 
 /* ========== VARIÁVEIS ========== */
 :root {
-    --cor-primaria: #006577;
-    --cor-secundaria: #C9A227;
-    --cor-dourado: #C9A227;
-    --cor-hover: #004d5c;
     --cor-texto-principal: #1a2f3e;
-    --cor-texto-secundario: #555555;
-    --cor-branco: #ffffff;
     --cor-fundo: #f5f7fa;
     --cor-sombra: rgba(0, 101, 119, 0.12);
     --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -61,7 +55,7 @@ body {
 .notificacoes-header h1 {
     font-size: clamp(1.8rem, 5vw, 2.4rem);
     font-weight: 800;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -72,7 +66,7 @@ body {
 }
 
 .notificacoes-header h1 i {
-    background: linear-gradient(135deg, var(--cor-primaria), #00899e);
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), #00899e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -90,9 +84,9 @@ body {
     gap: 0.75rem;
     margin-bottom: 2rem;
     padding: 0.75rem;
-    background: #f8fdfe;
+    background: var(--tema-fundo-alt, #f8fdfe);
     border-radius: 16px;
-    border: 1.5px solid #d8edf1;
+    border: 1.5px solid var(--tema-borda-primaria, #d8edf1);
     transition: var(--transicao-padrao);
 }
 
@@ -118,7 +112,7 @@ body {
 
 .tab-btn:hover {
     background: rgba(0,101,119,0.06);
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     transform: translateY(-1px);
 }
 
@@ -145,7 +139,7 @@ body {
 }
 
 .tab-btn.active .tab-badge {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(var(--rgb-superficie, 255, 255, 255), 0.25);
     color: var(--cor-branco);
 }
 
@@ -188,15 +182,15 @@ body {
 .notificacoes-empty {
     text-align: center;
     padding: 4rem 2rem;
-    background: #f8fdfe;
+    background: var(--tema-fundo-alt, #f8fdfe);
     border-radius: 16px;
-    border: 2px dashed #d8edf1;
+    border: 2px dashed var(--tema-borda-primaria, #d8edf1);
     transition: var(--transicao-padrao);
 }
 
 .notificacoes-empty i {
     font-size: 3.5rem;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -226,9 +220,9 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     padding: 1.25rem 1.5rem;
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 14px;
-    border: 1.5px solid #d8edf1;
+    border: 1.5px solid var(--tema-borda-primaria, #d8edf1);
     transition: var(--transicao-padrao);
     gap: 1.5rem;
     position: relative;
@@ -267,7 +261,7 @@ body {
 
 /* ----- Não lida ----- */
 .notificacao-item.nao-lida {
-    background: #f8fdfe;
+    background: var(--tema-fundo-alt, #f8fdfe);
     border-color: rgba(0,101,119,0.15);
 }
 
@@ -284,7 +278,7 @@ body {
 /* ----- Lida ----- */
 .notificacao-item.lida {
     opacity: 0.85;
-    border-color: #e8edf0;
+    border-color: color-mix(in srgb, #e8edf0 var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
 .notificacao-item.lida::before {
@@ -344,12 +338,12 @@ body {
 }
 
 .notificacao-item.lida .notificacao-mensagem {
-    color: #666666;
+    color: var(--tema-texto-sec, #666666);
 }
 
 .notificacao-data {
     font-size: 0.8rem;
-    color: #94a8b4;
+    color: var(--tema-texto-suave, #94a8b4);
     display: block;
     margin-top: 0.25rem;
     font-weight: 500;
@@ -406,15 +400,15 @@ body {
 
 /* Botão Marcar como lida */
 .notificacao-actions .btn-marcar-lida {
-    background: #f8fdfe;
-    color: var(--cor-primaria);
-    border: 1.5px solid #d8edf1;
+    background: var(--tema-fundo-alt, #f8fdfe);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
+    border: 1.5px solid var(--tema-borda-primaria, #d8edf1);
 }
 
 .notificacao-actions .btn-marcar-lida:hover {
     background: var(--cor-primaria);
     color: var(--cor-branco);
-    border-color: var(--cor-primaria);
+    border-color: var(--tema-primaria-texto, var(--cor-primaria));
     transform: translateX(3px);
     box-shadow: 0 2px 12px rgba(0,101,119,0.2);
 }
@@ -430,7 +424,7 @@ body {
 .notificacoes-voltar {
     margin-top: 2.5rem;
     padding-top: 1.5rem;
-    border-top: 1.5px solid #d8edf1;
+    border-top: 1.5px solid var(--tema-borda-primaria, #d8edf1);
 }
 
 .notificacoes-voltar a {
@@ -446,7 +440,7 @@ body {
 }
 
 .notificacoes-voltar a:hover {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     background: rgba(0,101,119,0.06);
     transform: translateX(-4px);
 }
@@ -748,4 +742,16 @@ body {
     .notificacoes-voltar a:hover i {
         transform: none !important;
     }
+}
+
+/* ===== CELULAR: abas lado a lado ("Não lidas" | "Todas") =====
+   e "Marcar todas como lidas" na linha de baixo. */
+@media (max-width: 868px) {
+    .notificacoes-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+    }
+    .notificacoes-tabs .tab-btn { justify-content: center; width: auto; }
+    .notificacoes-tabs .btn-marcar-todas { grid-column: 1 / -1; width: 100%; }
 }

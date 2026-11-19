@@ -21,7 +21,7 @@ class LogController
                 'tipo' => 'erro',
                 'mensagem' => 'Você não tem permissão para acessar esta página.'
             ];
-            header('Location: /Aptus/');
+            header(('Location: ' . aptus_base() . '/'));
             exit;
         }
 
@@ -40,7 +40,7 @@ class LogController
         $acoes = $this->logSistema->getAcoes();
 
         // Paginação HTML
-        $paginationHtml = $this->renderPagination($pagina, $totalPaginas, '/Aptus/logs');
+        $paginationHtml = $this->renderPagination($pagina, $totalPaginas, (aptus_base() . '/logs'));
 
         require '../app/Views/logs/index.php';
     }

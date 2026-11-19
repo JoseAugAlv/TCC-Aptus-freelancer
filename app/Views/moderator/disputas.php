@@ -35,7 +35,7 @@ $totalPendentes = $totalPendentes ?? 0;
     <?php if (empty($disputas)): ?>
         <div class="empty-state">
             <p>Nenhuma disputa pendente no momento.</p>
-            <a href="/Aptus/moderator" class="btn-voltar">Voltar</a>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar">Voltar</a>
         </div>
     <?php else: ?>
         <div class="table-wrapper">
@@ -61,7 +61,7 @@ $totalPendentes = $totalPendentes ?? 0;
                             <td><?= date('d/m/Y H:i', strtotime($disputa['data_abertura'])) ?></td>
                             <td><span class="status-badge <?= strtolower($disputa['situacao_nome']) ?>"><?= htmlspecialchars($disputa['situacao_nome']) ?></span></td>
                             <td>
-                                <a href="/Aptus/disputas/detalhes/<?= $disputa['id_disputa'] ?>" class="btn-analisar">
+                                <a href="<?= aptus_base() ?>/disputas/detalhes/<?= url_id($disputa['id_disputa']) ?>" class="btn-analisar">
                                     <i class="fas fa-eye"></i> Analisar
                                 </a>
                             </td>
@@ -72,7 +72,7 @@ $totalPendentes = $totalPendentes ?? 0;
         </div>
 
         <div class="voltar-wrapper">
-            <a href="/Aptus/moderator" class="btn-voltar">Voltar</a>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar">Voltar</a>
         </div>
     <?php endif; ?>
 </div>

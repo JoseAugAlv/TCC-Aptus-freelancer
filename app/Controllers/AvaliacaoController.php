@@ -21,31 +21,31 @@ class AvaliacaoController
     public function criar($interesseId = null)
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
-        if (!$interesseId) { header('Location: /Aptus/interesses/ativos'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
+        if (!$interesseId) { header(('Location: ' . aptus_base() . '/interesses/ativos')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
         $interesse = $this->interesse->findById($interesseId);
 
         if (!$interesse) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Interesse não encontrado.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         if ((int) $interesse['id_contratante'] !== $usuarioId
             && (int) $interesse['id_freelancer'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para avaliar este serviço.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
-        if (!in_array($interesse['situacao'], ['ativo', 'concluido'], true)) {
-            $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Apenas serviços ativos ou concluídos podem ser avaliados.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+        if ($interesse['situacao'] !== 'concluido') {
+            $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Apenas serviços concluídos podem ser avaliados.'];
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         if ($this->interesse->usuarioJaAvaliou($interesseId, $usuarioId)) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Você já avaliou este serviço.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         $anuncio = $this->anuncio->findById($interesse['id_anuncio']);
@@ -59,7 +59,7 @@ class AvaliacaoController
     public function salvar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $interesseId = (int) ($_POST['interesse_id'] ?? 0);
         $nota        = (int) ($_POST['nota'] ?? 0);
@@ -68,7 +68,7 @@ class AvaliacaoController
 
         if ($interesseId <= 0 || $nota < 1 || $nota > 5) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Dados inválidos.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         $pdo = Database::getConnection();
@@ -91,7 +91,7 @@ class AvaliacaoController
                 throw new RuntimeException('Avaliação duplicada.');
             }
 
-            if (!in_array($interesse['situacao'], ['ativo', 'concluido'], true)) {
+            if ($interesse['situacao'] !== 'concluido') {
                 throw new RuntimeException('Situação inválida para avaliar.');
             }
 
@@ -130,9 +130,9 @@ class AvaliacaoController
 
             $origem = $_POST['origem'] ?? 'ativos';
             if ($origem === 'detalhes') {
-                header('Location: /Aptus/interesses/detalhes/' . $interesseId);
+                header(('Location: ' . aptus_base() . '/interesses/detalhes/') . url_id($interesseId));
             } else {
-                header('Location: /Aptus/interesses/ativos');
+                header(('Location: ' . aptus_base() . '/interesses/ativos'));
             }
             exit;
 
@@ -140,7 +140,7 @@ class AvaliacaoController
             if ($pdo->inTransaction()) $pdo->rollBack();
             error_log('Erro em AvaliacaoController::salvar: ' . $e->getMessage());
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível enviar a avaliação. Tente novamente.'];
-            header('Location: /Aptus/interesses/ativos');
+            header(('Location: ' . aptus_base() . '/interesses/ativos'));
             exit;
         }
     }
@@ -148,10 +148,10 @@ class AvaliacaoController
     public function responder($avaliacaoId = null)
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
         if (!$avaliacaoId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'ID da avaliação não informado.'];
-            header('Location: /Aptus/interesses/recebidos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/recebidos')); exit;
         }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
@@ -159,17 +159,17 @@ class AvaliacaoController
 
         if (!$avaliacao) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Avaliação não encontrada.'];
-            header('Location: /Aptus/interesses/recebidos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/recebidos')); exit;
         }
 
         if ((int) $avaliacao['id_avaliado'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para responder esta avaliação.'];
-            header('Location: /Aptus/interesses/recebidos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/recebidos')); exit;
         }
 
         if (!empty($avaliacao['resposta_avaliado'])) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Esta avaliação já foi respondida.'];
-            header('Location: /Aptus/interesses/detalhes/' . $avaliacao['id_interesse']); exit;
+            header(('Location: ' . aptus_base() . '/interesses/detalhes/') . url_id($avaliacao['id_interesse'])); exit;
         }
 
         $tituloPagina = 'Responder Avaliação - Aptus';
@@ -181,7 +181,7 @@ class AvaliacaoController
     public function salvarResposta()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $avaliacaoId = (int) ($_POST['avaliacao_id'] ?? 0);
         $resposta    = trim($_POST['resposta'] ?? '');
@@ -189,13 +189,13 @@ class AvaliacaoController
 
         if ($avaliacaoId <= 0 || $resposta === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Resposta inválida.'];
-            header('Location: /Aptus/interesses/recebidos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/recebidos')); exit;
         }
 
         $avaliacao = $this->avaliacao->findById($avaliacaoId);
         if (!$avaliacao || (int) $avaliacao['id_avaliado'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para responder esta avaliação.'];
-            header('Location: /Aptus/interesses/recebidos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/recebidos')); exit;
         }
 
         $pdo = Database::getConnection();
@@ -227,7 +227,7 @@ class AvaliacaoController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível enviar a resposta. Tente novamente.'];
         }
 
-        header('Location: /Aptus/interesses/detalhes/' . $avaliacao['id_interesse']);
+        header(('Location: ' . aptus_base() . '/interesses/detalhes/') . url_id($avaliacao['id_interesse']));
         exit;
     }
 }

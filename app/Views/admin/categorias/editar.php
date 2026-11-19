@@ -9,7 +9,7 @@ $cat = $cat ?? [];
 <div class="admin-container">
     <h1>Editar Categoria</h1>
     <hr>
-    <form method="POST" action="/Aptus/admin/categorias/atualizar" class="config-form">
+    <form method="POST" action="<?= aptus_base() ?>/admin/categorias/atualizar" class="config-form">
         <input type="hidden" name="id" value="<?= (int)($cat['id_categoria'] ?? 0) ?>">
         <div class="form-group">
             <label for="nome">Nome *</label>
@@ -28,7 +28,7 @@ $cat = $cat ?? [];
         </div>
         <div class="form-actions">
             <button type="submit" class="btn-salvar">Atualizar</button>
-            <a href="/Aptus/admin/categorias" class="btn-voltar">Cancelar</a>
+            <a href="<?= aptus_base() ?>/admin/categorias" class="btn-voltar">Cancelar</a>
         </div>
         <?= CsrfMiddleware::field() ?>
     </form>

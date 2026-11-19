@@ -9,6 +9,8 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 $usuarios   = $usuarios ?? [];
 $roleLogado = (int) ($_SESSION['usuario']['role'] ?? 0);
+$idLogado   = (int) ($_SESSION['usuario']['id'] ?? 0);
+require_once __DIR__ . '/../../Controllers/AdminUsuarioController.php';
 ?>
 
 <div class="usuarios-wrapper">
@@ -29,7 +31,7 @@ $roleLogado = (int) ($_SESSION['usuario']['role'] ?? 0);
     <?php if (empty($usuarios)): ?>
         <div class="empty-state">
             <p>Nenhum usuário encontrado.</p>
-            <a href="/Aptus/moderator" class="btn-voltar">Voltar</a>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar">Voltar</a>
         </div>
     <?php else: ?>
         <div class="table-wrapper">
@@ -66,12 +68,19 @@ $roleLogado = (int) ($_SESSION['usuario']['role'] ?? 0);
                             <td><?= date('d/m/Y', strtotime($usuario['data_criacao'])) ?></td>
                             <td>
                                 <div class="acoes-linha">
-                                    <a href="/Aptus/perfil/publico/<?= (int) $usuario['id_usuario'] ?>" class="btn-ver">
+                                    <a href="<?= aptus_base() ?>/perfil/publico/<?= url_id((int) $usuario['id_usuario']) ?>" class="btn-ver">
                                         Ver
                                     </a>
 
-                                    <?php if (in_array($roleLogado, [1, 4], true) && !$banido): ?>
-                                        <form method="POST" action="/Aptus/admin/usuarios/banir"
+                                    <?php
+                                        $podeGerenciar = in_array($roleLogado, [1, 4], true)
+                                            && AdminUsuarioController::podeGerenciar(
+                                                $roleLogado, $idLogado,
+                                                (int) $usuario['id_usuario'], (int) $usuario['id_perfil']
+                                            );
+                                    ?>
+                                    <?php if ($podeGerenciar && !$banido): ?>
+                                        <form method="POST" action="<?= aptus_base() ?>/admin/usuarios/banir"
                                               class="form-banir"
                                               onsubmit="return confirm('Confirmar banimento deste usuário?');">
                                             <input type="hidden" name="id" value="<?= (int) $usuario['id_usuario'] ?>">
@@ -79,6 +88,14 @@ $roleLogado = (int) ($_SESSION['usuario']['role'] ?? 0);
                                                    required maxlength="255" class="input-motivo">
                                             <?= CsrfMiddleware::field() ?>
                                             <button type="submit" class="btn-banir">Banir</button>
+                                        </form>
+                                    <?php elseif ($podeGerenciar && $banido): ?>
+                                        <form method="POST" action="<?= aptus_base() ?>/admin/usuarios/desbanir"
+                                              class="form-banir"
+                                              onsubmit="return confirm('Remover o banimento deste usuário?');">
+                                            <input type="hidden" name="id" value="<?= (int) $usuario['id_usuario'] ?>">
+                                            <?= CsrfMiddleware::field() ?>
+                                            <button type="submit" class="btn-ver">Desbanir</button>
                                         </form>
                                     <?php endif; ?>
                                 </div>
@@ -90,7 +107,7 @@ $roleLogado = (int) ($_SESSION['usuario']['role'] ?? 0);
         </div>
 
         <div class="voltar-wrapper">
-            <a href="/Aptus/moderator" class="btn-voltar">Voltar</a>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar">Voltar</a>
         </div>
     <?php endif; ?>
 </div>

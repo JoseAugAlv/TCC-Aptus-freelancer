@@ -2,7 +2,7 @@
 require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/admin/configuracoes.php
 
-$tituloPagina = $tituloPagina ?? 'Configuracoes - Aptus';
+$tituloPagina = $tituloPagina ?? 'Configurações - Aptus';
 $cssPagina =  'configuracoes.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
@@ -25,7 +25,7 @@ $configs = $configs ?? [];
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
 
-    <form method="POST" action="/Aptus/admin/configuracoes/salvar" class="config-form">
+    <form method="POST" action="<?= aptus_base() ?>/admin/configuracoes/salvar" class="config-form">
         
         <!-- Configuracoes Gerais -->
         <div class="config-card">
@@ -193,7 +193,7 @@ $configs = $configs ?? [];
             <button type="submit" class="btn-salvar">
                 <i class="fas fa-save"></i> Salvar Configurações
             </button>
-            <a href="/Aptus/admin/dashboard" class="btn-voltar">
+            <a href="<?= aptus_base() ?>/admin/dashboard" class="btn-voltar">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>
         </div>

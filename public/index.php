@@ -26,7 +26,7 @@ set_exception_handler(function (Throwable $e) use ($appEnv) {
         echo '<title>Erro - Aptus</title></head><body>';
         echo '<h1>Algo deu errado</h1>';
         echo '<p>Ocorreu um erro inesperado.</p>';
-        echo '<p><a href="/Aptus/">Voltar ao início</a></p>';
+        echo ('<p><a href="' . aptus_base() . '/">Voltar ao início</a></p>');
         echo '</body></html>';
     } else {
         echo '<pre style="padding:20px;background:#fee;color:#900;font-family:monospace;">';
@@ -42,6 +42,7 @@ SessionConfig::configure();
 // 4) Dependências
 require_once __DIR__ . '/../app/Config/database.php';
 require_once __DIR__ . '/../app/Core/Router.php';
+require_once __DIR__ . '/../app/Helpers/UrlId.php';
 
 // 5) Auto-login via remember_token (hash + expiração)
 if (!isset($_SESSION['usuario'])
@@ -88,6 +89,45 @@ if (!isset($_SESSION['usuario'])
     }
 }
 
+// 5.1) Revalida a sessão a cada requisição: derruba banidos/desativados
+//      e mantém o perfil (role) sincronizado com o banco.
+if (isset($_SESSION['usuario']['id'])) {
+    try {
+        $stmt = Database::getConnection()->prepare(
+            "SELECT id_perfil, ativo, banido, motivo_banimento FROM usuario WHERE id_usuario = ? LIMIT 1"
+        );
+        $stmt->execute([(int) $_SESSION['usuario']['id']]);
+        $atual = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$atual || (int) $atual['ativo'] !== 1 || (int) $atual['banido'] === 1) {
+            $msg = !$atual || (int) $atual['ativo'] !== 1
+                ? 'Sua conta está inativa. Entre em contato com o administrador.'
+                : 'Sua conta foi banida. Motivo: ' . ($atual['motivo_banimento'] ?: 'Não informado');
+
+            $_SESSION = [];
+            session_regenerate_id(true);
+
+            $appUrlPath = parse_url(Config::get('APP_URL', '/Aptus'), PHP_URL_PATH) ?: '/Aptus';
+            setcookie('remember_token', '', [
+                'expires'  => time() - 3600,
+                'path'     => rtrim($appUrlPath, '/') . '/',
+                'domain'   => preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? 'localhost'),
+                'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => $msg];
+            header(('Location: ' . aptus_base() . '/login'));
+            exit;
+        }
+
+        $_SESSION['usuario']['role'] = (int) $atual['id_perfil'];
+    } catch (Throwable $e) {
+        error_log('Falha ao revalidar sessão: ' . $e->getMessage());
+    }
+}
+
 // 6) Modo manutenção
 try {
     require_once __DIR__ . '/../app/Models/Configuracao.php';
@@ -100,10 +140,10 @@ try {
         $rotaAtual = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
         $rotasLiberadas = [
-            '/Aptus/login',
-            '/Aptus/logout',
-            '/Aptus/auth/verificar',
-            '/Aptus/admin/configuracoes',
+            (aptus_base() . '/login'),
+            (aptus_base() . '/logout'),
+            (aptus_base() . '/auth/verificar'),
+            (aptus_base() . '/admin/configuracoes'),
         ];
 
         $liberado = false;
@@ -138,13 +178,26 @@ try {
             echo '<div class="icon"><i class="fas fa-tools"></i></div>';
             echo '<h1>Sistema em manutenção</h1>';
             echo '<p>' . htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8') . '</p>';
-            echo '<a href="/Aptus/login"><i class="fas fa-sign-in-alt"></i> Acesso administrativo</a>';
+            echo ('<a href="' . aptus_base() . '/login"><i class="fas fa-sign-in-alt"></i> Acesso administrativo</a>');
             echo '</div></body></html>';
             exit;
         }
     }
 } catch (Throwable $e) {
     error_log('Erro ao verificar modo manutenção: ' . $e->getMessage());
+}
+
+// 6.1) Limpeza de cadastros não confirmados em 24h (libera CPF, e-mail e @usuário).
+//      Roda no máximo uma vez por hora, marcado por um arquivo em tmp/.
+try {
+    $marcaLimpeza = __DIR__ . '/../tmp/limpeza_cadastros.marca';
+    if (!is_file($marcaLimpeza) || filemtime($marcaLimpeza) < time() - 3600) {
+        @touch($marcaLimpeza);
+        require_once __DIR__ . '/../app/Models/Usuario.php';
+        (new Usuario())->limparCadastrosExpirados();
+    }
+} catch (Throwable $e) {
+    error_log('Erro na limpeza de cadastros pendentes: ' . $e->getMessage());
 }
 
 // 7) Despachar

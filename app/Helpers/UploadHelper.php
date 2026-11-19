@@ -10,12 +10,14 @@ class UploadHelper
         'perfil'    => ['jpg', 'jpeg', 'png', 'webp'],
         'anuncio'   => ['jpg', 'jpeg', 'png', 'webp', 'gif'],
         'portfolio' => ['jpg', 'jpeg', 'png', 'webp'],
+        'denuncia'  => ['jpg', 'jpeg', 'png', 'webp', 'pdf'],
     ];
 
     public static $tamanhosMaximos = [
         'perfil'    => 2097152, // 2MB
         'anuncio'   => 5242880, // 5MB
         'portfolio' => 5242880, // 5MB
+        'denuncia'  => 5242880, // 5MB
     ];
 
     private static function publicDir(): string
@@ -42,6 +44,28 @@ class UploadHelper
     }
 
 
+    /**
+     * URL da foto de capa de um anúncio, pronta para <img src>.
+     * Aceita o caminho salvo pelo upload ("uploads/anuncio/x.png") ou só o nome
+     * do arquivo (dados antigos/seed). Se o arquivo não existir, devolve o placeholder.
+     */
+    public static function capaUrl($foto): string
+    {
+        $foto = trim((string) $foto);
+        if ($foto !== '') {
+            $candidatos = str_contains($foto, '/')
+                ? [ltrim($foto, '/')]
+                : ['uploads/anuncio/' . $foto, 'uploads/anuncios/' . $foto];
+
+            foreach ($candidatos as $relativo) {
+                if (is_file(self::publicDir() . '/' . $relativo)) {
+                    return self::baseUrl() . '/' . $relativo;
+                }
+            }
+        }
+        return self::baseUrl() . '/images/no-image.svg';
+    }
+
     private static function baseUrl(): string
     {
         $appUrl = Config::get('APP_URL', '/Aptus');
@@ -50,28 +74,17 @@ class UploadHelper
 
     public static function upload($arquivo, $categoria, $subpasta = '')
     {
-        $limits = self::getConfigLimits($categoria);
-
-        if ($arquivo['size'] > $limits['max_bytes']) {
-            $maxMB = $limits['max_bytes'] / 1048576;
-            return ['success' => false, 'message' => "Arquivo muito grande. Máximo: {$maxMB}MB"];
-        }
-
-        if (!in_array($extensao, $limits['types'], true)) {
-            return ['success' => false, 'message' => 'Formato não permitido. Use: ' . implode(', ', $limits['types'])];
-        }
-
         if (!isset(self::$tiposPermitidos[$categoria])) {
-            return ['success' => false, 'message' => 'Categoria de upload invalida.'];
+            return ['success' => false, 'message' => 'Categoria de upload inválida.'];
         }
 
         if ($arquivo['error'] !== UPLOAD_ERR_OK) {
             $mensagens = [
-                UPLOAD_ERR_INI_SIZE   => 'Arquivo excede o tamanho maximo permitido pelo servidor.',
-                UPLOAD_ERR_FORM_SIZE  => 'Arquivo excede o tamanho maximo permitido.',
+                UPLOAD_ERR_INI_SIZE   => 'Arquivo excede o tamanho máximo permitido pelo servidor.',
+                UPLOAD_ERR_FORM_SIZE  => 'Arquivo excede o tamanho máximo permitido.',
                 UPLOAD_ERR_PARTIAL    => 'Upload incompleto.',
                 UPLOAD_ERR_NO_FILE    => 'Nenhum arquivo foi enviado.',
-                UPLOAD_ERR_NO_TMP_DIR => 'Pasta temporaria nao encontrada.',
+                UPLOAD_ERR_NO_TMP_DIR => 'Pasta temporária não encontrada.',
                 UPLOAD_ERR_CANT_WRITE => 'Erro ao escrever o arquivo no disco.',
                 UPLOAD_ERR_EXTENSION  => 'Upload bloqueado por extensao PHP.',
             ];
@@ -79,10 +92,21 @@ class UploadHelper
         }
 
         $extensao = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
+
+        // Limites definidos pelo admin em Configurações (valem junto com os da categoria)
+        $limits = self::getConfigLimits($categoria);
+        if ($arquivo['size'] > $limits['max_bytes']) {
+            $maxMB = $limits['max_bytes'] / 1048576;
+            return ['success' => false, 'message' => "Arquivo muito grande. Máximo: {$maxMB}MB"];
+        }
+        if ($categoria !== 'denuncia' && !empty($limits['types']) && !in_array($extensao, $limits['types'], true)) {
+            return ['success' => false, 'message' => 'Formato não permitido. Use: ' . implode(', ', $limits['types'])];
+        }
+
         if (!in_array($extensao, self::$tiposPermitidos[$categoria], true)) {
             return [
                 'success' => false,
-                'message' => 'Formato de arquivo nao permitido. Use: '
+                'message' => 'Formato de arquivo não permitido. Use: '
                            . implode(', ', self::$tiposPermitidos[$categoria]),
             ];
         }
@@ -94,7 +118,7 @@ class UploadHelper
 
         $mimesPermitidos = self::getPermittedMimes($categoria);
         if (!SecurityHelper::validarMimeArquivo($arquivo['tmp_name'], $mimesPermitidos)) {
-            return ['success' => false, 'message' => 'Tipo de arquivo invalido.'];
+            return ['success' => false, 'message' => 'Tipo de arquivo inválido.'];
         }
 
         $pastaBase = self::publicDir() . '/uploads/' . $categoria;
@@ -104,7 +128,7 @@ class UploadHelper
 
         if (!file_exists($pastaBase)) {
             if (!@mkdir($pastaBase, 0755, true) && !is_dir($pastaBase)) {
-                return ['success' => false, 'message' => 'Nao foi possivel criar a pasta de upload.'];
+                return ['success' => false, 'message' => 'Não foi possível criar a pasta de upload.'];
             }
         }
 
@@ -224,11 +248,12 @@ class UploadHelper
             return false;
         }
 
-        $base = self::publicDir() . '/uploads';
+        // realpath nos dois lados: no Windows o separador vira "\" e a comparação precisa bater
+        $base = realpath(self::publicDir() . '/uploads');
         $alvo = realpath(self::publicDir() . '/' . ltrim($caminho, '/'));
 
         // Só remove se o alvo estiver DENTRO da pasta de uploads
-        if ($alvo === false || strpos($alvo, $base) !== 0) {
+        if ($base === false || $alvo === false || strpos($alvo, $base . DIRECTORY_SEPARATOR) !== 0) {
             return false;
         }
 
@@ -243,6 +268,7 @@ class UploadHelper
             'png'  => 'image/png',
             'webp' => 'image/webp',
             'gif'  => 'image/gif',
+            'pdf'  => 'application/pdf',
         ];
 
         $mimes = [];
@@ -257,7 +283,7 @@ class UploadHelper
     public static function getUrl($caminho)
     {
         if (empty($caminho)) {
-            return self::baseUrl() . '/images/default.png';
+            return self::baseUrl() . '/images/no-image.svg';
         }
         return self::baseUrl() . '/' . ltrim($caminho, '/');
     }

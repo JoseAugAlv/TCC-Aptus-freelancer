@@ -25,7 +25,7 @@ class FreelancerController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
@@ -33,8 +33,8 @@ class FreelancerController
         $role = $_SESSION['usuario']['role'];
         
         // Verificar se o usuário é freelancer (role 3) ou tem permissão
-        if (!in_array($role, [2, 3, 4])) {
-            header('Location: /Aptus/');
+        if (!in_array((int) $role, [1, 2, 3, 4], true)) {
+            header(('Location: ' . aptus_base() . '/'));
             exit;
         }
 

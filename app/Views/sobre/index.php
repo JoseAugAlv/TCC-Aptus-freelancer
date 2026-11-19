@@ -61,8 +61,8 @@ require_once __DIR__ . '/../layouts/nav.php';
         <h2>Pronto para começar?</h2>
         <p>Junte-se a milhares de pessoas que já confiam na Aptus</p>
         <div class="cta-buttons">
-            <a href="/Aptus/login" class="btn-primario">Cadastre-se Grátis</a>
-            <a href="/Aptus/anuncios" class="btn-secundario">Explorar Serviços</a>
+            <a href="<?= aptus_base() ?>/login" class="btn-primario">Cadastre-se Grátis</a>
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-secundario">Explorar Serviços</a>
         </div>
     </section>
 </main>

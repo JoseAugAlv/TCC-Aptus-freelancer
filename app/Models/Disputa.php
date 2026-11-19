@@ -129,11 +129,13 @@ class Disputa
      */
     public function atualizarSituacao($id, $situacaoId, $responsavelId, $resposta = null)
     {
+        // Só resolve disputas ainda pendentes (id_situacao = 1); evita decidir duas vezes
         $sql = "UPDATE disputa 
                 SET id_situacao = ?, id_responsavel = ?, resposta = ?, data_resolucao = NOW() 
-                WHERE id_disputa = ?";
+                WHERE id_disputa = ? AND id_situacao = 1";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$situacaoId, $responsavelId, $resposta, $id]);
+        $stmt->execute([$situacaoId, $responsavelId, $resposta, $id]);
+        return $stmt->rowCount() > 0;
     }
 
     /**
@@ -210,10 +212,10 @@ class Disputa
     {
         return [
             'pagamento_divergente' => 'Valor do pagamento divergente',
-            'servico_nao_realizado' => 'Servico nao realizado conforme combinado',
-            'prazo_nao_cumprido' => 'Prazo nao cumprido',
+            'servico_nao_realizado' => 'Serviço não realizado conforme combinado',
+            'prazo_nao_cumprido' => 'Prazo não cumprido',
             'qualidade_insatisfatoria' => 'Qualidade insatisfatoria',
-            'comunicacao_insuficiente' => 'Comunicacao insuficiente',
+            'comunicacao_insuficiente' => 'Comunicação insuficiente',
             'outro' => 'Outro motivo'
         ];
     }

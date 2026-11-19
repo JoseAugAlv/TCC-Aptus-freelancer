@@ -31,14 +31,14 @@ $usuario   = $_SESSION['usuario'] ?? null;
             <i class="fas fa-inbox" style="font-size: 4rem; color: #d1d5db;"></i>
             <h3>Nenhuma conversa ainda</h3>
             <p>Quando você enviar ou receber um interesse, o chat será ativado.</p>
-            <a href="/Aptus/anuncios" class="btn-explorar">
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-explorar">
                 <i class="fas fa-search"></i> Explorar Serviços
             </a>
         </div>
     <?php else: ?>
         <div class="conversas-lista">
             <?php foreach ($conversas as $conversa): ?>
-                <a href="/Aptus/chat/<?= $conversa['id_interesse'] ?>" class="conversa-item <?= ($conversa['nao_lidas'] ?? 0) > 0 ? 'nao-lida' : '' ?>">
+                <a href="<?= aptus_base() ?>/chat/<?= url_id($conversa['id_interesse']) ?>" class="conversa-item <?= ($conversa['nao_lidas'] ?? 0) > 0 ? 'nao-lida' : '' ?>">
                     <div class="conversa-avatar">
                         <?php if (!empty($conversa['outro_usuario_foto']) && $conversa['outro_usuario_foto'] != 'default.png'): ?>
                             <img src="<?= htmlspecialchars(\UploadHelper::getUrl($conversa['outro_usuario_foto']), ENT_QUOTES, 'UTF-8') ?>"

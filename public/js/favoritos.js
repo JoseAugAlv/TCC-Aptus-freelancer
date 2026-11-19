@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var texto = this.querySelector('.favorito-texto');
             var contador = this.querySelector('.favorito-contador');
 
-            var url = isFavoritado ? '/Aptus/favoritos/remover' : '/Aptus/favoritos/adicionar';
+            var url = isFavoritado ? window.APTUS_BASE + '/favoritos/remover' : window.APTUS_BASE + '/favoritos/adicionar';
             var formData = new FormData();
             formData.append('anuncio_id', anuncioId);
 

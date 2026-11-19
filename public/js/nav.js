@@ -1,115 +1,134 @@
 // public/js/nav.js
+// Único responsável pelo comportamento da navbar (menu de perfil,
+// dropdowns e menu hamburger). Não registre esses mesmos eventos em
+// outro arquivo: dois "toggle" no mesmo clique abrem e fecham o menu
+// ao mesmo tempo, e ele parece não funcionar.
 
-document.addEventListener('DOMContentLoaded', function() {
-    // ==========================================
-    // SIDEBAR
-    // ==========================================
-    const openBtn = document.getElementById('openBtn');
-    const closeBtn = document.getElementById('closeBtn');
-    const sidebar = document.getElementById('sidebar');
-    const body = document.body;
+document.addEventListener('DOMContentLoaded', function () {
+    'use strict';
 
-    if (openBtn && sidebar) {
-        openBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            sidebar.classList.add('active');
-            body.style.overflow = 'hidden';
-        });
+    var body = document.body;
+    var btnPerfil = document.getElementById('btnPerfilNavbar');
+    var menuPerfil = document.getElementById('menuPerfilNavbar');
+    var hamburger = document.getElementById('hamburger');
+    var navLinks = document.querySelector('.navbar-links');
+    var dropdowns = document.querySelectorAll('.navbar .dropdown');
+
+    function fecharPerfil() {
+        if (menuPerfil) menuPerfil.classList.remove('ativo');
+        if (btnPerfil) btnPerfil.setAttribute('aria-expanded', 'false');
     }
 
-    if (closeBtn && sidebar) {
-        closeBtn.addEventListener('click', function() {
-            sidebar.classList.remove('active');
-            body.style.overflow = '';
-        });
-    }
-
-    if (sidebar) {
-        sidebar.querySelectorAll('a').forEach(function(link) {
-            link.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                body.style.overflow = '';
-            });
-        });
-    }
-
-    document.addEventListener('click', function(e) {
-        if (sidebar && sidebar.classList.contains('active')) {
-            const clicouForaDaSidebar = !sidebar.contains(e.target);
-            const clicouForaDoBotaoAbrir = !openBtn || !openBtn.contains(e.target);
-            if (clicouForaDaSidebar && clicouForaDoBotaoAbrir) {
-                sidebar.classList.remove('active');
-                body.style.overflow = '';
+    function fecharDropdowns(exceto) {
+        dropdowns.forEach(function (d) {
+            if (d !== exceto) {
+                d.classList.remove('open');
+                var t = d.querySelector('.dropdown-toggle');
+                if (t) t.setAttribute('aria-expanded', 'false');
             }
+        });
+    }
+
+    function fecharHamburger() {
+        if (navLinks && navLinks.classList.contains('ativo')) {
+            navLinks.classList.remove('ativo');
+            body.style.overflow = '';
         }
-    });
+        if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+    }
 
     // ==========================================
     // MENU DE PERFIL
     // ==========================================
-    const btnPerfil = document.getElementById('btnPerfilNavbar');
-    const menuPerfil = document.getElementById('menuPerfilNavbar');
-
     if (btnPerfil && menuPerfil) {
-        // Evita que o botão seja tratado como submit caso esteja dentro de um form.
         btnPerfil.type = 'button';
+        btnPerfil.setAttribute('aria-haspopup', 'true');
+        btnPerfil.setAttribute('aria-expanded', 'false');
+        btnPerfil.setAttribute('aria-controls', 'menuPerfilNavbar');
 
-        btnPerfil.addEventListener('click', function(e) {
+        btnPerfil.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            menuPerfil.classList.toggle('ativo');
+            var abrir = !menuPerfil.classList.contains('ativo');
+            fecharDropdowns();
+            menuPerfil.classList.toggle('ativo', abrir);
+            btnPerfil.setAttribute('aria-expanded', abrir ? 'true' : 'false');
         });
 
-        menuPerfil.addEventListener('click', function(e) {
+        menuPerfil.addEventListener('click', function (e) {
             e.stopPropagation();
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!menuPerfil.contains(e.target) && !btnPerfil.contains(e.target)) {
-                menuPerfil.classList.remove('ativo');
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                menuPerfil.classList.remove('ativo');
-            }
         });
     }
 
     // ==========================================
-    // DROPDOWN
+    // DROPDOWNS (Anunciar / Admin)
     // ==========================================
-    const dropdowns = document.querySelectorAll('.dropdown');
-    dropdowns.forEach(function(dropdown) {
-        const toggle = dropdown.querySelector('.dropdown-toggle');
-        if (toggle) {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                dropdown.classList.toggle('open');
-            });
+    dropdowns.forEach(function (dropdown) {
+        var toggle = dropdown.querySelector('.dropdown-toggle');
+        if (!toggle) return;
+        toggle.setAttribute('aria-haspopup', 'true');
+        toggle.setAttribute('aria-expanded', 'false');
+
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var abrir = !dropdown.classList.contains('open');
+            fecharDropdowns(dropdown);
+            fecharPerfil();
+            dropdown.classList.toggle('open', abrir);
+            toggle.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+        });
+    });
+
+    // ==========================================
+    // MENU HAMBURGER (telas menores)
+    // ==========================================
+    if (hamburger && navLinks) {
+        hamburger.setAttribute('role', 'button');
+        hamburger.setAttribute('tabindex', '0');
+        hamburger.setAttribute('aria-label', 'Abrir menu');
+        hamburger.setAttribute('aria-expanded', 'false');
+
+        var alternarHamburger = function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var abrir = !navLinks.classList.contains('ativo');
+            navLinks.classList.toggle('ativo', abrir);
+            body.style.overflow = abrir ? 'hidden' : '';
+            hamburger.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+        };
+
+        hamburger.addEventListener('click', alternarHamburger);
+        hamburger.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') alternarHamburger(e);
+        });
+
+        // Clicar em um link de navegação fecha o menu (exceto os que abrem dropdown).
+        navLinks.querySelectorAll('a:not(.dropdown-toggle)').forEach(function (link) {
+            link.addEventListener('click', fecharHamburger);
+        });
+    }
+
+    // ==========================================
+    // FECHAR AO CLICAR FORA / ESC
+    // ==========================================
+    document.addEventListener('click', function (e) {
+        if (menuPerfil && btnPerfil && !menuPerfil.contains(e.target) && !btnPerfil.contains(e.target)) {
+            fecharPerfil();
+        }
+        dropdowns.forEach(function (d) {
+            if (!d.contains(e.target)) d.classList.remove('open');
+        });
+        if (navLinks && hamburger && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+            fecharHamburger();
         }
     });
 
-    document.addEventListener('click', function(e) {
-        dropdowns.forEach(function(dropdown) {
-            if (!dropdown.contains(e.target)) {
-                dropdown.classList.remove('open');
-            }
-        });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            fecharPerfil();
+            fecharDropdowns();
+            fecharHamburger();
+        }
     });
-
-    // ==========================================
-    // MENU MOBILE
-    // ==========================================
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', function(e) {
-            e.preventDefault();
-            navMenu.classList.toggle('active');
-        });
-    }
 });

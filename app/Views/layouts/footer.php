@@ -13,28 +13,29 @@ $__siteEndereco = $__cfg->get('site_endereco') ?: 'São Paulo, SP';
             <div class="footer-col">
                 <h3 class="footer-titulo">Sobre</h3>
                 <ul class="footer-links">
-                    <li><a href="/Aptus/sobre">Sobre Nós</a></li>
-                    <li><a href="/Aptus/sobre#como-funciona">Como Funciona</a></li>
-                    <li><a href="/Aptus/anuncios">Serviços</a></li>
+                    <li><a href="<?= aptus_base() ?>/sobre">Sobre Nós</a></li>
+                    <li><a href="<?= aptus_base() ?>/sobre#como-funciona">Como Funciona</a></li>
+                    <li><a href="<?= aptus_base() ?>/anuncios">Serviços</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h3 class="footer-titulo">Recursos</h3>
                 <ul class="footer-links">
-                    <li><a href="/Aptus/buscar">Buscar Serviços</a></li>
-                    <li><a href="/Aptus/anuncios/criar">Anunciar Serviço</a></li>
-                    <li><a href="/Aptus/favoritos">Meus Favoritos</a></li>
+                    <li><a href="<?= aptus_base() ?>/buscar">Buscar Serviços</a></li>
+                    <li><a href="<?= aptus_base() ?>/anuncios/criar">Anunciar Serviço</a></li>
+                    <li><a href="<?= aptus_base() ?>/favoritos">Meus Favoritos</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h3 class="footer-titulo">Suporte</h3>
                 <ul class="footer-links">
-                    <li><a href="/Aptus/contato">Central de Ajuda</a></li>
-                    <li><a href="/Aptus/termos">Política de Privacidade</a></li>
-                    <li><a href="/Aptus/termos">Termos de Uso</a></li>
-                    <li><a href="/Aptus/cookies">Política de Cookies</a></li>
+                    <li><a href="<?= aptus_base() ?>/contato">Central de Ajuda</a></li>
+                    <li><a href="<?= aptus_base() ?>/termos">Política de Privacidade</a></li>
+                    <li><a href="<?= aptus_base() ?>/termos">Termos de Uso</a></li>
+                    <li><a href="<?= aptus_base() ?>/politica-anuncios">Política de Anúncios</a></li>
+                    <li><a href="<?= aptus_base() ?>/cookies">Política de Cookies</a></li>
                 </ul>
             </div>
 
@@ -66,8 +67,12 @@ $__siteEndereco = $__cfg->get('site_endereco') ?: 'São Paulo, SP';
     </div>
 </footer>
 
-<script src="/Aptus/public/js/main.js"></script>
-<script src="/Aptus/public/js/masks.js"></script>
+<script src="<?= aptus_asset('js/main.js') ?>"></script>
+<script src="<?= aptus_asset('js/botao-carregando.js') ?>"></script>
+<script src="<?= aptus_asset('js/masks.js') ?>"></script>
+<?php foreach ((array) ($jsPagina ?? []) as $__js): ?>
+<script src="<?= aptus_asset('js/' . basename($__js)) ?>"></script>
+<?php endforeach; ?>
 
 
   <!-- VLibras Widget -->
@@ -80,8 +85,31 @@ $__siteEndereco = $__cfg->get('site_endereco') ?: 'São Paulo, SP';
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     <script>
         new window.VLibras.Widget('https://vlibras.gov.br/app');
+
+        // No celular o botão do VLibras ficava no meio da lateral direita, por
+        // cima do conteúdo. Ele é desenhado num shadow DOM (o CSS da página não
+        // alcança), então injetamos o estilo lá dentro: desce para o canto
+        // inferior direito. A altura vem de --vw-bottom (o chat sobe o botão).
+        (function () {
+            var tentativas = 0;
+            var timer = setInterval(function () {
+                var hosts = document.querySelectorAll('#vlibras-access-wrapper');
+                var prontos = Array.prototype.filter.call(hosts, function (h) { return h.shadowRoot; });
+                if (prontos.length || ++tentativas > 40) {
+                    clearInterval(timer);
+                    prontos.forEach(function (host) {
+                        if (host.shadowRoot.getElementById('aptus-vw-mobile')) return;
+                        var css = document.createElement('style');
+                        css.id = 'aptus-vw-mobile';
+                        css.textContent = '@media (max-width: 768px) {'
+                            + '#vlibras-access { top: auto !important; bottom: var(--vw-bottom, 16px) !important; right: 8px !important; }'
+                            + '}';
+                        host.shadowRoot.appendChild(css);
+                    });
+                }
+            }, 250);
+        })();
     </script>
-    <!-- Fim do VLibras Widget -->
      
 </body>
 </html>

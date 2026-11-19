@@ -26,7 +26,7 @@ class FavoritoController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
@@ -51,7 +51,7 @@ class FavoritoController
         
         if (!isset($_SESSION['usuario'])) {
             http_response_code(401);
-            echo json_encode(['success' => false, 'message' => 'Login necessario']);
+            echo json_encode(['success' => false, 'message' => 'Login necessário']);
             exit;
         }
 
@@ -60,7 +60,7 @@ class FavoritoController
 
         if ($anuncioId <= 0) {
             http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'ID do anuncio invalido']);
+            echo json_encode(['success' => false, 'message' => 'ID do anúncio inválido']);
             exit;
         }
 
@@ -68,13 +68,13 @@ class FavoritoController
         $anuncio = $this->anuncio->findById($anuncioId);
         if (!$anuncio) {
             http_response_code(404);
-            echo json_encode(['success' => false, 'message' => 'Anuncio nao encontrado']);
+            echo json_encode(['success' => false, 'message' => 'Anúncio não encontrado']);
             exit;
         }
 
         // Verificar se o usuario nao e o dono do anuncio
         if ($anuncio['id_usuario'] == $usuarioId) {
-            echo json_encode(['success' => false, 'message' => 'Voce nao pode favoritar seu proprio anuncio']);
+            echo json_encode(['success' => false, 'message' => 'Você não pode favoritar seu próprio anúncio']);
             exit;
         }
 
@@ -91,7 +91,7 @@ class FavoritoController
         } else {
             echo json_encode([
                 'success' => false, 
-                'message' => 'Este anuncio ja esta nos seus favoritos'
+                'message' => 'Este anúncio já esta nos seus favoritos'
             ]);
         }
         exit;
@@ -109,7 +109,7 @@ class FavoritoController
         
         if (!isset($_SESSION['usuario'])) {
             http_response_code(401);
-            echo json_encode(['success' => false, 'message' => 'Login necessario']);
+            echo json_encode(['success' => false, 'message' => 'Login necessário']);
             exit;
         }
 
@@ -118,7 +118,7 @@ class FavoritoController
 
         if ($anuncioId <= 0) {
             http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'ID do anuncio invalido']);
+            echo json_encode(['success' => false, 'message' => 'ID do anúncio inválido']);
             exit;
         }
 

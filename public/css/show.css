@@ -10,25 +10,15 @@ html {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    color: #1a1a1a;
+    background: linear-gradient(135deg, var(--tema-fundo-alt, #f5f7fa) 0%, var(--tema-fundo-gradiente, #c3cfe2) 100%);
+    color: var(--tema-texto, #1a1a1a);
     line-height: 1.6;
     overflow-x: hidden;
     padding-top: 70px;
 } 
 
 :root {
-    --cor-primaria: #006577;
-    --cor-secundaria: #C9A227;
-    --cor-dourado: #C9A227;
-    --cor-hover: #004d5c;
-    --cor-texto-principal: #1a1a1a;
-    --cor-texto-secundario: #555555;
-    --cor-branco: #ffffff;
     --cor-fundo: #f5f7fa;
-    --cor-sombra: rgba(0, 101, 119, 0.1);
-    --cor-borda: #b3e5fc;
-    --transicao-padrao: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 
@@ -37,7 +27,7 @@ body > h1:first-of-type {
     font-weight: 800;
     text-align: center;
     margin: 1.5rem auto 0.5rem;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -64,7 +54,7 @@ body > hr {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 15px;
     box-shadow: 0 4px 15px var(--cor-sombra);
     border: 1px solid var(--cor-borda);
@@ -76,7 +66,7 @@ body > hr {
 }
 
 .detalhes-imagem {
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 12px;
     overflow: hidden;
     display: flex;
@@ -121,7 +111,7 @@ body > hr {
     align-items: center;
     gap: 0.5rem;
     background: rgba(0, 101, 119, 0.08);
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     padding: 0.3rem 1rem;
     border-radius: 20px;
     font-size: 0.85rem;
@@ -144,13 +134,13 @@ body > hr {
     transition: var(--transicao-padrao);
 }
 .btn-favorito:hover {
-    border-color: #e74c3c;
-    color: #e74c3c;
+    border-color: var(--cor-erro);
+    color: var(--cor-erro);
     background: rgba(231, 76, 60, 0.04);
 }
 .btn-favorito.ativo {
-    border-color: #e74c3c;
-    color: #e74c3c;
+    border-color: var(--cor-erro);
+    color: var(--cor-erro);
     background: rgba(231, 76, 60, 0.08);
 }
 .btn-favorito i {
@@ -159,7 +149,7 @@ body > hr {
 .favorito-contador {
     font-weight: 400;
     font-size: 0.8rem;
-    color: #94a8b4;
+    color: var(--tema-texto-suave, #94a8b4);
 }
 
 /* Título do anúncio */
@@ -177,7 +167,7 @@ body > hr {
     margin: 0;
 }
 .preco-destaque i {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-right: 0.3rem;
 }
 
@@ -189,7 +179,7 @@ body > hr {
     font-size: 1rem;
 }
 .avaliacao-detalhes i {
-    color: #f59e0b;
+    color: var(--cor-aviso);
 }
 .avaliacao-detalhes .nota {
     font-weight: 700;
@@ -197,7 +187,7 @@ body > hr {
     margin-left: 0.3rem;
 }
 .avaliacao-detalhes .total-avaliacoes {
-    color: #94a8b4;
+    color: var(--tema-texto-suave, #94a8b4);
     font-size: 0.9rem;
     margin-left: 0.3rem;
 }
@@ -216,7 +206,7 @@ body > hr {
     flex-wrap: wrap;
     gap: 1.5rem;
     font-size: 0.9rem;
-    color: #94a8b4;
+    color: var(--tema-texto-suave, #94a8b4);
 }
 .info-extra span {
     display: flex;
@@ -224,14 +214,14 @@ body > hr {
     gap: 0.3rem;
 }
 .info-extra i {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
 }
 
 /* ============================================================
    7. CARD DO FREELANCER
    ============================================================ */
 .freelancer-card {
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 12px;
     padding: 1.2rem 1.5rem;
     border: 1px solid var(--cor-borda);
@@ -265,7 +255,7 @@ body > hr {
 }
 .freelancer-avatar i {
     font-size: 2rem;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
 }
 .freelancer-info h3 {
     font-size: 1.1rem;
@@ -278,7 +268,7 @@ body > hr {
     color: var(--cor-texto-secundario);
 }
 .freelancer-info p i {
-    color: #f59e0b;
+    color: var(--cor-aviso);
 }
 .freelancer-bio {
     margin-top: 0.8rem;
@@ -316,7 +306,7 @@ body > hr {
 }
 
 .btn-interesse {
-    background: linear-gradient(135deg, var(--cor-primaria), #004d5c);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
     color: var(--cor-branco);
     box-shadow: 0 2px 12px var(--cor-sombra);
 }
@@ -325,7 +315,7 @@ body > hr {
     box-shadow: 0 6px 20px rgba(0, 101, 119, 0.3);
 }
 .btn-interesse.btn-enviado {
-    background: #10b981;
+    background: var(--cor-sucesso);
     opacity: 0.8;
     cursor: default;
 }
@@ -334,33 +324,52 @@ body > hr {
     box-shadow: none;
 }
 
+/* Todas as vagas simultâneas do anúncio ocupadas */
+.btn-interesse.btn-agenda-cheia {
+    background: var(--tema-fundo-alt, #eef2f5);
+    color: var(--cor-texto-secundario, #555555);
+    border: 1px dashed var(--cor-borda, #b3e5fc);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+.btn-interesse.btn-agenda-cheia:hover { transform: none; box-shadow: none; }
+#motivoAgendaCheia { color: var(--cor-texto-secundario, #555555); flex-basis: 100%; }
+
+.vagas-dono {
+    flex-basis: 100%;
+    margin: 0 0 0.25rem;
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario, #555555);
+}
+.vagas-dono i { color: var(--tema-primaria-texto, var(--cor-primaria)); margin-right: 0.25rem; }
+
 .btn-editar {
-    background: #e8f0f8;
-    color: #2b6cb0;
-    border: 1px solid #b8c8e8;
+    background: var(--tema-fundo-alt, #e8f0f8);
+    color: color-mix(in srgb, #2b6cb0 var(--tema-tinta, 100%), #ffffff);
+    border: 1px solid color-mix(in srgb, #b8c8e8 var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 .btn-editar:hover {
-    background: #d0e0f0;
+    background: color-mix(in srgb, #d0e0f0 var(--tema-pastel, 100%), var(--cor-superficie));
     transform: translateY(-2px);
 }
 
 .btn-perfil-publico {
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     color: var(--cor-texto-principal);
     border: 1px solid var(--cor-borda);
 }
 .btn-perfil-publico:hover {
-    background: #f0f4f8;
+    background: color-mix(in srgb, #f0f4f8 var(--tema-pastel, 100%), var(--cor-superficie));
     transform: translateY(-2px);
 }
 
 .btn-denunciar {
-    background: #fff0f0;
-    color: #c0392b;
+    background: var(--tema-erro-bg, #fff0f0);
+    color: var(--tema-erro-text, #c0392b);
     border: 1px solid #f5a8a8;
 }
 .btn-denunciar:hover {
-    background: #ffe0e0;
+    background: color-mix(in srgb, #ffe0e0 var(--tema-pastel, 100%), var(--cor-superficie));
     transform: translateY(-2px);
 }
 
@@ -372,7 +381,7 @@ body > h3:not(.section-title) {
     margin: 2rem auto 1rem;
     padding: 0 1.5rem;
     font-size: 1.3rem;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-weight: 700;
 }
 
@@ -388,7 +397,7 @@ body > h3:not(.section-title) {
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid var(--cor-borda);
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     aspect-ratio: 1/1;
     transition: var(--transicao-padrao);
 }
@@ -420,7 +429,7 @@ body > p:last-of-type a {
     transition: var(--transicao-padrao);
 }
 body > p:last-of-type a:hover {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     transform: translateX(-4px);
 }
 
@@ -519,4 +528,139 @@ body > p:last-of-type a:hover {
         transform: none !important;
         box-shadow: none !important;
     }
+}
+
+/* Avisos (flash) com a mesma largura e alinhamento do card do anúncio */
+body > .flash-sucesso,
+body > .flash-erro,
+body > .flash-aviso {
+    max-width: 1100px;
+    margin: 0 auto 1.5rem;
+}
+@media (max-width: 1148px) {
+    body > .flash-sucesso,
+    body > .flash-erro,
+    body > .flash-aviso { margin-left: 1.5rem; margin-right: 1.5rem; }
+}
+
+/* ============================================================
+   FOTOS AMPLIADAS (public/js/galeria.js)
+   ============================================================ */
+.foto-ampliar {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+}
+.foto-ampliar img { display: block; }
+.foto-ampliar-dica {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+.detalhes-imagem .foto-ampliar-dica i { font-size: 0.85rem; padding: 0; color: inherit; }
+.foto-ampliar:hover .foto-ampliar-dica,
+.foto-ampliar:focus-visible .foto-ampliar-dica { opacity: 1; }
+.foto-ampliar:focus-visible { outline: 3px solid var(--tema-primaria-texto, var(--cor-primaria)); outline-offset: 2px; }
+.galeria-anuncio .foto-item { cursor: zoom-in; }
+
+html.gv-aberto { overflow: hidden; }
+.galeria-visualizador {
+    position: fixed;
+    inset: 0;
+    /* Acima da navbar e do botão flutuante do VLibras */
+    z-index: 2147483000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 10, 15, 0.92);
+    padding: 4.5rem 1.5rem 6rem;
+}
+.galeria-visualizador[hidden] { display: none; }
+.gv-figura {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gv-figura img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    filter: none !important;
+}
+.gv-fechar,
+.gv-nav {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.gv-fechar:hover, .gv-nav:hover,
+.gv-fechar:focus-visible, .gv-nav:focus-visible { background: rgba(255, 255, 255, 0.25); outline: 2px solid #ffffff; outline-offset: 2px; }
+.gv-fechar { top: 12px; right: 12px; }
+.gv-anterior { left: calc(50% - 110px); bottom: 18px; }
+.gv-proxima { right: calc(50% - 110px); bottom: 18px; }
+.gv-unica .gv-nav { display: none; }
+.gv-contador {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin: 0;
+    text-align: center;
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+}
+@media (max-width: 600px) {
+    .galeria-visualizador { padding: 4rem 0.5rem 5.5rem; }
+}
+
+
+/* ===== CELULAR: margens laterais na página do serviço =====
+   O conteúdo desta página fica direto no <body>; sem isso o card,
+   as avaliações e as fotos encostavam na borda da tela. */
+@media (max-width: 600px) {
+    body > h1,
+    body > hr,
+    body > .detalhes-container,
+    body > .avaliacoes-anuncio,
+    body > h3,
+    body > .galeria-anuncio,
+    body > p { margin-left: 12px; margin-right: 12px; }
+    body > .detalhes-container { padding: 1rem; border-radius: 16px; gap: 1.25rem; }
+    body > .galeria-anuncio { padding: 0; }
+    .detalhes-acoes { gap: 0.6rem; }
+    .detalhes-acoes .btn-interesse,
+    .detalhes-acoes form { width: 100%; }
+    .detalhes-acoes form .btn-interesse { width: 100%; }
 }

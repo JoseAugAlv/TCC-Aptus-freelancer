@@ -124,7 +124,7 @@ class Database
                     ]
                 );
 
-                if (Config::get('APP_ENV') !== 'production') {
+                if (Config::get('APP_DEBUG') === 'true') {
                     error_log("DB conectado em {$host}:{$port} - {$dbname}");
                 }
 

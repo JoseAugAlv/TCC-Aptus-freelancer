@@ -1,24 +1,30 @@
 /* public/css/variables.css
-   Fonte única de verdade para todas as variáveis globais do Aptus.
-   Carregado no header.php ANTES de qualquer CSS específico de página.
-   Nenhum CSS de página deve redeclarar :root. */
+   Fonte única de verdade para as variáveis globais do Aptus.
+   Carregado no header.php ANTES de qualquer outro CSS.
+
+   Regras:
+   - header.css, nav.css, footer.css e os demais CSS globais NÃO declaram :root.
+   - Um CSS de página só declara :root para o que aquela página realmente
+     muda em relação a este arquivo (ex.: outro --cor-fundo).
+   - Tema escuro e daltonismo ficam em acessibilidade.css, carregado por
+     último, com seletores html[data-tema] / html[data-daltonismo]. */
 
 :root {
-    /* ========== Cores primárias ========== */
+    /* ========== Marca ========== */
     --cor-primaria: #006577;
     --cor-hover: #004d5c;
-    --cor-secundaria: #8a6d1a;
-
-    /* Dourado tem dois papéis: */
-    --cor-dourado: #8a6d1a;             /* texto sobre branco (WCAG AA) */
-    --cor-dourado-decorativo: #C9A227;  /* bordas/fundos com texto branco por cima */
+    --cor-secundaria: #C9A227;
+    --cor-dourado: #C9A227;
+    --cor-dourado-decorativo: #C9A227;
 
     /* ========== Feedback ========== */
     --cor-sucesso: #10b981;
+    --cor-sucesso-escuro: #059669;
     --cor-sucesso-bg: #d1fae5;
     --cor-sucesso-text: #065f46;
 
     --cor-erro: #ef4444;
+    --cor-erro-escuro: #dc2626;
     --cor-erro-bg: #fee2e2;
     --cor-erro-text: #991b1b;
 
@@ -31,22 +37,39 @@
     --cor-info-text: #1e40af;
 
     /* ========== Texto ========== */
-    --cor-texto-principal: #1a2f3e;
+    --cor-texto-principal: #1a1a1a;
     --cor-texto-secundario: #555555;
     --cor-texto-suave: #94a8b4;
 
-    /* ========== Superfícies ========== */
+    /* ========== Superfícies ==========
+       --cor-branco é sempre branco (texto sobre botões coloridos).
+       Fundos de cards/painéis usam --cor-superficie, que muda no tema escuro. */
     --cor-branco: #ffffff;
-    --cor-fundo: #f8fafc;
-    --cor-borda: #e2e8f0;
-    --cor-sombra: rgba(0, 101, 119, 0.12);
+    --cor-fundo: #e2fbff;
+    --cor-fundo-alt: #f5f7fa;
+    --cor-fundo-gradiente: #c3cfe2;
+    --cor-superficie: #ffffff;
+    --rgb-superficie: 255, 255, 255;     /* uso: rgba(var(--rgb-superficie, 255, 255, 255), .9) */
+    --cor-primaria-suave: #e6f3f5;
+    --cor-borda: #b3e5fc;
+    --cor-sombra: rgba(0, 101, 119, 0.1);
+
+    /* ========== Acessibilidade ==========
+       Controlado por public/js/acessibilidade.js (atributos no <html>).
+       Cores fixas nos CSS usam var(--tema-*, #corOriginal): os tokens
+       --tema-* NÃO são definidos aqui, então o tema claro usa exatamente a
+       cor original e o tema escuro os define em acessibilidade.css.
+       A cor da marca usada como TEXTO/borda vem como
+       var(--tema-primaria-texto, var(--cor-primaria)), porque no escuro o
+       teal precisa ser mais claro como texto do que como fundo de botão. */
+    --escala-fonte: 1;
 
     /* ========== Tipografia ========== */
     --font-padrao: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
     /* ========== Layout ========== */
     --altura-navbar: 70px;
-    --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transicao-padrao: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
     /* ========== Z-index nomeado ========== */
     --z-navbar: 100;

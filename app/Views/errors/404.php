@@ -1,7 +1,13 @@
 <?php
 // app/Views/errors/404.php
 
-$tituloPagina = 'Pagina nao encontrada - Aptus';
+$erroCodigo   = $erroCodigo   ?? '404';
+$erroTitulo   = $erroTitulo   ?? 'Página não encontrada';
+$erroMensagem = $erroMensagem ?? 'Ops! A página que você está procurando não existe ou foi removida.';
+$erroDica     = $erroDica     ?? 'Verifique se o endereço está correto ou tente voltar para o início.';
+$erroIcone    = $erroIcone    ?? 'fas fa-search';
+
+$tituloPagina = $erroTitulo . ' - Aptus';
 $cssPagina = 'erro.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
@@ -9,20 +15,20 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 <div class="erro-container">
     <div class="erro-content">
-        <div class="erro-codigo">404</div>
-        <h1>Pagina nao encontrada</h1>
-        <p>Ops! A pagina que voce esta procurando nao existe ou foi removida.</p>
-        <p class="erro-dica">Verifique se o endereco esta correto ou tente voltar para o inicio.</p>
+        <div class="erro-codigo"><?= htmlspecialchars($erroCodigo) ?></div>
+        <h1><?= htmlspecialchars($erroTitulo) ?></h1>
+        <p><?= htmlspecialchars($erroMensagem) ?></p>
+        <p class="erro-dica"><?= htmlspecialchars($erroDica) ?></p>
         <div class="erro-acoes">
-            <a href="/Aptus/" class="btn-primary">
-                <i class="fas fa-home"></i> Voltar para o Inicio
+            <a href="<?= aptus_base() ?>/" class="btn-primary">
+                <i class="fas fa-home"></i> Voltar para o Início
             </a>
             <a href="javascript:history.back()" class="btn-secondary">
-                <i class="fas fa-arrow-left"></i> Voltar para a pagina anterior
+                <i class="fas fa-arrow-left"></i> Voltar para a página anterior
             </a>
         </div>
         <div class="erro-ilustracao">
-            <i class="fas fa-search"></i>
+            <i class="<?= htmlspecialchars($erroIcone) ?>"></i>
         </div>
     </div>
 </div>
@@ -36,17 +42,17 @@ require_once __DIR__ . '/../layouts/nav.php';
 }
 
 .erro-content {
-    background: #fff;
+    background: var(--tema-superficie, #fff);
     padding: 50px 40px;
     border-radius: 16px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tema-borda, #e2e8f0);
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 .erro-codigo {
     font-size: 8rem;
     font-weight: 800;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     line-height: 1;
     margin-bottom: 10px;
     text-shadow: 0 4px 20px rgba(0,101,119,0.15);
@@ -54,18 +60,18 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 .erro-content h1 {
     font-size: 2rem;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     margin-bottom: 12px;
 }
 
 .erro-content p {
-    color: #6b7280;
+    color: var(--tema-texto-sec, #6b7280);
     font-size: 1.05rem;
     margin-bottom: 8px;
 }
 
 .erro-dica {
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
     font-size: 0.95rem;
     margin-bottom: 30px;
 }
@@ -83,7 +89,7 @@ require_once __DIR__ . '/../layouts/nav.php';
     align-items: center;
     gap: 8px;
     padding: 12px 28px;
-    background: #006577;
+    background: var(--cor-primaria);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -94,7 +100,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 }
 
 .btn-primary:hover {
-    background: #004d5c;
+    background: var(--cor-hover);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,101,119,0.3);
 }
@@ -104,9 +110,9 @@ require_once __DIR__ . '/../layouts/nav.php';
     align-items: center;
     gap: 8px;
     padding: 12px 28px;
-    background: #f1f5f9;
-    color: #1a2f3e;
-    border: 2px solid #e2e8f0;
+    background: var(--tema-fundo-alt, #f1f5f9);
+    color: var(--tema-texto, #1a2f3e);
+    border: 2px solid var(--tema-borda, #e2e8f0);
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
@@ -115,7 +121,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 }
 
 .btn-secondary:hover {
-    background: #e2e8f0;
+    background: var(--tema-neutro-bg, #e2e8f0);
 }
 
 .erro-ilustracao {

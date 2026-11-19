@@ -3,38 +3,51 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    
+
     // ==========================================
     // FILTROS
     // ==========================================
     const btnFiltros = document.getElementById('btnFiltros');
     const filtrosSection = document.getElementById('filtrosSection');
-    
+    const formFiltros = document.getElementById('formFiltros');
+    const searchInput = document.getElementById('searchInput');
+
     if (btnFiltros && filtrosSection) {
+        const abrir = function(aberto) {
+            filtrosSection.style.display = aberto ? 'block' : 'none';
+            btnFiltros.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+        };
+
+        btnFiltros.setAttribute('aria-controls', 'filtrosSection');
+        btnFiltros.setAttribute('aria-expanded', 'false');
+
         btnFiltros.addEventListener('click', function(e) {
+            e.preventDefault();
             e.stopPropagation();
-            filtrosSection.style.display = 
-                filtrosSection.style.display === 'none' ? 'block' : 'none';
+            abrir(filtrosSection.style.display !== 'block');
         });
 
-        // Fechar filtros ao clicar fora
+        // Fechar ao clicar fora
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.search-section')) {
-                filtrosSection.style.display = 'none';
+                abrir(false);
+            }
+        });
+
+        // Fechar com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && filtrosSection.style.display === 'block') {
+                abrir(false);
+                btnFiltros.focus();
             }
         });
     }
 
-    // ==========================================
-    // BUSCA
-    // ==========================================
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                // O formulário cuida do envio via GET
-                console.log('Buscando: ' + this.value);
-            }
+    // Leva o texto digitado na busca junto com os filtros
+    if (formFiltros && searchInput) {
+        formFiltros.addEventListener('submit', function() {
+            const q = formFiltros.querySelector('input[name="q"]');
+            if (q) q.value = searchInput.value.trim();
         });
     }
 });

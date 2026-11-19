@@ -18,7 +18,7 @@ class ChatController
     public function index()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
         $conversas = $this->mensagem->getConversasRecentes($usuarioId);
@@ -31,20 +31,22 @@ class ChatController
     public function conversa($interesseId = null)
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
-        if (!$interesseId) { header('Location: /Aptus/chat'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
+        if (!$interesseId) { header(('Location: ' . aptus_base() . '/chat')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
 
         if (!$this->mensagem->usuarioPodeVer($interesseId, $usuarioId)) {
-            header('Location: /Aptus/chat');
+            header(('Location: ' . aptus_base() . '/chat'));
             exit;
         }
 
         $interesse = $this->mensagem->getDadosInteresse($interesseId, $usuarioId);
-        if (!$interesse) { header('Location: /Aptus/chat'); exit; }
+        if (!$interesse) { header(('Location: ' . aptus_base() . '/chat')); exit; }
 
         $outroUsuario = $this->mensagem->getOutroUsuario($interesseId, $usuarioId);
+        require_once __DIR__ . '/../Helpers/RestricaoHelper.php';
+        $chatBloqueado = RestricaoHelper::existeBloqueio((int) $usuarioId, (int) ($outroUsuario['id_usuario'] ?? 0));
         $mensagens    = $this->mensagem->getByInteresse($interesseId, 100);
 
         $this->mensagem->marcarLidas($interesseId, $usuarioId);
@@ -62,7 +64,7 @@ class ChatController
         if (!isset($_SESSION['usuario'])) {
             http_response_code(401);
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'message' => 'Login necessario']);
+            echo json_encode(['success' => false, 'message' => 'Login necessário']);
             exit;
         }
 
@@ -90,7 +92,7 @@ class ChatController
         if ($interesseId <= 0) {
             http_response_code(400);
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'message' => 'ID do interesse invalido']);
+            echo json_encode(['success' => false, 'message' => 'ID do interesse inválido']);
             exit;
         }
 
@@ -119,13 +121,21 @@ class ChatController
         if (!$interesse) {
             http_response_code(404);
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'message' => 'Interesse nao encontrado']);
+            echo json_encode(['success' => false, 'message' => 'Interesse não encontrado']);
             exit;
         }
 
         $destinatarioId = ((int) $interesse['id_contratante'] === $usuarioId)
             ? (int) $interesse['id_freelancer']
             : (int) $interesse['id_contratante'];
+
+        require_once __DIR__ . '/../Helpers/RestricaoHelper.php';
+        if (RestricaoHelper::existeBloqueio($usuarioId, $destinatarioId)) {
+            http_response_code(403);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['success' => false, 'message' => 'Existe um bloqueio entre vocês. Não é possível enviar mensagens.']);
+            exit;
+        }
 
         try {
             $resultado = $this->mensagem->enviar(
@@ -175,7 +185,7 @@ class ChatController
         if (!isset($_SESSION['usuario'])) {
             http_response_code(401);
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'message' => 'Login necessario']);
+            echo json_encode(['success' => false, 'message' => 'Login necessário']);
             exit;
         }
 
@@ -186,7 +196,7 @@ class ChatController
         if ($interesseId <= 0) {
             http_response_code(400);
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'message' => 'ID invalido']);
+            echo json_encode(['success' => false, 'message' => 'ID inválido']);
             exit;
         }
 

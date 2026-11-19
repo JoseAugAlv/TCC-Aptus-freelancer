@@ -11,50 +11,58 @@ $interesse = $interesse ?? [];
 $anuncio = $anuncio ?? [];
 ?>
 
-<h1>Avaliar Serviço</h1>
-<p>Compartilhe sua experiência com o freelancer</p>
-
-<hr>
-
-<?php if (isset($_SESSION['flash'])): ?>
-    <div class="flash-<?= $_SESSION['flash']['tipo'] ?>">
-        <?= htmlspecialchars($_SESSION['flash']['mensagem']) ?>
+<div class="avaliacao-container">
+    <div class="avaliacao-header">
+        <h1><i class="fas fa-star"></i> Avaliar Serviço</h1>
+        <p>Compartilhe sua experiência com o freelancer</p>
     </div>
-    <?php unset($_SESSION['flash']); ?>
-<?php endif; ?>
 
-<div>
-    <h2><?= htmlspecialchars($anuncio['titulo'] ?? '') ?></h2>
-    <p><strong>Freelancer:</strong> <?= htmlspecialchars($interesse['freelancer_nome'] ?? '') ?></p>
-    <p><strong>Preço:</strong> R$ <?= number_format($anuncio['preco'] ?? 0, 2, ',', '.') ?></p>
-</div>
-
-<hr>
-
-<form method="POST" action="/Aptus/avaliacoes/salvar">
-    <input type="hidden" name="interesse_id" value="<?= $interesse['id_interesse'] ?? 0 ?>">
-
-    <div>
-        <label>Nota</label>
-        <div>
-            <label><input type="radio" name="nota" value="1" required> 1 Estrela</label>
-            <label><input type="radio" name="nota" value="2"> 2 Estrelas</label>
-            <label><input type="radio" name="nota" value="3"> 3 Estrelas</label>
-            <label><input type="radio" name="nota" value="4"> 4 Estrelas</label>
-            <label><input type="radio" name="nota" value="5"> 5 Estrelas</label>
+    <?php if (isset($_SESSION['flash'])): ?>
+        <div class="flash-<?= htmlspecialchars($_SESSION['flash']['tipo']) ?>">
+            <?= htmlspecialchars($_SESSION['flash']['mensagem']) ?>
         </div>
-    </div>
+        <?php unset($_SESSION['flash']); ?>
+    <?php endif; ?>
 
-    <div>
-        <label for="comentario">Comentário</label>
-        <textarea id="comentario" name="comentario" rows="4" placeholder="Descreva sua experiência com o serviço..."></textarea>
-    </div>
+    <div class="avaliacao-card">
+        <div class="avaliacao-info">
+            <p><strong>Serviço:</strong> <?= htmlspecialchars($anuncio['titulo'] ?? '') ?></p>
+            <p><strong>Freelancer:</strong> <?= htmlspecialchars($interesse['freelancer_nome'] ?? '') ?></p>
+            <p><strong>Preço:</strong> R$ <?= number_format($anuncio['preco'] ?? 0, 2, ',', '.') ?></p>
+        </div>
 
-    <div>
-        <button type="submit">Enviar Avaliação</button>
-        <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?? 0 ?>">Cancelar</a>
+        <form method="POST" action="<?= aptus_base() ?>/avaliacoes/salvar">
+            <input type="hidden" name="interesse_id" value="<?= (int) ($interesse['id_interesse'] ?? 0) ?>">
+
+            <fieldset class="form-group avaliacao-nota">
+                <legend>Nota *</legend>
+                <div class="avaliacao-estrelas">
+                    <?php for ($n = 5; $n >= 1; $n--): ?>
+                        <input type="radio" id="nota<?= $n ?>" name="nota" value="<?= $n ?>" <?= $n === 1 ? 'required' : '' ?>>
+                        <label for="nota<?= $n ?>" title="<?= $n ?> estrela<?= $n > 1 ? 's' : '' ?>">
+                            <i class="fas fa-star" aria-hidden="true"></i>
+                            <span class="sr-only"><?= $n ?> estrela<?= $n > 1 ? 's' : '' ?></span>
+                        </label>
+                    <?php endfor; ?>
+                </div>
+            </fieldset>
+
+            <div class="form-group">
+                <label for="comentario">Comentário</label>
+                <textarea id="comentario" name="comentario" rows="4" placeholder="Descreva sua experiência com o serviço..."></textarea>
+            </div>
+
+            <div class="avaliacao-acoes">
+                <button type="submit" class="btn-enviar">
+                    <i class="fas fa-paper-plane"></i> Enviar Avaliação
+                </button>
+                <a href="<?= aptus_base() ?>/interesses/detalhes/<?= url_id((int) ($interesse['id_interesse'] ?? 0)) ?>" class="btn-cancelar">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+            <?= CsrfMiddleware::field() ?>
+        </form>
     </div>
-<?= CsrfMiddleware::field() ?>
-</form>
+</div>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

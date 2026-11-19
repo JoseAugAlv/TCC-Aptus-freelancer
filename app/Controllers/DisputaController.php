@@ -21,21 +21,21 @@ class DisputaController
     public function criar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
-        $interesseId = (int) ($_GET['interesse_id'] ?? 0);
-        if ($interesseId <= 0) { header('Location: /Aptus/interesses/ativos'); exit; }
+        $interesseId = UrlId::query('interesse_id');
+        if ($interesseId <= 0) { header(('Location: ' . aptus_base() . '/interesses/ativos')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
 
         if (!$this->disputa->podeAbrir($interesseId, $usuarioId)) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Não é possível abrir disputa para este serviço.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         if ($this->disputa->existsAtiva($interesseId)) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Já existe uma disputa ativa para este serviço.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         $interesse = $this->interesse->findById($interesseId);
@@ -50,7 +50,7 @@ class DisputaController
     public function salvar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $interesseId = (int) ($_POST['interesse_id'] ?? 0);
         $motivo      = trim($_POST['motivo'] ?? '');
@@ -59,17 +59,17 @@ class DisputaController
 
         if ($interesseId <= 0 || $motivo === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Preencha todos os campos obrigatórios.'];
-            header('Location: /Aptus/disputas/criar?interesse_id=' . $interesseId); exit;
+            header(('Location: ' . aptus_base() . '/disputas/criar?interesse_id=') . url_id($interesseId)); exit;
         }
 
         if (!$this->disputa->podeAbrir($interesseId, $usuarioId)) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Não é possível abrir disputa para este serviço.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         if ($this->disputa->existsAtiva($interesseId)) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Já existe uma disputa ativa para este serviço.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         $pdo = Database::getConnection();
@@ -87,7 +87,7 @@ class DisputaController
             $this->disputa->create($dados);
             $disputaId = (int) $pdo->lastInsertId();
 
-            $sql  = "SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4)";
+            $sql  = "SELECT id_usuario FROM usuario WHERE id_perfil IN (1, 2, 4) AND ativo = 1 AND banido = 0";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $moderadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -132,20 +132,20 @@ class DisputaController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível abrir a disputa. Tente novamente.'];
         }
 
-        header('Location: /Aptus/interesses/ativos');
+        header(('Location: ' . aptus_base() . '/interesses/ativos'));
         exit;
     }
 
     public function detalhes($id = null)
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
-        if (!$id) { header('Location: /Aptus/interesses/ativos'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
+        if (!$id) { header(('Location: ' . aptus_base() . '/interesses/ativos')); exit; }
 
         $disputa = $this->disputa->findById($id);
         if (!$disputa) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Disputa não encontrada.'];
-            header('Location: /Aptus/interesses/ativos'); exit;
+            header(('Location: ' . aptus_base() . '/interesses/ativos')); exit;
         }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
@@ -156,7 +156,7 @@ class DisputaController
                  || (int) $disputa['id_freelancer'] === $usuarioId
                  || in_array($role, [1, 2, 4], true));
 
-        if (!$podeVer) { header('Location: /Aptus/interesses/ativos'); exit; }
+        if (!$podeVer) { header(('Location: ' . aptus_base() . '/interesses/ativos')); exit; }
 
         $tituloPagina = 'Detalhes da Disputa - Aptus';
         $cssPagina    = 'disputas.css';
@@ -167,16 +167,16 @@ class DisputaController
     public function listar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $role = (int) $_SESSION['usuario']['role'];
-        if (!in_array($role, [1, 2, 4], true)) { header('Location: /Aptus/'); exit; }
+        if (!in_array($role, [1, 2, 4], true)) { header(('Location: ' . aptus_base() . '/')); exit; }
 
         $disputas       = $this->disputa->getPendentes();
         $totalPendentes = $this->disputa->countPendentes();
 
         $tituloPagina = 'Disputas - Moderação';
-        $cssPagina    = 'moderador.css';
+        $cssPagina    = 'disputa.css';
 
         require '../app/Views/moderator/disputas.php';
     }
@@ -184,23 +184,27 @@ class DisputaController
     public function aprovar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $role = (int) $_SESSION['usuario']['role'];
-        if (!in_array($role, [1, 2, 4], true)) { header('Location: /Aptus/'); exit; }
+        if (!in_array($role, [1, 2, 4], true)) { header(('Location: ' . aptus_base() . '/')); exit; }
 
         $id          = (int) ($_POST['id'] ?? 0);
         $resposta    = trim($_POST['resposta'] ?? '');
         $moderadorId = (int) $_SESSION['usuario']['id'];
 
-        if ($id <= 0) { header('Location: /Aptus/moderator/disputas'); exit; }
+        if ($id <= 0) { header(('Location: ' . aptus_base() . '/moderator/disputas')); exit; }
+
+        $this->validarModeracao($id, $moderadorId, $resposta);
 
         $pdo = Database::getConnection();
 
         try {
             $pdo->beginTransaction();
 
-            $this->disputa->aprovar($id, $moderadorId, $resposta);
+            if (!$this->disputa->aprovar($id, $moderadorId, $resposta)) {
+                throw new RuntimeException('Disputa já resolvida.');
+            }
 
             $disputa = $this->disputa->findById($id);
 
@@ -223,30 +227,34 @@ class DisputaController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível aprovar a disputa. Tente novamente.'];
         }
 
-        header('Location: /Aptus/moderator/disputas');
+        header(('Location: ' . aptus_base() . '/moderator/disputas'));
         exit;
     }
 
     public function rejeitar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $role = (int) $_SESSION['usuario']['role'];
-        if (!in_array($role, [1, 2, 4], true)) { header('Location: /Aptus/'); exit; }
+        if (!in_array($role, [1, 2, 4], true)) { header(('Location: ' . aptus_base() . '/')); exit; }
 
         $id          = (int) ($_POST['id'] ?? 0);
         $resposta    = trim($_POST['resposta'] ?? '');
         $moderadorId = (int) $_SESSION['usuario']['id'];
 
-        if ($id <= 0) { header('Location: /Aptus/moderator/disputas'); exit; }
+        if ($id <= 0) { header(('Location: ' . aptus_base() . '/moderator/disputas')); exit; }
+
+        $this->validarModeracao($id, $moderadorId, $resposta);
 
         $pdo = Database::getConnection();
 
         try {
             $pdo->beginTransaction();
 
-            $this->disputa->rejeitar($id, $moderadorId, $resposta);
+            if (!$this->disputa->rejeitar($id, $moderadorId, $resposta)) {
+                throw new RuntimeException('Disputa já resolvida.');
+            }
 
             $disputa = $this->disputa->findById($id);
 
@@ -269,7 +277,37 @@ class DisputaController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível rejeitar a disputa. Tente novamente.'];
         }
 
-        header('Location: /Aptus/moderator/disputas');
+        header(('Location: ' . aptus_base() . '/moderator/disputas'));
         exit;
+    }
+
+    /**
+     * Regras para moderar disputa: precisa existir, estar pendente, ter justificativa
+     * e o moderador não pode ser parte (contratante, freelancer ou quem abriu).
+     */
+    private function validarModeracao(int $id, int $moderadorId, string $resposta): void
+    {
+        $disputa = $this->disputa->findById($id);
+        $erro = null;
+
+        if (!$disputa) {
+            $erro = 'Disputa não encontrada.';
+        } elseif ((int) $disputa['id_situacao'] !== 1) {
+            $erro = 'Esta disputa já foi resolvida.';
+        } elseif (in_array($moderadorId, [
+            (int) $disputa['id_contratante'],
+            (int) $disputa['id_freelancer'],
+            (int) $disputa['id_aberto_por'],
+        ], true)) {
+            $erro = 'Você é parte desta disputa e não pode julgá-la.';
+        } elseif ($resposta === '') {
+            $erro = 'Informe a justificativa da decisão.';
+        }
+
+        if ($erro !== null) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => $erro];
+            header(('Location: ' . aptus_base() . '/moderator/disputas'));
+            exit;
+        }
     }
 }

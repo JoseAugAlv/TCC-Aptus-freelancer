@@ -32,13 +32,13 @@ class RelatorioController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
         
         $role = (int) $_SESSION['usuario']['role'];
         if (!in_array($role, [1, 2, 4])) {
-            header('Location: /Aptus/');
+            header(('Location: ' . aptus_base() . '/'));
             exit;
         }
 
@@ -75,7 +75,7 @@ class RelatorioController
         // Buscas sem categoria
         $buscasSemCategoria = $this->buscaLog->getBuscasSemCategoria();
         
-        $tituloPagina = 'Relatorios - Aptus';
+        $tituloPagina = 'Relatórios - Aptus';
         $cssPagina = 'relatorios.css';
         
         require '../app/Views/relatorios/index.php';
@@ -92,13 +92,13 @@ class RelatorioController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
         
         $role = (int) $_SESSION['usuario']['role'];
         if (!in_array($role, [1, 2, 4])) {
-            header('Location: /Aptus/');
+            header(('Location: ' . aptus_base() . '/'));
             exit;
         }
 
@@ -139,13 +139,13 @@ class RelatorioController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
         
         $role = (int) $_SESSION['usuario']['role'];
         if (!in_array($role, [1, 2, 4])) {
-            header('Location: /Aptus/');
+            header(('Location: ' . aptus_base() . '/'));
             exit;
         }
 

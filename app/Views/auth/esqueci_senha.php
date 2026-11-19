@@ -13,7 +13,7 @@ require_once __DIR__ . '/../layouts/nav.php';
         <div class="auth-card" style="max-width: 500px;">
             <div class="auth-header">
                 <h2>Esqueci a Senha</h2>
-                <p>Digite seu e-mail para receber as instrucoes</p>
+                <p>Digite seu e-mail para receber as instruções</p>
             </div>
 
             <?php if (isset($_SESSION['flash'])): ?>
@@ -23,18 +23,18 @@ require_once __DIR__ . '/../layouts/nav.php';
                 <?php unset($_SESSION['flash']); ?>
             <?php endif; ?>
 
-            <form method="POST" action="/Aptus/auth/enviar-token" class="auth-form">
+            <form method="POST" action="<?= aptus_base() ?>/auth/enviar-token" class="auth-form">
                 <div class="form-group">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-full">Enviar Instrucoes</button>
+                <button type="submit" class="btn btn-primary btn-full">Enviar Instruções</button>
             <?= CsrfMiddleware::field() ?>
 </form>
 
             <div class="auth-footer">
-                <p><a href="/Aptus/login">Voltar para o login</a></p>
+                <p><a href="<?= aptus_base() ?>/login">Voltar para o login</a></p>
             </div>
         </div>
     </div>

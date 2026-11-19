@@ -73,23 +73,27 @@ $role    = $_SESSION['usuario']['role'] ?? 0;
         <?php endif; ?>
 
         <div class="disputa-detalhes-acoes">
-            <?php if (in_array($role, [1, 2, 4]) && $disputa['situacao_nome'] == 'Pendente'): ?>
-                <form method="POST" action="/Aptus/moderator/disputas/aprovar" style="display:inline;">
+            <?php
+                $__uid = (int) ($_SESSION['usuario']['id'] ?? 0);
+                $__ehParte = in_array($__uid, [(int) $disputa['id_contratante'], (int) $disputa['id_freelancer'], (int) $disputa['id_aberto_por']], true);
+            ?>
+            <?php if (in_array($role, [1, 2, 4]) && $disputa['situacao_nome'] == 'Pendente' && !$__ehParte): ?>
+                <form method="POST" action="<?= aptus_base() ?>/moderator/disputas/aprovar" style="display:inline;">
                     <input type="hidden" name="id" value="<?= $disputa['id_disputa'] ?>">
                     <div class="form-group">
                         <label for="resposta_aprovar">Resposta (opcional)</label>
-                        <textarea id="resposta_aprovar" name="resposta" rows="2" placeholder="Justificativa..."></textarea>
+                        <textarea id="resposta_aprovar" name="resposta" rows="2" placeholder="Justificativa..." required maxlength="1000"></textarea>
                     </div>
                     <button type="submit" class="btn-aprovar" onclick="return confirm('Aprovar esta disputa?')">
                         <i class="fas fa-check"></i> Aprovar
                     </button>
                     <?= CsrfMiddleware::field() ?>
                 </form>
-                <form method="POST" action="/Aptus/moderator/disputas/rejeitar" style="display:inline;">
+                <form method="POST" action="<?= aptus_base() ?>/moderator/disputas/rejeitar" style="display:inline;">
                     <input type="hidden" name="id" value="<?= $disputa['id_disputa'] ?>">
                     <div class="form-group">
                         <label for="resposta_rejeitar">Resposta (opcional)</label>
-                        <textarea id="resposta_rejeitar" name="resposta" rows="2" placeholder="Justificativa..."></textarea>
+                        <textarea id="resposta_rejeitar" name="resposta" rows="2" placeholder="Justificativa..." required maxlength="1000"></textarea>
                     </div>
                     <button type="submit" class="btn-rejeitar" onclick="return confirm('Rejeitar esta disputa?')">
                         <i class="fas fa-times"></i> Rejeitar

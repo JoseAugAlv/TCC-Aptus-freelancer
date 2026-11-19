@@ -29,8 +29,8 @@ $tituloServico = $interesse['anuncio_titulo'] ?? ('Interesse #' . (int) $interes
 $valorSugerido = (float) ($interesse['anuncio_preco'] ?? 0);
 
 $acaoUrl = ($papel === 'freelancer')
-    ? '/Aptus/pagamentos/confirmar-freelancer'
-    : '/Aptus/pagamentos/confirmar-contratante';
+    ? (aptus_base() . '/pagamentos/confirmar-freelancer')
+    : (aptus_base() . '/pagamentos/confirmar-contratante');
 
 $jaConfirmou = false;
 if ($confirmacao) {
@@ -96,7 +96,7 @@ if (!array_filter($formasHabilitadas)) {
                 <p>Aguarde a confirmação da outra parte para o status final.</p>
             </div>
             <div class="form-actions">
-                <a href="/Aptus/pagamentos" class="btn btn-secondary">Voltar</a>
+                <a href="<?= aptus_base() ?>/pagamentos" class="btn btn-secondary">Voltar</a>
             </div>
         <?php else: ?>
             <form method="POST" action="<?= htmlspecialchars($acaoUrl, ENT_QUOTES, 'UTF-8') ?>" class="pagamento-form-confirmar">
@@ -145,7 +145,7 @@ if (!array_filter($formasHabilitadas)) {
                 </div>
 
                 <div class="form-actions">
-                    <a href="/Aptus/pagamentos" class="btn btn-secondary">Voltar</a>
+                    <a href="<?= aptus_base() ?>/pagamentos" class="btn btn-secondary">Voltar</a>
                     <button type="submit" class="btn btn-primary btn-full">Confirmar</button>
                 </div>
             </form>

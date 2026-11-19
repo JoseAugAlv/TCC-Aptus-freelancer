@@ -1,4 +1,4 @@
-body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #1a1a2e; margin: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: var(--tema-fundo-alt, #f8fafc); color: var(--tema-texto, #1a1a2e); margin: 0; }
 .is-loading { opacity: 0.7; pointer-events: none; }
 
 html, body { width: 100%; max-width: 100%; overflow-x: hidden; }

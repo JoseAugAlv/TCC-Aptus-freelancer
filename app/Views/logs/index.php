@@ -25,7 +25,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 
             <!-- Filtros -->
             <div class="logs-filtros">
-                <form method="GET" action="/Aptus/logs">
+                <form method="GET" action="<?= aptus_base() ?>/logs">
                     <div class="filtros-grid">
                         <div class="filtro-group">
                             <label for="buscar"><i class="fas fa-search"></i> Buscar</label>
@@ -62,7 +62,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                                 <button type="submit" class="btn" style="background: #2563eb; color: white;">
                                     <i class="fas fa-filter"></i> Filtrar
                                 </button>
-                                <a href="/Aptus/logs" class="btn" style="background: #6c757d; color: white;">
+                                <a href="<?= aptus_base() ?>/logs" class="btn" style="background: #6c757d; color: white;">
                                     <i class="fas fa-undo"></i> Limpar
                                 </a>
                             </div>
@@ -116,7 +116,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                     </div>
                 <?php endif; ?>
                 
-                <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; text-align: center; font-size: 0.9rem; color: var(--color-text);">
+                <div style="margin-top: 1rem; padding: 1rem; background: var(--tema-fundo-alt, #f8f9fa); border-radius: 8px; text-align: center; font-size: 0.9rem; color: var(--color-text);">
                     <i class="fas fa-info-circle"></i> 
                     Total de registros: <strong><?= $total ?? 0 ?></strong>
                     | Mostrando <strong><?= count($logs) ?></strong> registro(s)
@@ -124,8 +124,8 @@ require_once __DIR__ . '/../layouts/nav.php';
             <?php endif; ?>
 
             <!-- Voltar -->
-            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #f0f0f0; text-align: center;">
-                <a href="/Aptus/" class="btn">
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--tema-borda, #f0f0f0); text-align: center;">
+                <a href="<?= aptus_base() ?>/" class="btn">
                     <i class="fas fa-arrow-left"></i> Voltar
                 </a>
             </div>
@@ -136,7 +136,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 
 <style>
 .logs-filtros {
-    background: #f8f9fa;
+    background: var(--tema-fundo-alt, #f8f9fa);
     padding: 1.5rem;
     border-radius: var(--radius-lg);
     margin-bottom: 2rem;
@@ -158,7 +158,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 .filtro-group .form-control {
     width: 100%;
     padding: 0.6rem 0.8rem;
-    border: 2px solid #e9ecef;
+    border: 2px solid color-mix(in srgb, #e9ecef var(--tema-pastel-borda, 100%), var(--cor-borda));
     border-radius: 8px;
     font-family: 'Inter', sans-serif;
     font-size: 0.9rem;
@@ -189,7 +189,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 }
 .logs-table-wrapper tbody td {
     padding: 0.7rem 1rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid color-mix(in srgb, #e9ecef var(--tema-pastel-borda, 100%), var(--cor-borda));
     color: var(--color-text);
     font-size: 0.9rem;
 }
@@ -199,8 +199,8 @@ require_once __DIR__ . '/../layouts/nav.php';
     border-radius: 20px;
     font-size: 0.7rem;
     font-weight: 700;
-    background: #dbeafe;
-    color: #1e40af;
+    background: var(--cor-info-bg);
+    color: var(--cor-info-text);
 }
 .pagination-container {
     display: flex;
@@ -212,7 +212,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 .pagination-container a,
 .pagination-container span {
     padding: 0.4rem 0.8rem;
-    border: 2px solid #e9ecef;
+    border: 2px solid color-mix(in srgb, #e9ecef var(--tema-pastel-borda, 100%), var(--cor-borda));
     border-radius: 6px;
     text-decoration: none;
     color: var(--color-text);

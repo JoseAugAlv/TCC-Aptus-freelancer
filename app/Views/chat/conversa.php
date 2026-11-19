@@ -25,7 +25,7 @@ $usuario      = $_SESSION['usuario'] ?? null;
                 <p class="chat-sidebar-vazio">Nenhuma conversa</p>
             <?php else: ?>
                 <?php foreach ($conversas as $conv): ?>
-                    <a href="/Aptus/chat/<?= $conv['id_interesse'] ?>"
+                    <a href="<?= aptus_base() ?>/chat/<?= url_id($conv['id_interesse']) ?>"
                        class="chat-sidebar-item <?= ($conv['id_interesse'] == ($interesse['id_interesse'] ?? 0)) ? 'ativo' : '' ?>
                               <?= ($conv['nao_lidas'] ?? 0) > 0 ? 'nao-lida' : '' ?>">
                         <div class="chat-sidebar-avatar">
@@ -51,6 +51,9 @@ $usuario      = $_SESSION['usuario'] ?? null;
     <div class="chat-main">
         <?php if ($interesse): ?>
             <div class="chat-main-header">
+                <a href="<?= aptus_base() ?>/chat" class="chat-voltar-mobile" aria-label="Voltar para as conversas">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                </a>
                 <div class="chat-main-usuario">
                     <?php if (!empty($outroUsuario['foto_perfil']) && $outroUsuario['foto_perfil'] != 'default.png'): ?>
                         <img src="<?= htmlspecialchars(\UploadHelper::getUrl($outroUsuario['foto_perfil']), ENT_QUOTES, 'UTF-8') ?>"
@@ -63,8 +66,9 @@ $usuario      = $_SESSION['usuario'] ?? null;
                         <small><?= htmlspecialchars($interesse['anuncio_titulo'] ?? '') ?></small>
                     </div>
                 </div>
-                <a href="/Aptus/anuncios/<?= htmlspecialchars($interesse['anuncio_slug'] ?? '') ?>" class="btn-ver-anuncio">
-                    <i class="fas fa-eye"></i> Ver Anúncio
+                <a href="<?= aptus_base() ?>/anuncios?freelancer=<?= url_id((int) ($outroUsuario['id_usuario'] ?? 0)) ?>" class="btn-ver-anuncio"
+                   title="Todos os anúncios de <?= htmlspecialchars($outroUsuario['nome'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                    <i class="fas fa-th-large"></i> Ver Anúncios
                 </a>
             </div>
 
@@ -87,6 +91,12 @@ $usuario      = $_SESSION['usuario'] ?? null;
                 <?php endif; ?>
             </div>
 
+            <?php if (!empty($chatBloqueado)): ?>
+            <div class="chat-input-area chat-bloqueado" role="status">
+                <i class="fas fa-ban" aria-hidden="true"></i>
+                Existe um bloqueio entre vocês. Não é possível enviar mensagens nesta conversa.
+            </div>
+            <?php else: ?>
             <div class="chat-input-area">
                 <form id="formEnviarMensagem" method="POST" autocomplete="off">
                     <input type="hidden" name="interesse_id" value="<?= $interesse['id_interesse'] ?? 0 ?>">
@@ -97,6 +107,7 @@ $usuario      = $_SESSION['usuario'] ?? null;
                     <?= CsrfMiddleware::field() ?>
                 </form>
             </div>
+            <?php endif; ?>
         <?php else: ?>
             <div class="chat-main-vazio">
                 <i class="fas fa-comments" style="font-size: 4rem; color: #d1d5db;"></i>
@@ -159,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
             container.appendChild(msgElement);
             container.scrollTop = container.scrollHeight;
 
-            fetch('/Aptus/chat/enviar', {
+            fetch('<?= aptus_base() ?>/chat/enviar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -228,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function buscarNovasMensagens() {
         if (interesseId === 0) return;
 
-        fetch('/Aptus/chat/mensagens?interesse_id=' + interesseId + '&ultimo_id=' + ultimoId)
+        fetch('<?= aptus_base() ?>/chat/mensagens?interesse_id=' + interesseId + '&ultimo_id=' + ultimoId)
         .then(r => r.json())
         .then(function(data) {
             if (data.success && data.mensagens.length > 0) {

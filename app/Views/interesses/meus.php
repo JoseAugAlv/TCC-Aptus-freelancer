@@ -30,7 +30,7 @@ $interesses = $interesses ?? [];
             <i class="fas fa-inbox"></i>
             <h3>Nenhum interesse enviado</h3>
             <p>Você ainda não enviou nenhum interesse.</p>
-            <a href="/Aptus/anuncios" class="btn-primary">Explorar Serviços</a>
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-primary">Explorar Serviços</a>
         </div>
     <?php else: ?>
         <div class="interesses-grid">
@@ -56,7 +56,7 @@ $interesses = $interesses ?? [];
                     <div class="interesse-header">
                         <div class="interesse-cliente">
                             <?php if (!empty($interesse['freelancer_foto']) && $interesse['freelancer_foto'] != 'default.png'): ?>
-                                <img src="/Aptus/public/uploads/<?= htmlspecialchars($interesse['freelancer_foto']) ?>"
+                                <img src="<?= aptus_base() ?>/public/uploads/<?= htmlspecialchars($interesse['freelancer_foto']) ?>"
                                      alt="<?= htmlspecialchars($interesse['freelancer_nome']) ?>">
                             <?php else: ?>
                                 <i class="fas fa-user-circle"></i>
@@ -83,10 +83,10 @@ $interesses = $interesses ?? [];
                     </div>
 
                     <div class="interesse-acoes">
-                        <a href="/Aptus/chat/<?= $interesse['id_interesse'] ?>" class="btn-chat">
+                        <a href="<?= aptus_base() ?>/chat/<?= url_id($interesse['id_interesse']) ?>" class="btn-chat">
                             <i class="fas fa-comments"></i> Chat
                         </a>
-                        <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?>" class="btn-detalhes">
+                        <a href="<?= aptus_base() ?>/interesses/detalhes/<?= url_id($interesse['id_interesse']) ?>" class="btn-detalhes">
                             <i class="fas fa-eye"></i> Detalhes
                         </a>
                         <?php if ($interesse['situacao'] == 'pendente'): ?>
@@ -95,12 +95,12 @@ $interesses = $interesses ?? [];
                             </button>
                         <?php endif; ?>
                         <?php if ($interesse['situacao'] == 'ativo'): ?>
-                            <a href="/Aptus/interesses/ativos" class="btn-ativo">
+                            <a href="<?= aptus_base() ?>/interesses/ativos" class="btn-ativo">
                                 <i class="fas fa-check-circle"></i> Serviço Ativo
                             </a>
                         <?php endif; ?>
                         <?php if (in_array($interesse['situacao'], ['pendente', 'ativo'], true)): ?>
-                            <form method="POST" action="/Aptus/interesses/cancelar" style="display:inline;">
+                            <form method="POST" action="<?= aptus_base() ?>/interesses/cancelar" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
                                 <?= CsrfMiddleware::field() ?>
                                 <button type="submit" class="btn-cancelar" onclick="return confirm('Cancelar este interesse?')">
@@ -115,9 +115,9 @@ $interesses = $interesses ?? [];
     <?php endif; ?>
 
     <div class="interesses-links">
-        <a href="/Aptus/interesses/pendentes"><i class="fas fa-clock"></i> Propostas Pendentes</a>
-        <a href="/Aptus/interesses/ativos"><i class="fas fa-check-circle"></i> Serviços Ativos</a>
-        <a href="/Aptus/"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <a href="<?= aptus_base() ?>/interesses/pendentes"><i class="fas fa-clock"></i> Propostas Pendentes</a>
+        <a href="<?= aptus_base() ?>/interesses/ativos"><i class="fas fa-check-circle"></i> Serviços Ativos</a>
+        <a href="<?= aptus_base() ?>/"><i class="fas fa-arrow-left"></i> Voltar</a>
     </div>
 </div>
 

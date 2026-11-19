@@ -5,13 +5,7 @@
 
 /* ----- VARIÁVEIS (mesmas do interesses.css) ----- */
 :root {
-    --cor-primaria: #006577;
-    --cor-secundaria: #C9A227;
-    --cor-dourado: #C9A227;
-    --cor-hover: #004d5c;
     --cor-texto-principal: #1a2f3e;
-    --cor-texto-secundario: #555555;
-    --cor-branco: #ffffff;
     --cor-fundo: #f5f7fa;
     --cor-sombra: rgba(0, 101, 119, 0.12);
     --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -19,7 +13,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, var(--tema-fundo-alt, #f5f7fa) 0%, var(--tema-fundo-gradiente, #c3cfe2) 100%);
     color: var(--cor-texto-principal);
 }
 
@@ -28,7 +22,7 @@ body {
     max-width: 900px;
     margin: 0 auto;
     padding: 90px 1.5rem 2rem; /* ← ajuste conforme altura do nav */
-    background: #f8fafc;
+    background: var(--tema-fundo-alt, #f8fafc);
     min-height: 80vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -43,7 +37,7 @@ body {
 .interesses-header h1 {
     font-size: clamp(1.8rem, 5vw, 2.6rem);
     font-weight: 800;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -58,7 +52,7 @@ body {
 
 .interesses-container hr {
     border: none;
-    border-top: 2px solid #e2e8f0;
+    border-top: 2px solid var(--tema-borda, #e2e8f0);
     margin: 0.5rem 0 2rem 0;
 }
 
@@ -77,35 +71,35 @@ body {
 }
 
 .flash-sucesso {
-    background: #d1fae5;
-    border-left-color: #10b981;
-    color: #065f46;
+    background: var(--cor-sucesso-bg);
+    border-left-color: var(--cor-sucesso);
+    color: var(--cor-sucesso-text);
 }
 
 .flash-erro {
-    background: #fee2e2;
-    border-left-color: #ef4444;
-    color: #991b1b;
+    background: var(--cor-erro-bg);
+    border-left-color: var(--cor-erro);
+    color: var(--cor-erro-text);
 }
 
 .flash-aviso {
-    background: #fef3c7;
-    border-left-color: #f59e0b;
-    color: #92400e;
+    background: var(--cor-aviso-bg);
+    border-left-color: var(--cor-aviso);
+    color: var(--cor-aviso-text);
 }
 
 /* ----- ESTADO VAZIO (igual ao interesses) ----- */
 .interesses-empty {
     text-align: center;
     padding: 4rem 2rem;
-    background: #ffffff;
+    background: var(--tema-superficie, #ffffff);
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     margin: 2rem 0;
 }
 
 .interesses-empty p {
-    color: #64748b;
+    color: var(--tema-texto-sec, #64748b);
     font-size: 1.05rem;
     margin-bottom: 0.5rem;
 }
@@ -132,7 +126,7 @@ body {
 .interesses-container h2 {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin: 2rem 0 1.2rem 0;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid rgba(0, 101, 119, 0.1);
@@ -148,12 +142,12 @@ body {
 
 /* ----- CARD INDIVIDUAL (igual ao interesses) ----- */
 .interesse-card {
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     padding: 1.5rem 1.8rem;
     transition: var(--transicao-padrao);
-    border: 1px solid #f1f5f9;
+    border: 1px solid var(--tema-borda, #f1f5f9);
 }
 
 .interesse-card:hover {
@@ -162,7 +156,7 @@ body {
 }
 
 .interesse-card.concluido {
-    border-left: 4px solid #10b981;
+    border-left: 4px solid var(--cor-sucesso);
 }
 
 /* --- HEADER DO CARD (igual ao interesses) --- */
@@ -183,7 +177,7 @@ body {
 
 .interesse-cliente i {
     font-size: 2rem;
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
 }
 
 .interesse-cliente div {
@@ -193,12 +187,12 @@ body {
 
 .interesse-cliente strong {
     font-size: 1rem;
-    color: #0f172a;
+    color: var(--tema-texto, #0f172a);
 }
 
 .interesse-data {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
     margin-top: 0.1rem;
 }
 
@@ -214,18 +208,18 @@ body {
 }
 
 .interesse-status.ativo {
-    background: #dbeafe;
-    color: #1e40af;
+    background: var(--cor-info-bg);
+    color: var(--cor-info-text);
 }
 
 .interesse-status.concluido {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--cor-sucesso-bg);
+    color: var(--cor-sucesso-text);
 }
 
 .interesse-status.divergente {
-    background: #fef2f2;
-    color: #dc2626;
+    background: var(--tema-erro-bg, #fef2f2);
+    color: var(--cor-erro-escuro);
 }
 
 /* --- CORPO DO CARD (igual ao interesses) --- */
@@ -237,7 +231,7 @@ body {
 .interesse-body h3 {
     font-size: 1.15rem;
     font-weight: 600;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin: 0 0 0.2rem 0;
 }
 
@@ -254,13 +248,13 @@ body {
 }
 
 .interesse-confirmado {
-    color: #10b981;
+    color: var(--cor-sucesso);
     font-size: 0.85rem;
     margin: 0.2rem 0;
 }
 
 .interesse-pagamento-divergente {
-    color: #dc2626;
+    color: var(--cor-erro-escuro);
     font-size: 0.85rem;
     margin: 0.2rem 0;
     display: flex;
@@ -272,21 +266,21 @@ body {
    FORMULÁRIO DE AVALIAÇÃO (com correção do textarea)
    ============================================================ */
 .avaliacao-form-container {
-    background: #f8fafc;
+    background: var(--tema-fundo-alt, #f8fafc);
     padding: 1.2rem 1.5rem;
     border-radius: 12px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tema-borda, #e2e8f0);
     margin: 1rem 0 1.2rem 0;
 }
 
 .avaliacao-form-container h4 {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 1.1rem;
     margin: 0 0 0.2rem 0;
 }
 
 .avaliacao-form-container p {
-    color: #6b7280;
+    color: var(--tema-texto-sec, #6b7280);
     font-size: 0.9rem;
     margin: 0 0 1rem 0;
 }
@@ -298,7 +292,7 @@ body {
 .avaliacao-form .avaliacao-estrelas label {
     display: block;
     font-weight: 600;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     margin-bottom: 0.3rem;
 }
 
@@ -324,7 +318,7 @@ body {
 .avaliacao-form .estrelas label:hover,
 .avaliacao-form .estrelas label:hover ~ label,
 .avaliacao-form .estrelas input:checked ~ label {
-    color: #f59e0b;
+    color: var(--cor-aviso);
 }
 
 /* ----- CORREÇÃO DO TEXTAREA (não ultrapassar a largura) ----- */
@@ -335,7 +329,7 @@ body {
 .avaliacao-form .avaliacao-comentario label {
     display: block;
     font-weight: 600;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     margin-bottom: 0.3rem;
 }
 
@@ -343,7 +337,7 @@ body {
     width: 100%;
     max-width: 100%; /* ← GARANTE QUE NÃO ULTRAPASSA */
     padding: 0.6rem 0.8rem;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--tema-borda, #e2e8f0);
     border-radius: 8px;
     font-size: 0.9rem;
     font-family: inherit;
@@ -353,7 +347,7 @@ body {
 }
 
 .avaliacao-form .avaliacao-comentario textarea:focus {
-    border-color: var(--cor-primaria);
+    border-color: var(--tema-primaria-texto, var(--cor-primaria));
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.1);
 }
@@ -377,15 +371,15 @@ body {
 
 /* --- AVALIAÇÃO JÁ FEITA --- */
 .avaliacao-ja-feita {
-    background: #f0fdf4;
+    background: color-mix(in srgb, #f0fdf4 var(--tema-pastel, 100%), var(--cor-superficie));
     padding: 0.8rem 1.2rem;
     border-radius: 10px;
-    border: 1px solid #10b981;
+    border: 1px solid var(--cor-sucesso);
     margin: 1rem 0 1.2rem 0;
 }
 
 .avaliacao-ja-feita p {
-    color: #065f46;
+    color: var(--cor-sucesso-text);
     margin: 0;
     font-weight: 500;
     display: flex;
@@ -403,7 +397,7 @@ body {
     gap: 0.6rem;
     margin-top: 0.8rem;
     padding-top: 0.8rem;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--tema-borda, #f1f5f9);
 }
 
 .interesse-acoes a,
@@ -451,18 +445,18 @@ body {
 
 /* ===== BOTÃO CONFIRMAR ===== */
 .btn-confirmar {
-    background: #10b981 !important;
+    background: var(--cor-sucesso) !important;
     color: #ffffff !important;
 }
 
 .btn-confirmar:hover {
-    background: #059669 !important;
+    background: var(--cor-sucesso-escuro) !important;
     transform: scale(1.03);
 }
 
 /* ===== BOTÃO DISPUTA ===== */
 .btn-disputa {
-    background: #dc2626 !important;
+    background: var(--cor-erro-escuro) !important;
     color: #ffffff !important;
 }
 
@@ -479,14 +473,14 @@ body {
     gap: 1.2rem 2rem;
     margin: 2.5rem 0 1rem 0;
     padding: 1.2rem 0;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--tema-borda, #e2e8f0);
 }
 
 .interesses-links a {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: #475569;
+    color: var(--tema-texto-sec, #475569);
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
@@ -496,8 +490,8 @@ body {
 }
 
 .interesses-links a:hover {
-    color: var(--cor-primaria);
-    background: #f1f5f9;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
+    background: var(--tema-fundo-alt, #f1f5f9);
 }
 
 /* ============================================================
@@ -564,4 +558,73 @@ body {
         width: 100%;
         justify-content: center;
     }
+}
+/* ===== Concluir serviço (cada parte confirma; com as duas, vira concluído) ===== */
+.interesse-status-confirmacao {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+.interesse-status-confirmacao i { margin-top: 0.15rem; }
+.conclusao-andamento { background: var(--tema-fundo-alt, #f5f7fa); color: var(--cor-texto-secundario, #555555); }
+.conclusao-aguardando { background: var(--cor-aviso-bg, #fef3c7); color: var(--cor-aviso-text, #92400e); }
+.conclusao-sua-vez { background: var(--cor-info-bg, #dbeafe); color: var(--cor-info-text, #1e40af); font-weight: 600; }
+
+.conclusao-dica {
+    margin: 0 0 0.75rem;
+    font-size: 0.82rem;
+    color: var(--tema-texto-suave, #64748b);
+}
+.conclusao-dica i { color: var(--cor-dourado, #C9A227); margin-right: 0.3rem; }
+
+.interesse-acoes .aviso-aguardando {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    background: var(--cor-aviso-bg, #fef3c7);
+    color: var(--cor-aviso-text, #92400e);
+}
+.avaliacao-ja-feita p { margin: 0 0 0.75rem; font-size: 0.88rem; color: var(--cor-texto-secundario, #555555); }
+.avaliacao-ja-feita i { color: var(--cor-sucesso, #10b981); }
+
+
+/* ===== CELULAR: ações do card em grade =====
+   Chat e Detalhes lado a lado; a ação principal (Concluir serviço,
+   Aguardando, Abrir Disputa) ocupa a linha inteira embaixo. */
+@media (max-width: 768px) {
+    .interesse-header {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .interesse-header .interesse-cliente { flex: 1 1 auto; min-width: 0; }
+    .interesse-acoes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    .interesse-acoes > form,
+    .interesse-acoes > .aviso-aguardando,
+    .interesse-acoes > .btn-disputa { grid-column: 1 / -1; }
+    .interesse-acoes > form { display: block; }
+    .interesse-acoes a,
+    .interesse-acoes button,
+    .interesse-acoes .aviso-aguardando {
+        justify-content: center;
+        min-height: 42px;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.88rem;
+        font-weight: 600;
+        border-radius: 12px;
+    }
+    .interesse-acoes form .btn-confirmar { width: 100%; }
 }

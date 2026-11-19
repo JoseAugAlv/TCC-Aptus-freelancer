@@ -16,7 +16,7 @@ class PortfolioController
     public function index()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $usuarioId = $_SESSION['usuario']['id'];
         $itens     = $this->portfolio->getByUsuario($usuarioId);
@@ -30,7 +30,7 @@ class PortfolioController
     public function criar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $tituloPagina = 'Adicionar ao Portfólio - Aptus';
         $cssPagina    = 'perfil.css';
@@ -41,7 +41,7 @@ class PortfolioController
     public function salvar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
         $titulo    = trim($_POST['titulo'] ?? '');
@@ -49,7 +49,7 @@ class PortfolioController
 
         if ($titulo === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'O título é obrigatório.'];
-            header('Location: /Aptus/perfil/portfolio/criar');
+            header(('Location: ' . aptus_base() . '/perfil/portfolio/criar'));
             exit;
         }
 
@@ -60,7 +60,7 @@ class PortfolioController
                 $imagem = $resultado['nome'];
             } else {
                 $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro no upload: ' . $resultado['message']];
-                header('Location: /Aptus/perfil/portfolio/criar');
+                header(('Location: ' . aptus_base() . '/perfil/portfolio/criar'));
                 exit;
             }
         }
@@ -78,21 +78,21 @@ class PortfolioController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao adicionar item. Tente novamente.'];
         }
 
-        header('Location: /Aptus/perfil/portfolio');
+        header(('Location: ' . aptus_base() . '/perfil/portfolio'));
         exit;
     }
 
     public function editar($id = null)
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
-        if (!$id) { header('Location: /Aptus/perfil/portfolio'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
+        if (!$id) { header(('Location: ' . aptus_base() . '/perfil/portfolio')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
         $item      = $this->portfolio->findById($id);
 
         if (!$item || (int) $item['id_usuario'] !== $usuarioId) {
-            header('Location: /Aptus/perfil/portfolio');
+            header(('Location: ' . aptus_base() . '/perfil/portfolio'));
             exit;
         }
 
@@ -105,7 +105,7 @@ class PortfolioController
     public function atualizar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $id        = (int) ($_POST['id'] ?? 0);
         $usuarioId = (int) $_SESSION['usuario']['id'];
@@ -114,13 +114,13 @@ class PortfolioController
 
         $item = $this->portfolio->findById($id);
         if (!$item || (int) $item['id_usuario'] !== $usuarioId) {
-            header('Location: /Aptus/perfil/portfolio');
+            header(('Location: ' . aptus_base() . '/perfil/portfolio'));
             exit;
         }
 
         if ($titulo === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'O título é obrigatório.'];
-            header('Location: /Aptus/perfil/portfolio/editar/' . $id);
+            header(('Location: ' . aptus_base() . '/perfil/portfolio/editar/') . url_id($id));
             exit;
         }
 
@@ -130,13 +130,13 @@ class PortfolioController
             $resultado = UploadHelper::upload($_FILES['imagem'], 'portfolio');
             if ($resultado['success']) {
                 if (!empty($item['imagem'])) {
-                    $antigo = $_SERVER['DOCUMENT_ROOT'] . '/Aptus/public/uploads/portfolio/' . basename($item['imagem']);
+                    $antigo = $_SERVER['DOCUMENT_ROOT'] . (aptus_base() . '/public/uploads/portfolio/') . basename($item['imagem']);
                     if (file_exists($antigo)) @unlink($antigo);
                 }
                 $dados['imagem'] = $resultado['nome'];
             } else {
                 $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro no upload: ' . $resultado['message']];
-                header('Location: /Aptus/perfil/portfolio/editar/' . $id);
+                header(('Location: ' . aptus_base() . '/perfil/portfolio/editar/') . url_id($id));
                 exit;
             }
         }
@@ -147,7 +147,7 @@ class PortfolioController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao atualizar item. Tente novamente.'];
         }
 
-        header('Location: /Aptus/perfil/portfolio');
+        header(('Location: ' . aptus_base() . '/perfil/portfolio'));
         exit;
     }
 
@@ -158,24 +158,24 @@ class PortfolioController
     public function excluir()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $id        = (int) ($_POST['id'] ?? 0);
         $usuarioId = (int) $_SESSION['usuario']['id'];
 
         if ($id <= 0) {
-            header('Location: /Aptus/perfil/portfolio');
+            header(('Location: ' . aptus_base() . '/perfil/portfolio'));
             exit;
         }
 
         $item = $this->portfolio->findById($id);
         if (!$item || (int) $item['id_usuario'] !== $usuarioId) {
-            header('Location: /Aptus/perfil/portfolio');
+            header(('Location: ' . aptus_base() . '/perfil/portfolio'));
             exit;
         }
 
         if (!empty($item['imagem'])) {
-            $caminho = $_SERVER['DOCUMENT_ROOT'] . '/Aptus/public/uploads/portfolio/' . basename($item['imagem']);
+            $caminho = $_SERVER['DOCUMENT_ROOT'] . (aptus_base() . '/public/uploads/portfolio/') . basename($item['imagem']);
             if (file_exists($caminho)) @unlink($caminho);
         }
 
@@ -185,7 +185,7 @@ class PortfolioController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao remover item. Tente novamente.'];
         }
 
-        header('Location: /Aptus/perfil/portfolio');
+        header(('Location: ' . aptus_base() . '/perfil/portfolio'));
         exit;
     }
 }

@@ -19,7 +19,7 @@ $usuarioData = $usuarioData ?? [];
             <p>Bem-vindo, <?= htmlspecialchars($usuario['nome'] ?? '') ?>!</p>
         </div>
         <div class="header-actions">
-            <a href="/Aptus/anuncios" class="btn-primary">Explorar Serviços</a>
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-primary">Explorar Serviços</a>
         </div>
     </div>
 
@@ -30,22 +30,22 @@ $usuarioData = $usuarioData ?? [];
             <div class="kpi-label">Total de Interesses</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-clock" style="color: #3b82f6;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-clock" style="color: var(--cor-info);"></i></div>
             <div class="kpi-value"><?= $interessesAtivos ?? 0 ?></div>
             <div class="kpi-label">Em Andamento</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-check-circle" style="color: #10b981;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-check-circle" style="color: var(--cor-sucesso);"></i></div>
             <div class="kpi-value"><?= $interessesConcluidos ?? 0 ?></div>
             <div class="kpi-label">Concluídos</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-times-circle" style="color: #ef4444;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-times-circle" style="color: var(--cor-erro);"></i></div>
             <div class="kpi-value"><?= $interessesCancelados ?? 0 ?></div>
             <div class="kpi-label">Cancelados</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-heart" style="color: #ef4444;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-heart" style="color: var(--cor-erro);"></i></div>
             <div class="kpi-value"><?= $totalFavoritos ?? 0 ?></div>
             <div class="kpi-label">Favoritos</div>
         </div>
@@ -55,7 +55,7 @@ $usuarioData = $usuarioData ?? [];
         <h3><i class="fas fa-paper-plane"></i> Últimos Interesses</h3>
         <?php if (empty($ultimosInteresses)): ?>
             <p class="empty-message">Você ainda não enviou nenhum interesse.</p>
-            <a href="/Aptus/anuncios" class="btn-primary">Explorar serviços</a>
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-primary">Explorar serviços</a>
         <?php else: ?>
             <table>
                 <thead>
@@ -85,12 +85,12 @@ $usuarioData = $usuarioData ?? [];
                             <td><span style="color: <?= $cor ?>; font-weight: bold;"><?= ucfirst($interesse['situacao']) ?></span></td>
                             <td><?= date('d/m/Y', strtotime($interesse['data_interesse'])) ?></td>
                             <td>
-                                <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?>">Ver</a>
+                                <a href="<?= aptus_base() ?>/interesses/detalhes/<?= url_id($interesse['id_interesse']) ?>">Ver</a>
                                 <?php if ($interesse['situacao'] == 'ativo'): ?>
-                                    <form method="POST" action="/Aptus/interesses/cancelar" style="display:inline;">
+                                    <form method="POST" action="<?= aptus_base() ?>/interesses/cancelar" style="display:inline;">
                                         <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
                                         <?= CsrfMiddleware::field() ?>
-                                        <button type="submit" onclick="return confirm('Cancelar este interesse?')" style="background:none;border:none;color:#ef4444;cursor:pointer;text-decoration:underline;">Cancelar</button>
+                                        <button type="submit" onclick="return confirm('Cancelar este interesse?')" style="background:none;border:none;color:var(--cor-erro);cursor:pointer;text-decoration:underline;">Cancelar</button>
                                     </form>
                                 <?php endif; ?>
                             </td>
@@ -99,7 +99,7 @@ $usuarioData = $usuarioData ?? [];
                 </tbody>
             </table>
             <div class="card-footer">
-                <a href="/Aptus/interesses/meus">Ver todos os interesses →</a>
+                <a href="<?= aptus_base() ?>/interesses/meus">Ver todos os interesses →</a>
             </div>
         <?php endif; ?>
     </div>
@@ -108,7 +108,7 @@ $usuarioData = $usuarioData ?? [];
         <h3><i class="fas fa-heart"></i> Favoritos</h3>
         <?php if (empty($favoritos)): ?>
             <p class="empty-message">Você ainda não tem favoritos.</p>
-            <a href="/Aptus/anuncios" class="btn-primary">Explorar serviços</a>
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-primary">Explorar serviços</a>
         <?php else: ?>
             <div class="favoritos-grid">
                 <?php foreach ($favoritos as $favorito): ?>
@@ -130,13 +130,13 @@ $usuarioData = $usuarioData ?? [];
                                 <i class="fas fa-tag"></i> <?= htmlspecialchars($favorito['categoria_nome']) ?>
                             </p>
                             <p class="favorito-preco">R$ <?= number_format($favorito['preco'], 2, ',', '.') ?></p>
-                            <a href="/Aptus/anuncios/<?= htmlspecialchars($favorito['slug']) ?>" class="btn-ver">Ver Serviço</a>
+                            <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($favorito['slug']) ?>" class="btn-ver">Ver Serviço</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
             <div class="card-footer">
-                <a href="/Aptus/favoritos">Ver todos os favoritos →</a>
+                <a href="<?= aptus_base() ?>/favoritos">Ver todos os favoritos →</a>
             </div>
         <?php endif; ?>
     </div>
@@ -150,7 +150,7 @@ $usuarioData = $usuarioData ?? [];
             <div><span class="label">Membro desde</span><span class="value"><?= date('d/m/Y', strtotime($usuarioData['data_criacao'] ?? 'now')) ?></span></div>
         </div>
         <div class="card-footer">
-            <a href="/Aptus/perfil/editar">Editar perfil →</a>
+            <a href="<?= aptus_base() ?>/perfil/editar">Editar perfil →</a>
         </div>
     </div>
 </div>

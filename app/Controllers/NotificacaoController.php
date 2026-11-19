@@ -19,7 +19,7 @@ class NotificacaoController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
@@ -28,7 +28,7 @@ class NotificacaoController
         $naoLidas = $this->notificacao->getNaoLidas($usuarioId);
         $todas = $this->notificacao->getTodas($usuarioId);
         
-        $tituloPagina = 'Notificacoes - Aptus';
+        $tituloPagina = 'Notificações - Aptus';
         $cssPagina = 'notificacoes.css';
         
         require '../app/Views/notificacoes/index.php';
@@ -41,7 +41,7 @@ class NotificacaoController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
@@ -52,7 +52,7 @@ class NotificacaoController
             $this->notificacao->marcarLida($id, $usuarioId);
         }
         
-        header('Location: /Aptus/notificacoes');
+        header(('Location: ' . aptus_base() . '/notificacoes'));
         exit;
     }
 
@@ -63,14 +63,14 @@ class NotificacaoController
         }
         
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
         $usuarioId = $_SESSION['usuario']['id'];
         $this->notificacao->marcarTodasLidas($usuarioId);
         
-        header('Location: /Aptus/notificacoes');
+        header(('Location: ' . aptus_base() . '/notificacoes'));
         exit;
     }
 

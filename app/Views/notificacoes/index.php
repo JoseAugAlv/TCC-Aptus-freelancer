@@ -25,17 +25,17 @@ function urlNotificacao(array $n): string
 
     switch ($tabela) {
         case 'interesse':
-            return $regId ? '/Aptus/interesses/detalhes/' . $regId : '/Aptus/interesses/ativos';
+            return $regId ? (aptus_base() . '/interesses/detalhes/') . url_id($regId) : (aptus_base() . '/interesses/ativos');
         case 'disputa':
-            return $regId ? '/Aptus/disputas/detalhes/' . $regId : '/Aptus/interesses/ativos';
+            return $regId ? (aptus_base() . '/disputas/detalhes/') . url_id($regId) : (aptus_base() . '/interesses/ativos');
         case 'mensagem':
-            return $intId ? '/Aptus/chat/' . $intId : '/Aptus/chat';
+            return $intId ? (aptus_base() . '/chat/') . url_id($intId) : (aptus_base() . '/chat');
         case 'avaliacao':
-            return '/Aptus/interesses/ativos';
+            return (aptus_base() . '/interesses/ativos');
         case 'confirmacao_pagamento':
-            return '/Aptus/pagamentos';
+            return (aptus_base() . '/pagamentos');
         case 'anuncio_servico':
-            return '/Aptus/anuncios/meus';
+            return (aptus_base() . '/anuncios/meus');
         default:
             return '';
     }
@@ -48,13 +48,13 @@ function urlNotificacao(array $n): string
     </div>
 
     <div class="notificacoes-tabs">
-        <a href="/Aptus/notificacoes" class="tab-btn <?= !$mostrarTodas ? 'active' : '' ?>">
+        <a href="<?= aptus_base() ?>/notificacoes" class="tab-btn <?= !$mostrarTodas ? 'active' : '' ?>">
             Não Lidas
             <?php if (count($naoLidas) > 0): ?>
                 <span class="tab-badge"><?= count($naoLidas) ?></span>
             <?php endif; ?>
         </a>
-        <a href="/Aptus/notificacoes?todas=1" class="tab-btn <?= $mostrarTodas ? 'active' : '' ?>">
+        <a href="<?= aptus_base() ?>/notificacoes?todas=1" class="tab-btn <?= $mostrarTodas ? 'active' : '' ?>">
             Todas
             <span class="tab-badge"><?= count($todas) ?></span>
         </a>
@@ -105,10 +105,10 @@ function urlNotificacao(array $n): string
     <?php endif; ?>
 
     <div class="notificacoes-voltar">
-        <a href="/Aptus/"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <a href="<?= aptus_base() ?>/"><i class="fas fa-arrow-left"></i> Voltar</a>
     </div>
 </div>
 
-<script src="/Aptus/public/js/notificacoes.js"></script>
+<script src="<?= aptus_base() ?>/public/js/notificacoes.js"></script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

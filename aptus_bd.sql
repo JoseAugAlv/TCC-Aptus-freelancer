@@ -374,3 +374,119 @@ ALTER TABLE usuario
 CREATE INDEX idx_token_verificacao ON usuario (token_verificacao);
 
 ALTER TABLE usuario ADD COLUMN cep VARCHAR(9) NULL AFTER estado;
+
+-- Expiração do token "Lembrar-me" (usado em AuthController::login e public/index.php)
+ALTER TABLE usuario ADD COLUMN remember_token_expira DATETIME NULL AFTER remember_token;
+-- =====================================================================
+-- Requisitos (alteracoes_desejadas.md): username, endereço completo,
+-- privacidade de localização, suspensão, fotos múltiplas, anexos de
+-- denúncia e bloqueio entre usuários.
+-- =====================================================================
+ALTER TABLE usuario
+    ADD COLUMN username VARCHAR(30) NULL AFTER nome,
+    ADD COLUMN logradouro VARCHAR(150) NULL AFTER cep,
+    ADD COLUMN numero VARCHAR(10) NULL AFTER logradouro,
+    ADD COLUMN complemento VARCHAR(60) NULL AFTER numero,
+    ADD COLUMN bairro VARCHAR(100) NULL AFTER complemento,
+    ADD COLUMN privacidade_localizacao ENUM('oculto','cidade','cidade_bairro') NOT NULL DEFAULT 'oculto' AFTER bairro,
+    ADD COLUMN suspenso_ate DATETIME NULL AFTER id_moderador_banimento,
+    ADD COLUMN motivo_suspensao VARCHAR(255) NULL AFTER suspenso_ate,
+    ADD COLUMN id_admin_suspensao INT NULL AFTER motivo_suspensao;
+
+-- usuários já existentes recebem username derivado do e-mail (ajustável no perfil)
+UPDATE usuario SET username = LOWER(CONCAT(
+    LEFT(REGEXP_REPLACE(SUBSTRING_INDEX(email, '@', 1), '[^A-Za-z0-9_.]', ''), 24), '_', id_usuario))
+WHERE username IS NULL;
+
+ALTER TABLE usuario
+    MODIFY username VARCHAR(30) NOT NULL,
+    ADD UNIQUE KEY uk_usuario_username (username);
+
+CREATE TABLE IF NOT EXISTS denuncia_anexo (
+    id_anexo     INT AUTO_INCREMENT PRIMARY KEY,
+    id_denuncia  INT NOT NULL,
+    arquivo      VARCHAR(255) NOT NULL,
+    data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_denuncia_anexo FOREIGN KEY (id_denuncia) REFERENCES denuncia(id_denuncia) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS usuario_bloqueio (
+    id_bloqueio   INT AUTO_INCREMENT PRIMARY KEY,
+    id_bloqueador INT NOT NULL,
+    id_bloqueado  INT NOT NULL,
+    data_criacao  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_bloqueio_par (id_bloqueador, id_bloqueado),
+    KEY idx_bloqueado (id_bloqueado),
+    CONSTRAINT fk_bloqueio_de FOREIGN KEY (id_bloqueador) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_bloqueio_para FOREIGN KEY (id_bloqueado) REFERENCES usuario(id_usuario) ON DELETE CASCADE
+);
+
+-- A capa (anuncio_servico.foto_capa) passa a ser sempre uma das fotos do anúncio
+INSERT INTO anuncio_foto (id_anuncio, arquivo, ordem)
+SELECT a.id_anuncio, a.foto_capa, -1
+FROM anuncio_servico a
+WHERE a.foto_capa IS NOT NULL AND a.foto_capa <> ''
+  AND NOT EXISTS (SELECT 1 FROM anuncio_foto f WHERE f.id_anuncio = a.id_anuncio AND f.arquivo = a.foto_capa);
+
+-- Dados de teste: CPFs válidos (dígitos verificadores) e nascimento para as contas seed
+UPDATE usuario SET cpf_cnpj = '77706108007', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 1;
+UPDATE usuario SET cpf_cnpj = '75764020085', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 2;
+UPDATE usuario SET cpf_cnpj = '19966268251', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 3;
+UPDATE usuario SET cpf_cnpj = '27715134988', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 4;
+UPDATE usuario SET cpf_cnpj = '95333867895', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 5;
+UPDATE usuario SET cpf_cnpj = '03161984714', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 6;
+UPDATE usuario SET cpf_cnpj = '60553935062', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 7;
+UPDATE usuario SET cpf_cnpj = '29515880033', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 8;
+UPDATE usuario SET cpf_cnpj = '39279160303', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 9;
+UPDATE usuario SET cpf_cnpj = '24481410027', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 10;
+UPDATE usuario SET cpf_cnpj = '38035564900', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 11;
+UPDATE usuario SET cpf_cnpj = '25174720097', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 12;
+UPDATE usuario SET cpf_cnpj = '60640746713', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 13;
+UPDATE usuario SET cpf_cnpj = '59255412191', data_nascimento = COALESCE(NULLIF(data_nascimento, '0000-00-00'), '1990-01-01') WHERE id_usuario = 14;
+
+-- Reputação calculada só a partir de avaliações reais: cliente avaliando o
+-- prestador em serviço concluído (avaliações em serviços cancelados não contam)
+UPDATE usuario u
+LEFT JOIN (
+    SELECT a.id_avaliado, AVG(a.nota) AS media, COUNT(*) AS total
+    FROM avaliacao a
+    JOIN interesse i ON i.id_interesse = a.id_interesse
+    WHERE i.situacao = 'concluido' AND a.id_avaliado = i.id_freelancer AND a.id_avaliador = i.id_contratante
+    GROUP BY a.id_avaliado
+) r ON r.id_avaliado = u.id_usuario
+SET u.nota_media = COALESCE(ROUND(r.media, 2), 0),
+    u.total_avaliacoes = COALESCE(r.total, 0);
+
+-- Capa do anúncio 18 (antes sem foto), gerada como imagem ilustrativa
+INSERT INTO anuncio_foto (id_anuncio, arquivo, ordem) SELECT 18, 'anuncio_18_capa.jpg', 0 FROM DUAL WHERE EXISTS (SELECT 1 FROM anuncio_servico WHERE id_anuncio = 18) AND NOT EXISTS (SELECT 1 FROM anuncio_foto WHERE id_anuncio = 18);
+UPDATE anuncio_servico SET foto_capa = 'anuncio_18_capa.jpg' WHERE id_anuncio = 18 AND (foto_capa IS NULL OR foto_capa = '');
+
+-- =====================================================================
+-- 19/11/2026: vagas simultâneas por anúncio, login com Google e troca de
+-- e-mail por código (mesmo conteúdo de atualizacao_banco_2026-11-19.sql)
+-- =====================================================================
+ALTER TABLE anuncio_servico
+    ADD COLUMN max_simultaneos TINYINT UNSIGNED NOT NULL DEFAULT 1
+        COMMENT 'clientes atendidos ao mesmo tempo (propostas aceitas em andamento)'
+        AFTER preco;
+
+ALTER TABLE usuario
+    ADD COLUMN google_id VARCHAR(64) NULL COMMENT 'identificador da conta Google (campo sub do OpenID)' AFTER email,
+    ADD COLUMN email_pendente VARCHAR(100) NULL COMMENT 'novo e-mail aguardando confirmação por código' AFTER google_id,
+    ADD COLUMN codigo_email_hash CHAR(64) NULL COMMENT 'sha256 do código de 6 dígitos enviado por e-mail' AFTER email_pendente,
+    ADD COLUMN codigo_email_expira DATETIME NULL AFTER codigo_email_hash,
+    ADD COLUMN codigo_email_tentativas TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER codigo_email_expira,
+    ADD UNIQUE KEY uk_usuario_google (google_id);
+
+CREATE INDEX idx_usuario_pendente ON usuario (email_verificado, token_verificacao_expira);
+
+-- 19/11/2026: e-mail da conta Google conectada (pode ser diferente do e-mail do cadastro)
+ALTER TABLE usuario
+    ADD COLUMN google_email VARCHAR(100) NULL
+        COMMENT 'e-mail da conta Google conectada (pode ser diferente do e-mail do cadastro)'
+        AFTER google_id;
+
+-- 19/11/2026: confirmação de conclusão do serviço por cada parte
+ALTER TABLE interesse
+    ADD COLUMN concluido_contratante TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'cliente confirmou que o serviço foi executado' AFTER data_conclusao,
+    ADD COLUMN concluido_freelancer TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'prestador confirmou que o serviço foi executado' AFTER concluido_contratante;

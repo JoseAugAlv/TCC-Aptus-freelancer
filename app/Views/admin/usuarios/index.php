@@ -6,7 +6,7 @@ $cssPagina    = $cssPagina    ?? 'usuarios.css';
 require_once __DIR__ . '/../../layouts/header.php';
 require_once __DIR__ . '/../../layouts/nav.php';
 
-$usuarios = $usuarios ?? [];
+$usuarios   = $usuarios ?? [];
 ?>
 
 <div class="usuarios-wrapper">
@@ -23,6 +23,14 @@ $usuarios = $usuarios ?? [];
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
 
+    <form method="GET" action="<?= aptus_base() ?>/admin/usuarios" class="usuarios-busca" role="search">
+        <label for="buscaUsuario" class="sr-only">Buscar usuário</label>
+        <input type="search" id="buscaUsuario" name="q" value="<?= htmlspecialchars($busca ?? '') ?>"
+               placeholder="Buscar por nome, @usuário ou e-mail" maxlength="100">
+        <button type="submit" class="btn-ver"><i class="fas fa-search" aria-hidden="true"></i> Buscar</button>
+        <span class="usuarios-total"><?= (int) ($totalUsuarios ?? count($usuarios)) ?> usuário(s)</span>
+    </form>
+
     <?php if (empty($usuarios)): ?>
         <div class="empty-state"><p>Nenhum usuário encontrado.</p></div>
     <?php else: ?>
@@ -37,30 +45,20 @@ $usuarios = $usuarios ?? [];
                         <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php foreach ($usuarios as $u): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($u['nome']) ?></td>
-                            <td><?= htmlspecialchars($u['email']) ?></td>
-                            <td><?= htmlspecialchars($u['nome_perfil'] ?? 'Usuário') ?></td>
-                            <td>
-                                <?php if (!empty($u['banido'])): ?>
-                                    <span class="badge badge-excluido">Banido</span>
-                                <?php elseif (empty($u['ativo'])): ?>
-                                    <span class="badge badge-pausado">Inativo</span>
-                                <?php else: ?>
-                                    <span class="badge badge-ativo">Ativo</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <a href="/Aptus/perfil/publico/<?= (int) $u['id_usuario'] ?>">Ver</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
+                <tbody id="linhasUsuarios">
+                    <?php require __DIR__ . '/_linhas.php'; ?>
                 </tbody>
             </table>
         </div>
+        <?php if (!empty($temMais)): ?>
+            <div class="ver-mais-wrap">
+                <button type="button" class="btn-ver-mais" data-ver-mais data-alvo="#linhasUsuarios"
+                        data-url="<?= htmlspecialchars($proximaUrl, ENT_QUOTES, 'UTF-8') ?>" data-pagina="1">
+                    <i class="fas fa-plus" aria-hidden="true"></i> Ver mais
+                </button>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 
-<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>
+<?php $jsPagina = 'ver-mais.js'; require_once __DIR__ . '/../../layouts/footer.php'; ?>

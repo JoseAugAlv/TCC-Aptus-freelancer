@@ -13,7 +13,7 @@ $item = $item ?? [];
 <div class="perfil-container">
     <div class="perfil-header">
         <h1><i class="fas fa-edit"></i> Editar Item</h1>
-        <a href="/Aptus/perfil/portfolio" class="btn-voltar">
+        <a href="<?= aptus_base() ?>/perfil/portfolio" class="btn-voltar">
             <i class="fas fa-arrow-left"></i> Voltar
         </a>
     </div>
@@ -27,7 +27,7 @@ $item = $item ?? [];
     <?php endif; ?>
 
     <div class="perfil-card">
-        <form method="POST" action="/Aptus/perfil/portfolio/atualizar" class="perfil-form" enctype="multipart/form-data">
+        <form method="POST" action="<?= aptus_base() ?>/perfil/portfolio/atualizar" class="perfil-form" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= $item['id_portfolio'] ?? 0 ?>">
 
             <div class="form-group">
@@ -44,9 +44,9 @@ $item = $item ?? [];
                 <div class="form-group">
                     <label>Imagem Atual</label>
                     <div style="margin-top: 8px;">
-                        <img src="/Aptus/public/uploads/portfolio/<?= htmlspecialchars($item['imagem']) ?>" 
+                        <img src="<?= aptus_base() ?>/public/uploads/portfolio/<?= htmlspecialchars($item['imagem']) ?>" 
                              alt="<?= htmlspecialchars($item['titulo'] ?? '') ?>" 
-                             style="max-width: 200px; border-radius: 8px; border: 1px solid #eee;">
+                             style="max-width: 200px; border-radius: 8px; border: 1px solid var(--tema-borda, #eee);">
                     </div>
                 </div>
             <?php endif; ?>
@@ -54,14 +54,14 @@ $item = $item ?? [];
             <div class="form-group">
                 <label for="imagem">Nova Imagem (opcional)</label>
                 <input type="file" id="imagem" name="imagem" class="form-control" accept="image/*">
-                <small style="color: #888; display: block; margin-top: 5px;">Deixe em branco para manter a imagem atual.</small>
+                <small style="color: var(--tema-texto-sec, #888); display: block; margin-top: 5px;">Deixe em branco para manter a imagem atual.</small>
             </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn-salvar">
                     <i class="fas fa-save"></i> Atualizar
                 </button>
-                <a href="/Aptus/perfil/portfolio" class="btn-cancelar">
+                <a href="<?= aptus_base() ?>/perfil/portfolio" class="btn-cancelar">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
             </div>

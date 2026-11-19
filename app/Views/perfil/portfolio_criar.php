@@ -11,7 +11,7 @@ require_once __DIR__ . '/../layouts/nav.php';
 <div class="perfil-container">
     <div class="perfil-header">
         <h1><i class="fas fa-plus"></i> Adicionar ao Portfólio</h1>
-        <a href="/Aptus/perfil/portfolio" class="btn-voltar">
+        <a href="<?= aptus_base() ?>/perfil/portfolio" class="btn-voltar">
             <i class="fas fa-arrow-left"></i> Voltar
         </a>
     </div>
@@ -25,7 +25,7 @@ require_once __DIR__ . '/../layouts/nav.php';
     <?php endif; ?>
 
     <div class="perfil-card">
-        <form method="POST" action="/Aptus/perfil/portfolio/salvar" class="perfil-form" enctype="multipart/form-data">
+        <form method="POST" action="<?= aptus_base() ?>/perfil/portfolio/salvar" class="perfil-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="titulo">Título *</label>
                 <input type="text" id="titulo" name="titulo" class="form-control" placeholder="Ex: Reforma de Apartamento" required>
@@ -39,14 +39,14 @@ require_once __DIR__ . '/../layouts/nav.php';
             <div class="form-group">
                 <label for="imagem">Imagem</label>
                 <input type="file" id="imagem" name="imagem" class="form-control" accept="image/*">
-                <small style="color: #888; display: block; margin-top: 5px;">Formatos permitidos: JPG, PNG, GIF. Tamanho máximo: 5MB</small>
+                <small style="color: var(--tema-texto-sec, #888); display: block; margin-top: 5px;">Formatos permitidos: JPG, PNG, GIF. Tamanho máximo: 5MB</small>
             </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn-salvar">
                     <i class="fas fa-save"></i> Adicionar
                 </button>
-                <a href="/Aptus/perfil/portfolio" class="btn-cancelar">
+                <a href="<?= aptus_base() ?>/perfil/portfolio" class="btn-cancelar">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
             </div>

@@ -94,7 +94,7 @@ class Configuracao
             'site_descricao' => 'Conectando Talentos',
             'site_email' => 'contato@aptus.com',
             'site_telefone' => '(11) 99999-9999',
-            'site_endereco' => 'Sao Paulo, SP',
+            'site_endereco' => 'São Paulo, SP',
             
             'upload_max_size' => '5',
             'upload_allow_types' => 'jpg,jpeg,png,webp,gif',
@@ -111,7 +111,7 @@ class Configuracao
             'email_from_name' => 'Aptus',
             
             'manutencao' => '0',
-            'manutencao_mensagem' => 'Sistema em manutencao. Volte em breve.'
+            'manutencao_mensagem' => 'Sistema em manutenção. Volte em breve.'
         ];
     }
 

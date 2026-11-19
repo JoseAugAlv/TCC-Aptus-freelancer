@@ -13,10 +13,10 @@ $itens = $itens ?? [];
     <div class="perfil-header">
         <h1><i class="fas fa-images"></i> Meu Portfólio</h1>
         <div class="perfil-actions">
-            <a href="/Aptus/perfil/portfolio/criar" class="btn-editar">
+            <a href="<?= aptus_base() ?>/perfil/portfolio/criar" class="btn-editar">
                 <i class="fas fa-plus"></i> Adicionar Item
             </a>
-            <a href="/Aptus/perfil" class="btn-voltar">
+            <a href="<?= aptus_base() ?>/perfil" class="btn-voltar">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>
         </div>
@@ -35,7 +35,7 @@ $itens = $itens ?? [];
             <i class="fas fa-images"></i>
             <h3>Nenhum item no portfólio</h3>
             <p>Adicione fotos dos seus trabalhos para mostrar sua experiência.</p>
-            <a href="/Aptus/perfil/portfolio/criar" class="btn-editar" style="display: inline-block; margin-top: 1rem;">
+            <a href="<?= aptus_base() ?>/perfil/portfolio/criar" class="btn-editar" style="display: inline-block; margin-top: 1rem;">
                 <i class="fas fa-plus"></i> Adicionar Primeiro Item
             </a>
         </div>
@@ -44,7 +44,7 @@ $itens = $itens ?? [];
             <?php foreach ($itens as $item): ?>
                 <div class="portfolio-item">
                     <?php if (!empty($item['imagem'])): ?>
-                        <img src="/Aptus/public/uploads/portfolio/<?= htmlspecialchars($item['imagem']) ?>" 
+                        <img src="<?= aptus_base() ?>/public/uploads/portfolio/<?= htmlspecialchars($item['imagem']) ?>" 
                              alt="<?= htmlspecialchars($item['titulo']) ?>">
                     <?php else: ?>
                         <div class="portfolio-placeholder">
@@ -57,14 +57,17 @@ $itens = $itens ?? [];
                             <p><?= htmlspecialchars(mb_strimwidth($item['descricao'], 0, 80, '...')) ?></p>
                         <?php endif; ?>
                         <div class="portfolio-item-actions">
-                            <a href="/Aptus/perfil/portfolio/editar/<?= $item['id_portfolio'] ?>" class="btn-edit">
+                            <a href="<?= aptus_base() ?>/perfil/portfolio/editar/<?= url_id($item['id_portfolio']) ?>" class="btn-edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="/Aptus/perfil/portfolio/excluir/<?= $item['id_portfolio'] ?>" 
-                               class="btn-delete" 
-                               onclick="return confirm('Tem certeza que deseja excluir este item?')">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                            <form method="POST" action="<?= aptus_base() ?>/perfil/portfolio/excluir" style="display:inline; margin:0;"
+                                  onsubmit="return confirm('Tem certeza que deseja excluir este item?')">
+                                <input type="hidden" name="id" value="<?= (int) $item['id_portfolio'] ?>">
+                                <?= CsrfMiddleware::field() ?>
+                                <button type="submit" class="btn-delete" aria-label="Excluir item">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

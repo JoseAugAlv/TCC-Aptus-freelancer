@@ -1,17 +1,3 @@
-:root {
-    --cor-primaria: #006577;
-    --cor-secundaria: #C9A227;
-    --cor-fundo: #e2fbff;
-    --cor-dourado: #C9A227;
-    --cor-branco: #ffffff;
-    --cor-texto-principal: #1a1a1a;
-    --cor-texto-secundario: #555555;
-    --cor-sombra: rgba(0, 101, 119, 0.1);
-    --cor-hover: #004d5c;
-    --cor-borda: #b3e5fc;
-    --transicao-padrao: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -20,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, var(--tema-fundo-alt, #f5f7fa) 0%, var(--tema-fundo-gradiente, #c3cfe2) 100%);
     color: var(--cor-texto-principal);
     line-height: 1.6;
     overflow-x: hidden;
@@ -42,7 +28,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -92,21 +78,21 @@ body {
 }
 
 .flash-sucesso {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: var(--tema-sucesso-bg, #d4edda);
+    color: var(--tema-sucesso-text, #155724);
+    border: 1px solid color-mix(in srgb, #c3e6cb var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
 .flash-erro {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: var(--tema-erro-bg, #f8d7da);
+    color: var(--tema-erro-text, #721c24);
+    border: 1px solid color-mix(in srgb, #f5c6cb var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
 .flash-aviso {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffc107;
+    background: var(--tema-aviso-bg, #fff3cd);
+    color: var(--tema-aviso-text, #856404);
+    border: 1px solid color-mix(in srgb, #ffc107 var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
 @keyframes slideInRight {
@@ -122,7 +108,7 @@ body {
 
 .config-card {
     position: relative;
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 15px;
     border: 1px solid rgba(0, 101, 119, 0.1);
     padding: 1.8rem;
@@ -157,12 +143,12 @@ body {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
     padding-bottom: 0.8rem;
-    border-bottom: 1px solid #eef2f5;
+    border-bottom: 1px solid var(--tema-borda, #eef2f5);
 }
 
 .config-card h3 i {
@@ -195,7 +181,7 @@ body {
 .form-group label {
     font-weight: 600;
     font-size: 0.9rem;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
 }
 
 .form-control {
@@ -204,25 +190,25 @@ body {
     font-size: 0.95rem;
     font-family: inherit;
     color: var(--cor-texto-principal);
-    background: #f8fbfc;
-    border: 2px solid #e2e8f0;
+    background: var(--tema-fundo-alt, #f8fbfc);
+    border: 2px solid var(--tema-borda, #e2e8f0);
     border-radius: 10px;
     transition: var(--transicao-padrao);
 }
 
 .form-control:hover {
-    border-color: #d3dce6;
+    border-color: color-mix(in srgb, #d3dce6 var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
 .form-control:focus {
     outline: none;
-    border-color: var(--cor-primaria);
-    background: var(--cor-branco);
+    border-color: var(--tema-primaria-texto, var(--cor-primaria));
+    background: var(--tema-superficie, var(--cor-branco));
     box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.12);
 }
 
 .form-control::placeholder {
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
 }
 
 textarea.form-control {
@@ -233,7 +219,7 @@ textarea.form-control {
 
 .help-text {
     font-size: 0.8rem;
-    color: #6b7280;
+    color: var(--tema-texto-sec, #6b7280);
     margin-top: 0.15rem;
 }
 
@@ -245,8 +231,8 @@ textarea.form-control {
     font-size: 0.95rem;
     cursor: pointer;
     padding: 0.8rem 1rem;
-    background: #f8fbfc;
-    border: 2px solid #e2e8f0;
+    background: var(--tema-fundo-alt, #f8fbfc);
+    border: 2px solid var(--tema-borda, #e2e8f0);
     border-radius: 10px;
     transition: var(--transicao-padrao);
 }
@@ -313,15 +299,15 @@ textarea.form-control {
     font-size: 1rem;
     font-weight: 600;
     color: var(--cor-texto-principal);
-    background: #f1f5f9;
-    border: 2px solid #e2e8f0;
+    background: var(--tema-fundo-alt, #f1f5f9);
+    border: 2px solid var(--tema-borda, #e2e8f0);
     border-radius: 10px;
     text-decoration: none;
     transition: var(--transicao-padrao);
 }
 
 .btn-voltar:hover {
-    background: #e2e8f0;
+    background: var(--tema-neutro-bg, #e2e8f0);
     transform: translateY(-2px);
 }
 

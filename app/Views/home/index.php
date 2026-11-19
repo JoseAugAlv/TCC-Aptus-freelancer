@@ -2,6 +2,7 @@
 // app/Views/home/index.php
 require_once __DIR__ . '/../../Middleware/CsrfMiddleware.php';
 require_once __DIR__ . '/../../Models/Categoria.php';
+require_once __DIR__ . '/../../Helpers/UploadHelper.php';
 
 $tituloPagina = $tituloPagina ?? 'Aptus - Conectando Talentos';
 $cssPagina    = $cssPagina    ?? 'home.css';
@@ -19,7 +20,7 @@ $__categorias = (new Categoria())->getAll();
             <p>Encontre os melhores profissionais para seus projetos ou publique o que você precisa</p>
 
             <div class="search-section">
-                <form action="/Aptus/buscar" method="GET" class="search-container">
+                <form action="<?= aptus_base() ?>/buscar" method="GET" class="search-container">
                     <input type="text" name="q" class="search-input" id="searchInput"
                            placeholder="O que você está procurando?"
                            aria-label="Campo de busca de serviços"
@@ -27,13 +28,14 @@ $__categorias = (new Categoria())->getAll();
                     <button type="button" class="btn-filtros" id="btnFiltros">
                         <i class="fas fa-sliders-h"></i> Filtros
                     </button>
-                    <button type="submit" class="btn-search-submit">
-                        <i class="fas fa-search"></i>
+                    <button type="submit" class="btn-search-submit" aria-label="Buscar">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <span class="btn-search-texto">Buscar</span>
                     </button>
                 </form>
 
                 <div class="filtros-section" id="filtrosSection" style="display: none;">
-                    <form id="formFiltros" action="/Aptus/buscar" method="GET">
+                    <form id="formFiltros" action="<?= aptus_base() ?>/buscar" method="GET">
                         <input type="hidden" name="q" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
 
                         <h3><i class="fas fa-star"></i> Nível de Avaliação</h3>
@@ -46,13 +48,21 @@ $__categorias = (new Categoria())->getAll();
                         <h3><i class="fas fa-tags"></i> Categoria</h3>
                         <div class="filtro-grupo">
                             <select name="categoria" style="width:100%; padding:8px; border-radius:6px;">
-                                <option value="0">Todas</option>
+                                <option value="">Todas</option>
                                 <?php foreach ($__categorias as $cat): ?>
-                                    <option value="<?= (int) $cat['id_categoria'] ?>">
+                                    <option value="<?= url_id($cat['id_categoria']) ?>">
                                         <?= htmlspecialchars($cat['nome']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+
+                        <h3><i class="fas fa-dollar-sign"></i> Faixa de Preço (R$)</h3>
+                        <div class="filtro-grupo">
+                            <input type="number" name="preco_min" min="0" step="10" placeholder="Mínimo"
+                                   aria-label="Preço mínimo" style="width:100%; padding:8px; border-radius:6px;">
+                            <input type="number" name="preco_max" min="0" step="10" placeholder="Máximo"
+                                   aria-label="Preço máximo" style="width:100%; padding:8px; border-radius:6px;">
                         </div>
 
                         <h3><i class="fas fa-sort-amount-down"></i> Ordenar</h3>
@@ -79,7 +89,7 @@ $__categorias = (new Categoria())->getAll();
         <div class="categorias-grid">
             <?php if (!empty($categoriasPopulares)): ?>
                 <?php foreach ($categoriasPopulares as $cat): ?>
-                    <a href="/Aptus/buscar?categoria=<?= (int) $cat['id_categoria'] ?>" class="categoria-card">
+                    <a href="<?= aptus_base() ?>/buscar?categoria=<?= url_id($cat['id_categoria']) ?>" class="categoria-card">
                         <div class="icone">
                             <i class="<?= htmlspecialchars($cat['icone'] ?? 'fas fa-tag') ?>"></i>
                         </div>
@@ -101,6 +111,10 @@ $__categorias = (new Categoria())->getAll();
                 <?php if (!empty($anunciosDestaque)): ?>
                     <?php foreach ($anunciosDestaque as $anuncio): ?>
                         <div class="profissional-card">
+                            <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>" class="card-capa" tabindex="-1" aria-hidden="true">
+                                <img src="<?= htmlspecialchars(\UploadHelper::capaUrl($anuncio['foto_capa'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                                     alt="" loading="lazy">
+                            </a>
                             <div class="categoria-tag">
                                 <i class="<?= htmlspecialchars($anuncio['categoria_icone'] ?? 'fas fa-tag') ?>"></i>
                                 <?= htmlspecialchars($anuncio['categoria_nome'] ?? 'Geral') ?>
@@ -120,21 +134,12 @@ $__categorias = (new Categoria())->getAll();
                                 </span>
                             </div>
 
-                            <div style="margin: 0 1.5rem 0.5rem 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <?php if ($i <= round($anuncio['nota_media'] ?? 0)): ?>
-                                        <i class="fas fa-star" style="color: #f59e0b; font-size: 0.9rem;"></i>
-                                    <?php else: ?>
-                                        <i class="far fa-star" style="color: #d1d5db; font-size: 0.9rem;"></i>
-                                    <?php endif; ?>
-                                <?php endfor; ?>
-                                <span style="color: var(--cor-texto-secundario); font-size: 0.85rem;">
-                                    (<?= number_format($anuncio['nota_media'] ?? 0, 1) ?>)
-                                </span>
+                            <div class="card-nota">
+                                <?php $estrelasNota = $anuncio['nota_anuncio'] ?? 0; $estrelasTotal = $anuncio['total_avaliacoes_anuncio'] ?? 0; require __DIR__ . '/../partials/estrelas.php'; ?>
                             </div>
 
                             <div style="display: flex; gap: 10px; margin-top: 5px;">
-                                <a href="/Aptus/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>"
+                                <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>"
                                    class="btn-perfil" style="flex: 1; margin-top: 0;">
                                     <i class="fas fa-eye"></i> Ver Detalhes
                                 </a>
@@ -149,7 +154,7 @@ $__categorias = (new Categoria())->getAll();
                 <?php endif; ?>
             </div>
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="/Aptus/buscar" class="btn-perfil" style="display: inline-block; width: auto; padding: 0.8rem 2.5rem;">
+                <a href="<?= aptus_base() ?>/buscar" class="btn-perfil" style="display: inline-block; width: auto; padding: 0.8rem 2.5rem;">
                     <i class="fas fa-arrow-right"></i> Ver Todos os Serviços
                 </a>
             </div>
@@ -166,4 +171,4 @@ $__categorias = (new Categoria())->getAll();
     </div>
 <?php endif; ?>
 
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
+<?php $jsPagina = 'home.js'; require_once __DIR__ . '/../layouts/footer.php'; ?>

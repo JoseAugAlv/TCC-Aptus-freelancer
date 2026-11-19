@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/moderator/categorias.php
 
 $tituloPagina = $tituloPagina ?? 'Categorias - Aptus';
@@ -26,7 +27,8 @@ $categorias = $categorias ?? [];
 
     <div class="form-section">
         <h2>Nova Categoria</h2>
-        <form method="POST" action="/Aptus/moderator/categorias/salvar" class="form-categoria">
+        <form method="POST" action="<?= aptus_base() ?>/moderator/categorias/salvar" class="form-categoria">
+            <?= CsrfMiddleware::field() ?>
             <div class="form-row">
                 <div class="form-group">
                     <label for="nome">Nome:</label>
@@ -42,7 +44,7 @@ $categorias = $categorias ?? [];
     <?php if (empty($categorias)): ?>
         <div class="empty-state">
             <p>Nenhuma categoria encontrada.</p>
-            <a href="/Aptus/moderator" class="btn-voltar">Voltar</a>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar">Voltar</a>
         </div>
     <?php else: ?>
         <div class="table-wrapper">
@@ -64,8 +66,21 @@ $categorias = $categorias ?? [];
                             <td><?= htmlspecialchars($categoria['icone'] ?? 'N/A') ?></td>
                             <td><?= $categoria['total_anuncios'] ?? 0 ?></td>
                             <td>
-                                <a href="/Aptus/moderator/categorias/editar/<?= $categoria['id_categoria'] ?>" class="btn-editar">Editar</a>
-                                <form method="POST" action="/Aptus/moderator/categorias/excluir" style="display:inline;"
+                                <details class="editar-categoria-inline">
+                                    <summary class="btn-editar">Editar</summary>
+                                    <form method="POST" action="<?= aptus_base() ?>/moderator/categorias/editar" class="form-editar-categoria">
+                                        <input type="hidden" name="id" value="<?= (int) $categoria['id_categoria'] ?>">
+                                        <input type="text" name="nome" required maxlength="100" aria-label="Nome"
+                                               value="<?= htmlspecialchars($categoria['nome']) ?>">
+                                        <input type="text" name="descricao" maxlength="255" aria-label="Descrição" placeholder="Descrição"
+                                               value="<?= htmlspecialchars($categoria['descricao'] ?? '') ?>">
+                                        <input type="text" name="icone" maxlength="50" aria-label="Ícone" placeholder="fas fa-tag"
+                                               value="<?= htmlspecialchars($categoria['icone'] ?? 'fas fa-tag') ?>">
+                                        <?= CsrfMiddleware::field() ?>
+                                        <button type="submit" class="btn-editar">Salvar</button>
+                                    </form>
+                                </details>
+                                <form method="POST" action="<?= aptus_base() ?>/moderator/categorias/excluir" style="display:inline;"
                                     onsubmit="return confirm('Excluir esta categoria?')">
                                     <input type="hidden" name="id" value="<?= (int) $categoria['id_categoria'] ?>">
                                     <?= CsrfMiddleware::field() ?>
@@ -79,7 +94,7 @@ $categorias = $categorias ?? [];
         </div>
 
         <div class="voltar-wrapper">
-            <a href="/Aptus/moderator" class="btn-voltar">Voltar</a>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar">Voltar</a>
         </div>
     <?php endif; ?>
 </div>

@@ -1,8 +1,3 @@
-:root {
-    --cor-primaria: #006577;
-    --cor-dourado: #C9A227;
-}
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -17,7 +12,7 @@ body {
 }
 
 .moderador-header {
-    background: linear-gradient(135deg, #006577, #004d5c);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
     color: #fff;
     padding: 2.5rem 3rem;
     border-radius: 20px;
@@ -44,7 +39,7 @@ body {
 
 .moderador-header .badge-count {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(var(--rgb-superficie, 255, 255, 255), 0.2);
     padding: 2px 14px;
     border-radius: 20px;
     font-size: 0.85rem;
@@ -60,27 +55,27 @@ body {
 }
 
 .moderador-card {
-    background: #fff;
+    background: var(--tema-superficie, #fff);
     padding: 25px 20px;
     border-radius: 16px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tema-borda, #e2e8f0);
     text-align: center;
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     text-decoration: none;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     display: block;
 }
 
 .moderador-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(0, 101, 119, 0.12);
-    border-color: #006577;
+    border-color: var(--tema-primaria-texto, var(--cor-primaria));
 }
 
 .moderador-card .card-icon {
     font-size: 2.5rem;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 12px;
     display: block;
 }
@@ -88,12 +83,12 @@ body {
 .moderador-card h3 {
     font-size: 1.1rem;
     margin: 0 0 6px 0;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
 }
 
 .moderador-card p {
     font-size: 0.9rem;
-    color: #6b7280;
+    color: var(--tema-texto-sec, #6b7280);
     margin: 0 0 12px 0;
 }
 
@@ -103,16 +98,16 @@ body {
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
-    background: #ef4444;
+    background: var(--cor-erro);
     color: #fff;
 }
 
 .moderador-card .card-badge.zero {
-    background: #10b981;
+    background: var(--cor-sucesso);
 }
 
 .moderador-table-wrapper {
-    background: rgba(255, 255, 255, 0.88);
+    background: rgba(var(--rgb-superficie, 255, 255, 255), 0.88);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
@@ -127,7 +122,7 @@ body {
 }
 
 .moderador-table thead {
-    background: linear-gradient(135deg, #006577, #004d5c);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
     color: #fff;
 }
 
@@ -144,12 +139,12 @@ body {
 .moderador-table tbody td {
     padding: 12px 18px;
     vertical-align: middle;
-    color: #1a1a1a;
-    border-bottom: 1px solid #f0f0f0;
+    color: var(--tema-texto, #1a1a1a);
+    border-bottom: 1px solid var(--tema-borda, #f0f0f0);
 }
 
 .moderador-table tbody tr:hover {
-    background: #f8fafc;
+    background: var(--tema-fundo-alt, #f8fafc);
 }
 
 .moderador-table .badge-status {
@@ -161,28 +156,28 @@ body {
 }
 
 .badge-status.pendente {
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--cor-aviso-bg);
+    color: var(--cor-aviso-text);
 }
 .badge-status.aprovado {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--cor-sucesso-bg);
+    color: var(--cor-sucesso-text);
 }
 .badge-status.rejeitado {
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--cor-erro-bg);
+    color: var(--cor-erro-text);
 }
 .badge-status.ativo {
-    background: #dbeafe;
-    color: #1e40af;
+    background: var(--cor-info-bg);
+    color: var(--cor-info-text);
 }
 .badge-status.concluido {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--cor-sucesso-bg);
+    color: var(--cor-sucesso-text);
 }
 .badge-status.cancelado {
-    background: #f3f4f6;
-    color: #4b5563;
+    background: var(--tema-fundo-alt, #f3f4f6);
+    color: var(--tema-texto-sec, #4b5563);
 }
 
 .btn-moderador {
@@ -204,31 +199,31 @@ body {
 }
 
 .btn-aprovar {
-    background: #10b981;
+    background: var(--cor-sucesso);
     color: #fff;
 }
 .btn-aprovar:hover {
-    background: #059669;
+    background: var(--cor-sucesso-escuro);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .btn-rejeitar {
-    background: #ef4444;
+    background: var(--cor-erro);
     color: #fff;
 }
 .btn-rejeitar:hover {
-    background: #dc2626;
+    background: var(--cor-erro-escuro);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .btn-analisar {
-    background: #006577;
+    background: var(--cor-primaria);
     color: #fff;
 }
 .btn-analisar:hover {
-    background: #004d5c;
+    background: var(--cor-hover);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 101, 119, 0.3);
 }
@@ -264,23 +259,23 @@ body {
 .moderador-empty {
     text-align: center;
     padding: 4rem 2rem;
-    background: rgba(255, 255, 255, 0.88);
+    background: rgba(var(--rgb-superficie, 255, 255, 255), 0.88);
     border-radius: 20px;
-    border: 2px dashed #d1d5db;
+    border: 2px dashed var(--tema-borda, #d1d5db);
 }
 .moderador-empty i {
     font-size: 3.5rem;
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
     margin-bottom: 1rem;
     display: block;
 }
 .moderador-empty h3 {
-    color: #1a1a1a;
+    color: var(--tema-texto, #1a1a1a);
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
 }
 .moderador-empty p {
-    color: #555;
+    color: var(--tema-texto-sec, #555);
     font-size: 1rem;
     margin-bottom: 1.5rem;
 }
@@ -292,34 +287,34 @@ body {
     margin-bottom: 2rem;
 }
 .moderador-stat {
-    background: #fff;
+    background: var(--tema-superficie, #fff);
     padding: 18px 20px;
     border-radius: 12px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tema-borda, #e2e8f0);
     text-align: center;
 }
 .moderador-stat .stat-number {
     font-size: 2rem;
     font-weight: 800;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     display: block;
 }
 .moderador-stat .stat-label {
     font-size: 0.85rem;
-    color: #6b7280;
+    color: var(--tema-texto-sec, #6b7280);
 }
 
 .detalhes-container-moderador {
-    background: #fff;
+    background: var(--tema-superficie, #fff);
     padding: 30px;
     border-radius: 16px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tema-borda, #e2e8f0);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 .detalhes-container-moderador .detalhes-section {
     margin-bottom: 24px;
     padding-bottom: 24px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--tema-borda, #f0f0f0);
 }
 .detalhes-container-moderador .detalhes-section:last-child {
     border-bottom: none;
@@ -327,7 +322,7 @@ body {
     padding-bottom: 0;
 }
 .detalhes-container-moderador h3 {
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 1.1rem;
     margin: 0 0 12px 0;
 }
@@ -339,16 +334,16 @@ body {
 }
 .detalhes-container-moderador .detalhes-row .label {
     font-weight: 600;
-    color: #4b5563;
+    color: var(--tema-texto-sec, #4b5563);
 }
 .detalhes-container-moderador .detalhes-row .value {
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
 }
 .detalhes-container-moderador .detalhes-descricao {
-    background: #f8fafc;
+    background: var(--tema-fundo-alt, #f8fafc);
     padding: 16px;
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tema-borda, #e2e8f0);
     white-space: pre-wrap;
     word-break: break-word;
 }
@@ -359,13 +354,13 @@ body {
 .form-moderador label {
     display: block;
     font-weight: 600;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     margin-bottom: 4px;
 }
 .form-moderador textarea {
     width: 100%;
     padding: 10px 14px;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--tema-borda, #e2e8f0);
     border-radius: 8px;
     font-size: 0.95rem;
     font-family: inherit;
@@ -373,7 +368,7 @@ body {
     transition: all 0.3s;
 }
 .form-moderador textarea:focus {
-    border-color: #006577;
+    border-color: var(--tema-primaria-texto, var(--cor-primaria));
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 101, 119, 0.1);
 }

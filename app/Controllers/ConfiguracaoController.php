@@ -17,20 +17,20 @@ class ConfiguracaoController
         if (session_status() === PHP_SESSION_NONE) session_start();
 
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
         $role = (int) $_SESSION['usuario']['role'];
         if (!in_array($role, [1, 4], true)) {
-            header('Location: /Aptus/');
+            header(('Location: ' . aptus_base() . '/'));
             exit;
         }
 
         $this->config->initDefaults();
         $configs = $this->config->getAll();
 
-        $tituloPagina = 'Configuracoes - Aptus';
+        $tituloPagina = 'Configurações - Aptus';
         $cssPagina    = 'admin.css';
 
         require '../app/Views/admin/configuracoes.php';
@@ -41,13 +41,13 @@ class ConfiguracaoController
         if (session_status() === PHP_SESSION_NONE) session_start();
 
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
 
         $role = (int) $_SESSION['usuario']['role'];
         if (!in_array($role, [1, 4], true)) {
-            header('Location: /Aptus/');
+            header(('Location: ' . aptus_base() . '/'));
             exit;
         }
 
@@ -85,7 +85,7 @@ class ConfiguracaoController
         foreach ($numericos as $key) {
             if (!isset($configs[$key]) || !is_numeric($configs[$key]) || (int) $configs[$key] < 1) {
                 $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => "Valor inválido em '{$key}' (deve ser número maior que 0)."];
-                header('Location: /Aptus/admin/configuracoes');
+                header(('Location: ' . aptus_base() . '/admin/configuracoes'));
                 exit;
             }
             $configs[$key] = (string) (int) $configs[$key];
@@ -94,7 +94,7 @@ class ConfiguracaoController
         // Validar e-mail
         if (!empty($configs['site_email']) && !filter_var($configs['site_email'], FILTER_VALIDATE_EMAIL)) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'E-mail inválido.'];
-            header('Location: /Aptus/admin/configuracoes');
+            header(('Location: ' . aptus_base() . '/admin/configuracoes'));
             exit;
         }
 
@@ -113,7 +113,7 @@ class ConfiguracaoController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Erro ao salvar configurações.'];
         }
 
-        header('Location: /Aptus/admin/configuracoes');
+        header(('Location: ' . aptus_base() . '/admin/configuracoes'));
         exit;
     }
 }

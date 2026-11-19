@@ -130,7 +130,7 @@ $gruposDev = [
                      style="display:none;"></div>
             <?php endif; ?>
 
-            <form method="POST" action="/Aptus/login" class="auth-form" id="loginForm" onsubmit="return aceitarLgpdEContinuar(event)">
+            <form method="POST" action="<?= aptus_base() ?>/login" class="auth-form" id="loginForm" onsubmit="return aceitarLgpdEContinuar(event)">
                 <div class="form-group">
                     <label for="email">E-mail <span class="obrigatorio">*</span></label>
                     <div class="input-wrap">
@@ -157,19 +157,19 @@ $gruposDev = [
                         <input type="checkbox" name="lembrar" value="1">
                         <span>Lembrar-me por 30 dias</span>
                     </label>
-                    <a href="/Aptus/auth/esqueci-senha" class="link-esqueci">Esqueci a senha</a>
+                    <a href="<?= aptus_base() ?>/auth/esqueci-senha" class="link-esqueci">Esqueci a senha</a>
                 </div>
 
                 <div class="form-group termo-check" style="margin-top:6px;">
                     <label class="checkbox-termos" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
                         <input type="checkbox" name="aceite_termos" id="aceite_termos_login"
                             value="1" required
-                            style="margin-top:3px; width:16px; height:16px; accent-color:#006577; flex-shrink:0;">
-                        <span style="font-size:.85rem; color:#475569; line-height:1.5;">
+                            style="margin-top:3px; width:16px; height:16px; accent-color:var(--cor-primaria); flex-shrink:0;">
+                        <span style="font-size:.85rem; color:var(--tema-texto-sec, #475569); line-height:1.5;">
                             Li e concordo com os
-                            <a href="/Aptus/termos" target="_blank" style="color:#006577; text-decoration:underline;">Termos de Uso</a>,
-                            a <a href="/Aptus/termos#privacidade" target="_blank" style="color:#006577; text-decoration:underline;">Política de Privacidade</a>
-                            e a <a href="/Aptus/cookies" target="_blank" style="color:#006577; text-decoration:underline;">Política de Cookies</a>,
+                            <a href="<?= aptus_base() ?>/termos" target="_blank" style="color:var(--tema-primaria-texto, var(--cor-primaria)); text-decoration:underline;">Termos de Uso</a>,
+                            a <a href="<?= aptus_base() ?>/termos#privacidade" target="_blank" style="color:var(--tema-primaria-texto, var(--cor-primaria)); text-decoration:underline;">Política de Privacidade</a>
+                            e a <a href="<?= aptus_base() ?>/cookies" target="_blank" style="color:var(--tema-primaria-texto, var(--cor-primaria)); text-decoration:underline;">Política de Cookies</a>,
                             conforme a LGPD (Lei nº 13.709/2018).
                         </span>
                     </label>
@@ -181,8 +181,10 @@ $gruposDev = [
                 <?= CsrfMiddleware::field() ?>
             </form>
 
+            <?php $googleTexto = 'Entrar com Google'; require __DIR__ . '/../partials/botao_google.php'; ?>
+
             <div class="auth-footer">
-                <p>Não tem uma conta? <a href="/Aptus/login/cadastrar">Criar Conta Grátis</a></p>
+                <p>Não tem uma conta? <a href="<?= aptus_base() ?>/login/cadastrar">Criar Conta Grátis</a></p>
             </div>
         </div>
     </div>
@@ -326,12 +328,12 @@ document.addEventListener('DOMContentLoaded', function () {
    PAINEL DEV — TEMA CLARO
    ========================================================== */
 .dev-panel {
-    background: #ffffff;
+    background: var(--tema-superficie, #ffffff);
     border-radius: 18px;
     padding: 22px 20px;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     box-shadow: 0 8px 32px rgba(0, 101, 119, 0.10);
-    border: 1px solid #d8edf1;
+    border: 1px solid var(--tema-borda-primaria, #d8edf1);
     position: sticky;
     top: 90px;
     max-height: calc(100vh - 110px);
@@ -346,10 +348,10 @@ document.addEventListener('DOMContentLoaded', function () {
     top: 0; left: 0; right: 0;
     height: 4px;
     border-radius: 18px 18px 0 0;
-    background: linear-gradient(90deg, #006577 0%, #C9A227 100%);
+    background: linear-gradient(90deg, var(--cor-primaria) 0%, var(--cor-dourado-decorativo) 100%);
 }
 .dev-panel::-webkit-scrollbar { width: 8px; }
-.dev-panel::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+.dev-panel::-webkit-scrollbar-track { background: var(--tema-fundo-alt, #f1f5f9); border-radius: 4px; }
 .dev-panel::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
 .dev-header {
@@ -358,13 +360,13 @@ document.addEventListener('DOMContentLoaded', function () {
     gap: 12px;
     margin-bottom: 16px;
     padding-bottom: 16px;
-    border-bottom: 1px solid #e8eff3;
+    border-bottom: 1px solid color-mix(in srgb, #e8eff3 var(--tema-pastel-borda, 100%), var(--cor-borda));
     padding-top: 6px;
 }
 .dev-header-icon {
     width: 42px; height: 42px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #006577, #004d5c);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -377,28 +379,28 @@ document.addEventListener('DOMContentLoaded', function () {
 .dev-titulo    {
     font-weight: 800;
     font-size: 0.95rem;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     letter-spacing: .2px;
 }
-.dev-subtitulo { font-size: 0.72rem; color: #64748b; }
+.dev-subtitulo { font-size: 0.72rem; color: var(--tema-texto-sec, #64748b); }
 
 .dev-senha {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    background: #fef7e6;
-    border: 1px solid #f5d97a;
+    background: color-mix(in srgb, #fef7e6 var(--tema-pastel, 100%), var(--cor-superficie));
+    border: 1px solid color-mix(in srgb, #f5d97a var(--tema-pastel-borda, 100%), var(--cor-borda));
     border-radius: 10px;
     margin-bottom: 16px;
     font-size: 0.78rem;
-    color: #8a6d1a;
+    color: var(--tema-dourado-texto, #8a6d1a);
     font-weight: 600;
 }
-.dev-senha i { color: #C9A227; font-size: 0.9rem; }
+.dev-senha i { color: var(--cor-dourado-decorativo); font-size: 0.9rem; }
 .dev-senha span { flex: 1; }
 .dev-senha code {
-    background: #C9A227;
+    background: var(--cor-dourado-decorativo);
     color: #ffffff;
     padding: 3px 10px;
     border-radius: 6px;
@@ -415,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
     width: 100%;
     padding: 13px 16px;
     margin-bottom: 18px;
-    background: linear-gradient(135deg, #006577, #004d5c);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
     color: #ffffff;
     border: none;
     border-radius: 11px;
@@ -427,9 +429,9 @@ document.addEventListener('DOMContentLoaded', function () {
     box-shadow: 0 6px 18px rgba(0, 101, 119, 0.25);
     text-align: left;
 }
-.dev-atalho > i:first-child { color: #C9A227; font-size: 1rem; }
+.dev-atalho > i:first-child { color: var(--cor-dourado-decorativo); font-size: 1rem; }
 .dev-atalho span { flex: 1; color: #ffffff; }
-.dev-atalho strong { color: #C9A227; font-weight: 800; }
+.dev-atalho strong { color: var(--cor-dourado-decorativo); font-weight: 800; }
 .dev-atalho-arrow { opacity: 0.7; transition: transform .2s; color: #ffffff; font-size: 0.8rem; }
 .dev-atalho:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0, 101, 119, 0.35); }
 .dev-atalho:hover .dev-atalho-arrow { transform: translateX(4px); opacity: 1; }
@@ -442,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function () {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 8px;
     padding-left: 2px;
     display: flex;
@@ -465,15 +467,15 @@ document.addEventListener('DOMContentLoaded', function () {
     gap: 10px;
     width: 100%;
     padding: 9px 12px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    background: var(--tema-superficie, #ffffff);
+    border: 1px solid var(--tema-borda, #e2e8f0);
     border-left: 4px solid var(--user-cor, #64748b);
     border-radius: 9px;
     cursor: pointer;
     transition: all .18s ease;
     font-family: inherit;
     text-align: left;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
 }
 .dev-user:hover {
     background: var(--user-cor, #64748b);
@@ -484,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .dev-user:hover .dev-user-info strong,
 .dev-user:hover .dev-user-info small { color: #ffffff; }
 .dev-user:hover .dev-user-avatar {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(var(--rgb-superficie, 255, 255, 255), 0.25);
     color: #ffffff;
 }
 .dev-user:hover .dev-user-seta { color: #ffffff; }
@@ -506,14 +508,14 @@ document.addEventListener('DOMContentLoaded', function () {
 .dev-user-info strong {
     font-size: 0.84rem;
     font-weight: 700;
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     letter-spacing: .2px;
     line-height: 1.2;
     transition: color .18s ease;
 }
 .dev-user-info small {
     font-size: 0.68rem;
-    color: #64748b;
+    color: var(--tema-texto-sec, #64748b);
     line-height: 1.2;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -522,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 .dev-user-seta {
     font-size: 0.7rem;
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
     transition: all .18s ease;
     flex-shrink: 0;
 }
@@ -533,15 +535,15 @@ document.addEventListener('DOMContentLoaded', function () {
     gap: 8px;
     padding: 10px 12px;
     margin-top: 14px;
-    background: #f8fdfe;
-    border: 1px solid #e8eff3;
+    background: var(--tema-fundo-alt, #f8fdfe);
+    border: 1px solid color-mix(in srgb, #e8eff3 var(--tema-pastel-borda, 100%), var(--cor-borda));
     border-radius: 8px;
     font-size: 0.7rem;
-    color: #64748b;
+    color: var(--tema-texto-sec, #64748b);
     line-height: 1.4;
 }
-.dev-footer i { color: #059669; font-size: 0.8rem; flex-shrink: 0; }
-.dev-footer strong { color: #006577; }
+.dev-footer i { color: var(--cor-sucesso-escuro); font-size: 0.8rem; flex-shrink: 0; }
+.dev-footer strong { color: var(--tema-primaria-texto, var(--cor-primaria)); }
 
 /* ==========================================================
    CARD DE LOGIN
@@ -554,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .input-wrap > i {
     position: absolute;
     left: 14px;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 0.95rem;
     pointer-events: none;
     opacity: 0.7;
@@ -568,14 +570,14 @@ document.addEventListener('DOMContentLoaded', function () {
     right: 10px;
     background: transparent;
     border: none;
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
     cursor: pointer;
     padding: 6px 8px;
     border-radius: 6px;
     transition: all .2s ease;
     font-size: 0.9rem;
 }
-.toggle-senha:hover { color: #006577; background: rgba(0, 101, 119, 0.06); }
+.toggle-senha:hover { color: var(--tema-primaria-texto, var(--cor-primaria)); background: rgba(0, 101, 119, 0.06); }
 .remember-group {
     display: flex !important;
     justify-content: space-between;
@@ -586,12 +588,12 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 .link-esqueci {
     font-size: 0.82rem;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     text-decoration: none;
     font-weight: 500;
     transition: color .2s ease;
 }
-.link-esqueci:hover { color: #C9A227; text-decoration: underline; }
+.link-esqueci:hover { color: var(--cor-dourado-decorativo); text-decoration: underline; }
 .btn-full {
     display: inline-flex !important;
     align-items: center;

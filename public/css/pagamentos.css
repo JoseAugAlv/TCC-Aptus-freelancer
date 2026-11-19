@@ -1,7 +1,8 @@
 /* public/css/pagamentos.css — Pagamentos Aptus */
 
 .pagamento-section {
-    padding: 2rem 1rem;
+    /* a navbar é fixa: o conteúdo começa abaixo dela */
+    padding: calc(var(--altura-navbar) + 2rem) 1rem 2rem;
     max-width: 900px;
     margin: 0 auto;
     animation: fadeInUp 0.6s ease-out;
@@ -14,13 +15,13 @@
 
 .pagamento-header h2 {
     font-size: 2rem;
-    color: #2c1810;
+    color: var(--tema-texto, #2c1810);
     margin-bottom: 0.25rem;
     font-weight: 700;
 }
 
 .pagamento-header p {
-    color: #5a4a3a;
+    color: var(--tema-texto-sec, #5a4a3a);
     margin-bottom: 1.5rem;
 }
 
@@ -31,8 +32,8 @@
 }
 
 .pagamento-card {
-    background: #fff;
-    border: 1px solid #e6ddd5;
+    background: var(--tema-superficie, #fff);
+    border: 1px solid color-mix(in srgb, #e6ddd5 var(--tema-pastel-borda, 100%), var(--cor-borda));
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 4px 20px rgba(44, 24, 16, 0.06);
@@ -46,12 +47,12 @@
 
 .pagamento-card h3 {
     font-size: 1.25rem;
-    color: #8b6914;
+    color: color-mix(in srgb, #8b6914 var(--tema-tinta, 100%), #ffffff);
     margin-bottom: 0.5rem;
 }
 
 .pagamento-card p {
-    color: #5a4a3a;
+    color: var(--tema-texto-sec, #5a4a3a);
     margin-bottom: 1rem;
     line-height: 1.5;
 }
@@ -65,11 +66,11 @@
     display: flex;
     justify-content: space-between;
     padding: 0.75rem 0;
-    border-bottom: 1px dashed #e6ddd5;
+    border-bottom: 1px dashed color-mix(in srgb, #e6ddd5 var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
-.detalhe-row .label { font-weight: 600; color: #2c1810; }
-.detalhe-row .valor  { color: #5a4a3a; }
+.detalhe-row .label { font-weight: 600; color: var(--tema-texto, #2c1810); }
+.detalhe-row .valor  { color: var(--tema-texto-sec, #5a4a3a); }
 
 .form-actions {
     display: flex;
@@ -78,8 +79,8 @@
 }
 
 .btn-secondary {
-    background: #e6ddd5;
-    color: #2c1810;
+    background: color-mix(in srgb, #e6ddd5 var(--tema-pastel, 100%), var(--cor-superficie));
+    color: var(--tema-texto, #2c1810);
     padding: 0.65rem 1.25rem;
     border-radius: 8px;
     text-decoration: none;
@@ -90,7 +91,55 @@
 .btn-secondary:hover { background: #d6cbb8; }
 
 @media (max-width: 600px) {
-    .pagamento-section { padding: 1rem; }
+    .pagamento-section { padding: calc(var(--altura-navbar) + 1rem) 1rem 1rem; }
     .pagamento-cards { grid-template-columns: 1fr; }
     .form-actions { flex-direction: column; }
 }
+
+/* ===== DETALHES + FORMULÁRIO DE CONFIRMAÇÃO ===== */
+.pagamento-detalhes,
+.pagamento-form-confirmar {
+    background: var(--tema-superficie, #fff);
+    border: 1px solid color-mix(in srgb, #e6ddd5 var(--tema-pastel-borda, 100%), var(--cor-borda));
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(44, 24, 16, 0.06);
+}
+
+.pagamento-detalhes .detalhe-row:last-child { border-bottom: none; }
+
+.pagamento-form-confirmar .form-group { margin-bottom: 1.1rem; }
+
+.pagamento-form-confirmar label {
+    display: block;
+    font-weight: 600;
+    color: var(--tema-texto, #2c1810);
+    margin-bottom: 0.4rem;
+}
+
+.pagamento-form-confirmar input,
+.pagamento-form-confirmar select,
+.pagamento-form-confirmar textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--tema-borda-primaria, #d8edf1);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--tema-texto, #2c1810);
+    background: var(--tema-fundo-alt, #f8fdfe);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.pagamento-form-confirmar input:focus,
+.pagamento-form-confirmar select:focus,
+.pagamento-form-confirmar textarea:focus {
+    outline: none;
+    border-color: var(--tema-primaria-texto, var(--cor-primaria));
+    background: var(--tema-superficie, #fff);
+    box-shadow: 0 0 0 4px rgba(0, 101, 119, 0.08);
+}
+
+.pagamento-form-confirmar textarea { resize: vertical; min-height: 90px; }
+.pagamento-card .form-actions .btn { font-size: 0.9rem; }

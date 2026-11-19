@@ -15,21 +15,14 @@ html {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    color: #1a1a1a;
+    background: linear-gradient(135deg, var(--tema-fundo-alt, #f5f7fa) 0%, var(--tema-fundo-gradiente, #c3cfe2) 100%);
+    color: var(--tema-texto, #1a1a1a);
     line-height: 1.6;
     overflow-x: hidden;
 }
 
 /* ========== VARIÁVEIS ========== */
 :root {
-    --cor-primaria: #006577;
-    --cor-secundaria: #C9A227;
-    --cor-dourado: #C9A227;
-    --cor-hover: #004d5c;
-    --cor-texto-principal: #1a1a1a;
-    --cor-texto-secundario: #555555;
-    --cor-branco: #ffffff;
     --cor-fundo: #f5f7fa;
     --cor-sombra: rgba(0, 101, 119, 0.12);
     --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -57,7 +50,7 @@ body {
 
 .sobre-hero h1 {
     font-size: 3rem;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 1rem;
     font-weight: 800;
 }
@@ -88,7 +81,7 @@ body {
 .mvp-card {
     text-align: center;
     padding: 2rem;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(var(--rgb-superficie, 255, 255, 255), 0.7);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     border: 1px solid rgba(0, 101, 119, 0.1);
@@ -103,12 +96,12 @@ body {
 
 .mvp-card i {
     font-size: 3rem;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 1rem;
 }
 
 .mvp-card h3 {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 1rem;
     font-size: 1.5rem;
 }
@@ -128,7 +121,7 @@ body {
 
 .como-funciona-section h2 {
     text-align: center;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 2rem;
     margin-bottom: 2rem;
     position: relative;
@@ -188,7 +181,7 @@ body {
 }
 
 .step-item h3 {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
 }
@@ -208,7 +201,7 @@ body {
 }
 
 .cta-section h2 {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 1.8rem;
     margin-bottom: 1rem;
 }
@@ -249,8 +242,8 @@ body {
 
 .btn-secundario {
     background: transparent;
-    color: var(--cor-primaria);
-    border: 2px solid var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
+    border: 2px solid var(--tema-primaria-texto, var(--cor-primaria));
 }
 
 .btn-secundario:hover {

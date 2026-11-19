@@ -62,7 +62,7 @@ class CsrfMiddleware
             ];
 
             // Valida o referer antes de redirecionar (anti-open-redirect)
-            $referer   = $_SERVER['HTTP_REFERER'] ?? '/Aptus/login';
+            $referer   = $_SERVER['HTTP_REFERER'] ?? (aptus_base() . '/login');
             $refererOk = false;
 
             try {
@@ -73,7 +73,7 @@ class CsrfMiddleware
                 $refererOk = false;
             }
 
-            header('Location: ' . ($refererOk ? $referer : '/Aptus/login'));
+            header('Location: ' . ($refererOk ? $referer : (aptus_base() . '/login')));
             exit;
         }
     }

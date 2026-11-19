@@ -17,7 +17,7 @@ class PagamentoController
     public function index()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
 
@@ -49,15 +49,15 @@ class PagamentoController
     public function confirmar()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $usuarioId   = (int) $_SESSION['usuario']['id'];
-        $interesseId = (int) ($_GET['id'] ?? 0);
+        $interesseId = UrlId::query('id');
         $papel       = $_GET['papel'] ?? '';
 
         if ($interesseId <= 0 || !in_array($papel, ['contratante', 'freelancer'], true)) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Parâmetros inválidos.'];
-            header('Location: /Aptus/pagamentos'); exit;
+            header(('Location: ' . aptus_base() . '/pagamentos')); exit;
         }
 
         $interesseModel = new Interesse();
@@ -74,7 +74,7 @@ class PagamentoController
 
         if (!$interesse || !$papelValido) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para confirmar este pagamento.'];
-            header('Location: /Aptus/pagamentos'); exit;
+            header(('Location: ' . aptus_base() . '/pagamentos')); exit;
         }
 
         $confirmacaoModel = new ConfirmacaoPagamento();
@@ -88,7 +88,7 @@ class PagamentoController
     public function confirmarContratante()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
         $id        = (int) ($_POST['interesse_id'] ?? 0);
@@ -102,13 +102,13 @@ class PagamentoController
 
         if (!$interesse || (int) $interesse['id_contratante'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para confirmar este pagamento.'];
-            header('Location: /Aptus/pagamentos'); exit;
+            header(('Location: ' . aptus_base() . '/pagamentos')); exit;
         }
 
         // Só permite confirmar se o interesse está ativo
         if (!in_array($interesse['situacao'], ['ativo'], true)) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Este serviço não está ativo.'];
-            header('Location: /Aptus/pagamentos'); exit;
+            header(('Location: ' . aptus_base() . '/pagamentos')); exit;
         }
 
         // Bloqueia reconfirmação
@@ -117,19 +117,19 @@ class PagamentoController
 
         if ($existente && !empty($existente['confirmado_contratante'])) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Você já confirmou este pagamento.'];
-            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante');
+            header(('Location: ' . aptus_base() . '/pagamentos/confirmar?id=') . url_id($id) . '&papel=contratante');
             exit;
         }
 
         if ($valor <= 0) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o valor pago.'];
-            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante');
+            header(('Location: ' . aptus_base() . '/pagamentos/confirmar?id=') . url_id($id) . '&papel=contratante');
             exit;
         }
 
         if ($forma === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Selecione a forma de pagamento.'];
-            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante');
+            header(('Location: ' . aptus_base() . '/pagamentos/confirmar?id=') . url_id($id) . '&papel=contratante');
             exit;
         }
 
@@ -146,14 +146,14 @@ class PagamentoController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível registrar o pagamento.'];
         }
 
-        header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=contratante');
+        header(('Location: ' . aptus_base() . '/pagamentos/confirmar?id=') . url_id($id) . '&papel=contratante');
         exit;
     }
 
     public function confirmarFreelancer()
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['usuario'])) { header('Location: /Aptus/login'); exit; }
+        if (!isset($_SESSION['usuario'])) { header(('Location: ' . aptus_base() . '/login')); exit; }
 
         $usuarioId = (int) $_SESSION['usuario']['id'];
         $id        = (int) ($_POST['interesse_id'] ?? 0);
@@ -166,12 +166,12 @@ class PagamentoController
 
         if (!$interesse || (int) $interesse['id_freelancer'] !== $usuarioId) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não tem permissão para confirmar este pagamento.'];
-            header('Location: /Aptus/pagamentos'); exit;
+            header(('Location: ' . aptus_base() . '/pagamentos')); exit;
         }
 
         if (!in_array($interesse['situacao'], ['ativo'], true)) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Este serviço não está ativo.'];
-            header('Location: /Aptus/pagamentos'); exit;
+            header(('Location: ' . aptus_base() . '/pagamentos')); exit;
         }
 
         $confirmacao = new ConfirmacaoPagamento();
@@ -179,13 +179,13 @@ class PagamentoController
 
         if ($existente && !empty($existente['confirmado_freelancer'])) {
             $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Você já confirmou este pagamento.'];
-            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=freelancer');
+            header(('Location: ' . aptus_base() . '/pagamentos/confirmar?id=') . url_id($id) . '&papel=freelancer');
             exit;
         }
 
         if ($valor <= 0) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o valor recebido.'];
-            header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=freelancer');
+            header(('Location: ' . aptus_base() . '/pagamentos/confirmar?id=') . url_id($id) . '&papel=freelancer');
             exit;
         }
 
@@ -202,7 +202,7 @@ class PagamentoController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível registrar o pagamento.'];
         }
 
-        header('Location: /Aptus/pagamentos/confirmar?id=' . $id . '&papel=freelancer');
+        header(('Location: ' . aptus_base() . '/pagamentos/confirmar?id=') . url_id($id) . '&papel=freelancer');
         exit;
     }
 }

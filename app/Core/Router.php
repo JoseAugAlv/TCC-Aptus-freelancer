@@ -29,6 +29,8 @@ class Router
     public function dispatch($requestUri)
     {
         $path = parse_url($requestUri, PHP_URL_PATH);
+        // Barras repetidas (ex.: "/Aptus//auth/verificar") contam como uma só.
+        $path = preg_replace('#/{2,}#', '/', (string) $path);
 
         // BasePath dinâmico
         $appUrl   = \Config::get('APP_URL', '/Aptus');
@@ -41,6 +43,12 @@ class Router
 
         if ($path === '' || $path === false) {
             $path = '/';
+        }
+
+        // "/logs/" e "/logs" são a mesma rota. O Apache acrescenta a barra
+        // final quando existe uma pasta com o mesmo nome (ex.: logs/ na raiz).
+        if ($path !== '/') {
+            $path = rtrim($path, '/') ?: '/';
         }
 
         $method = $_SERVER['REQUEST_METHOD'];
@@ -57,7 +65,7 @@ class Router
             foreach ($this->routes[$method] as $routePath => $routeData) {
                 if (!str_contains($routePath, '{')) continue;
 
-                $pattern = preg_replace('#\{[a-zA-Z0-9_]+\}#', '([a-zA-Z0-9\-]+)', $routePath);
+                $pattern = preg_replace('#\{[a-zA-Z0-9_]+\}#', '([a-zA-Z0-9_\-]+)', $routePath);
                 $pattern = "#^" . $pattern . "$#";
 
                 if (preg_match($pattern, $path, $matches)) {
@@ -65,6 +73,19 @@ class Router
                     $route            = $routeData;
                     $route['pattern'] = $pattern;
                     $params           = $matches;
+
+                    // Parâmetros {id} chegam como token opaco (UrlId) e são
+                    // convertidos para o ID numérico. ID cru ou token inválido = 404.
+                    preg_match_all('#\{([a-zA-Z0-9_]+)\}#', $routePath, $nomes);
+                    foreach ($nomes[1] as $i => $nome) {
+                        if ($nome !== 'id') continue;
+                        $idReal = \UrlId::decode($params[$i] ?? null);
+                        if ($idReal === null) {
+                            $route = null;
+                            break;
+                        }
+                        $params[$i] = $idReal;
+                    }
                     break;
                 }
             }
@@ -100,7 +121,7 @@ class Router
                     echo json_encode(['success' => false, 'error' => 'Não autenticado']);
                     exit;
                 }
-                header('Location: /Aptus/login');
+                header(('Location: ' . aptus_base() . '/login'));
                 exit;
             }
 
@@ -115,8 +136,7 @@ class Router
                     exit;
                 }
                 http_response_code(403);
-                echo "<h1>403 - Acesso Negado</h1>";
-                echo '<p><a href="/Aptus/">Voltar para o início</a></p>';
+                require __DIR__ . '/../Views/errors/403.php';
                 exit;
             }
         }

@@ -28,20 +28,20 @@ $statusAtual = $_GET['status'] ?? '';
     <?php endif; ?>
 
     <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
-        <a href="/Aptus/moderator/anuncios"
+        <a href="<?= aptus_base() ?>/moderator/anuncios"
            class="filtro-btn <?= $statusAtual === '' ? 'ativo' : '' ?>">Todos</a>
-        <a href="/Aptus/moderator/anuncios?status=1"
+        <a href="<?= aptus_base() ?>/moderator/anuncios?status=1"
            class="filtro-btn <?= $statusAtual === '1' ? 'ativo' : '' ?>">Pendentes</a>
-        <a href="/Aptus/moderator/anuncios?status=2"
+        <a href="<?= aptus_base() ?>/moderator/anuncios?status=2"
            class="filtro-btn <?= $statusAtual === '2' ? 'ativo' : '' ?>">Aprovados</a>
-        <a href="/Aptus/moderator/anuncios?status=3"
+        <a href="<?= aptus_base() ?>/moderator/anuncios?status=3"
            class="filtro-btn <?= $statusAtual === '3' ? 'ativo' : '' ?>">Rejeitados</a>
     </div>
 
     <?php if (empty($anuncios)): ?>
         <div class="empty-state">
             <p>Nenhum anúncio encontrado.</p>
-            <a href="/Aptus/moderator" class="btn-voltar">Voltar</a>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar">Voltar</a>
         </div>
     <?php else: ?>
         <div class="table-wrapper">
@@ -72,34 +72,57 @@ $statusAtual = $_GET['status'] ?? '';
                             <td><?= date('d/m/Y H:i', strtotime($anuncio['data_criacao'])) ?></td>
                             <td>
                                 <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                                    <?php if ((int) $anuncio['id_situacao_moderacao'] === 1): ?>
-                                        <form method="POST" action="/Aptus/moderator/anuncios/aprovar">
+                                    <?php $__proprio = (int) $anuncio['id_usuario'] === (int) ($_SESSION['usuario']['id'] ?? 0); ?>
+                                    <?php if ($__proprio): ?>
+                                        <span class="status-badge" title="Outro moderador precisa analisar">Seu anúncio</span>
+                                    <?php endif; ?>
+                                    <?php if (!$__proprio && (int) $anuncio['id_situacao_moderacao'] === 1): ?>
+                                        <form method="POST" action="<?= aptus_base() ?>/moderator/anuncios/aprovar">
                                             <input type="hidden" name="id" value="<?= (int) $anuncio['id_anuncio'] ?>">
                                             <?= CsrfMiddleware::field() ?>
                                             <button type="submit" class="btn-aprovar"
                                                     onclick="return confirm('Aprovar este anúncio?')">Aprovar</button>
                                         </form>
 
-                                        <form method="POST" action="/Aptus/moderator/anuncios/rejeitar">
-                                            <input type="hidden" name="id" value="<?= (int) $anuncio['id_anuncio'] ?>">
-                                            <?= CsrfMiddleware::field() ?>
-                                            <button type="submit" class="btn-rejeitar"
-                                                    onclick="return confirm('Rejeitar este anúncio?')">Rejeitar</button>
-                                        </form>
+                                        <details class="acao-motivo">
+                                            <summary class="btn-rejeitar">Rejeitar</summary>
+                                            <form method="POST" action="<?= aptus_base() ?>/moderator/anuncios/rejeitar">
+                                                <input type="hidden" name="id" value="<?= (int) $anuncio['id_anuncio'] ?>">
+                                                <?= CsrfMiddleware::field() ?>
+                                                <label class="sr-only" for="motivoRej<?= (int) $anuncio['id_anuncio'] ?>">Motivo</label>
+                                                <textarea id="motivoRej<?= (int) $anuncio['id_anuncio'] ?>" name="motivo" rows="2"
+                                                          maxlength="200" required placeholder="Motivo (o anunciante verá)"></textarea>
+                                                <button type="submit" class="btn-rejeitar">Confirmar rejeição</button>
+                                            </form>
+                                        </details>
                                     <?php endif; ?>
 
-                                    <?php if ($anuncio['situacao'] === 'ativo'): ?>
-                                        <form method="POST" action="/Aptus/moderator/anuncios/suspender">
+                                    <?php if (!$__proprio && (int) $anuncio['id_situacao_moderacao'] === 2): ?>
+                                        <details class="acao-motivo">
+                                            <summary class="btn-rejeitar btn-revogar">Revogar</summary>
+                                            <form method="POST" action="<?= aptus_base() ?>/moderator/anuncios/revogar">
+                                                <input type="hidden" name="id" value="<?= (int) $anuncio['id_anuncio'] ?>">
+                                                <?= CsrfMiddleware::field() ?>
+                                                <label class="sr-only" for="motivoRev<?= (int) $anuncio['id_anuncio'] ?>">Motivo</label>
+                                                <textarea id="motivoRev<?= (int) $anuncio['id_anuncio'] ?>" name="motivo" rows="2"
+                                                          maxlength="200" required placeholder="Por que a aprovação está sendo revogada?"></textarea>
+                                                <button type="submit" class="btn-rejeitar btn-revogar">Confirmar revogação</button>
+                                            </form>
+                                        </details>
+                                    <?php endif; ?>
+
+                                    <?php if (!$__proprio && $anuncio['situacao'] === 'ativo'): ?>
+                                        <form method="POST" action="<?= aptus_base() ?>/moderator/anuncios/suspender">
                                             <input type="hidden" name="id" value="<?= (int) $anuncio['id_anuncio'] ?>">
                                             <?= CsrfMiddleware::field() ?>
                                             <button type="submit" class="btn-rejeitar"
-                                                    style="background:#f59e0b;"
+                                                    style="background:var(--cor-aviso);"
                                                     onclick="return confirm('Suspender este anúncio?')">Suspender</button>
                                         </form>
                                     <?php endif; ?>
 
-                                    <a href="/Aptus/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>"
-                                       class="btn-aprovar" style="background:#3b82f6; text-decoration:none;">Ver</a>
+                                    <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>"
+                                       class="btn-aprovar" style="background:var(--cor-info); text-decoration:none;">Ver</a>
                                 </div>
                             </td>
                         </tr>
@@ -109,7 +132,7 @@ $statusAtual = $_GET['status'] ?? '';
         </div>
 
         <div class="voltar-wrapper">
-            <a href="/Aptus/moderator" class="btn-voltar">Voltar</a>
+            <a href="<?= aptus_base() ?>/moderator" class="btn-voltar">Voltar</a>
         </div>
     <?php endif; ?>
 

@@ -15,7 +15,7 @@ $usuarioData = $usuarioData ?? [];
         <h1>Dashboard Freelancer</h1>
         <p>Bem-vindo, <?= htmlspecialchars($usuario['nome'] ?? '') ?>!</p>
         <div class="header-actions">
-            <a href="/Aptus/anuncios/criar" class="btn-primary">+ Novo Serviço</a>
+            <a href="<?= aptus_base() ?>/anuncios/criar" class="btn-primary">+ Novo Serviço</a>
         </div>
     </div>
 
@@ -27,17 +27,17 @@ $usuarioData = $usuarioData ?? [];
             <div class="kpi-label">Total de Serviços</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-check-circle" style="color: #10b981;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-check-circle" style="color: var(--cor-sucesso);"></i></div>
             <div class="kpi-value"><?= $servicosAtivos ?? 0 ?></div>
             <div class="kpi-label">Ativos</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-pause-circle" style="color: #f59e0b;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-pause-circle" style="color: var(--cor-aviso);"></i></div>
             <div class="kpi-value"><?= $servicosPausados ?? 0 ?></div>
             <div class="kpi-label">Pausados</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-clock" style="color: #3b82f6;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-clock" style="color: var(--cor-info);"></i></div>
             <div class="kpi-value"><?= $servicosPendentes ?? 0 ?></div>
             <div class="kpi-label">Pendentes</div>
         </div>
@@ -47,12 +47,12 @@ $usuarioData = $usuarioData ?? [];
             <div class="kpi-label">Interesses Recebidos</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-check-double" style="color: #10b981;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-check-double" style="color: var(--cor-sucesso);"></i></div>
             <div class="kpi-value"><?= $interessesConcluidos ?? 0 ?></div>
             <div class="kpi-label">Concluídos</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-clock" style="color: #f59e0b;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-clock" style="color: var(--cor-aviso);"></i></div>
             <div class="kpi-value"><?= $propostasPendentes ?? 0 ?></div>
             <div class="kpi-label">Propostas Pendentes</div>
         </div>
@@ -63,15 +63,7 @@ $usuarioData = $usuarioData ?? [];
         <div class="avaliacao-info">
             <span class="avaliacao-label">Avaliação Média</span>
             <div class="avaliacao-estrelas">
-                <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <?php if ($i <= round($avaliacao['nota'] ?? 0)): ?>
-                        <i class="fas fa-star" style="color: #f59e0b;"></i>
-                    <?php else: ?>
-                        <i class="far fa-star" style="color: #d1d5db;"></i>
-                    <?php endif; ?>
-                <?php endfor; ?>
-                <span class="avaliacao-nota"><?= number_format($avaliacao['nota'] ?? 0, 1) ?></span>
-                <span class="avaliacao-total">(<?= $avaliacao['total'] ?? 0 ?> avaliações)</span>
+                <?php $estrelasNota = $avaliacao['nota'] ?? 0; $estrelasTotal = $avaliacao['total'] ?? 0; require __DIR__ . '/../partials/estrelas.php'; ?>
             </div>
         </div>
     </div>
@@ -81,7 +73,7 @@ $usuarioData = $usuarioData ?? [];
         <h3><i class="fas fa-tools"></i> Últimos Serviços</h3>
         <?php if (empty($ultimosServicos)): ?>
             <p class="empty-message">Nenhum serviço criado ainda.</p>
-            <a href="/Aptus/anuncios/criar" class="btn-primary">Criar primeiro serviço</a>
+            <a href="<?= aptus_base() ?>/anuncios/criar" class="btn-primary">Criar primeiro serviço</a>
         <?php else: ?>
             <table>
                 <thead>
@@ -117,15 +109,15 @@ $usuarioData = $usuarioData ?? [];
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a href="/Aptus/anuncios/<?= htmlspecialchars($servico['slug']) ?>">Ver</a>
-                                <a href="/Aptus/anuncios/editar/<?= $servico['id_anuncio'] ?>">Editar</a>
+                                <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($servico['slug']) ?>">Ver</a>
+                                <a href="<?= aptus_base() ?>/anuncios/editar/<?= url_id($servico['id_anuncio']) ?>">Editar</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
             <div class="card-footer">
-                <a href="/Aptus/anuncios/meus">Ver todos os serviços →</a>
+                <a href="<?= aptus_base() ?>/anuncios/meus">Ver todos os serviços →</a>
             </div>
         <?php endif; ?>
     </div>
@@ -166,14 +158,14 @@ $usuarioData = $usuarioData ?? [];
                             </td>
                             <td><?= date('d/m/Y', strtotime($interesse['data_interesse'])) ?></td>
                             <td>
-                                <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?>">Ver</a>
+                                <a href="<?= aptus_base() ?>/interesses/detalhes/<?= url_id($interesse['id_interesse']) ?>">Ver</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
             <div class="card-footer">
-                <a href="/Aptus/interesses/recebidos">Ver todos os interesses →</a>
+                <a href="<?= aptus_base() ?>/interesses/recebidos">Ver todos os interesses →</a>
             </div>
         <?php endif; ?>
     </div>
@@ -200,12 +192,12 @@ $usuarioData = $usuarioData ?? [];
             </div>
         </div>
         <div class="card-footer">
-            <a href="/Aptus/perfil/editar">Editar perfil →</a>
+            <a href="<?= aptus_base() ?>/perfil/editar">Editar perfil →</a>
         </div>
     </div>
 
     <div style="text-align: center; margin-top: 2rem;">
-        <a href="/Aptus/" class="btn-primary">← Voltar ao Início</a>
+        <a href="<?= aptus_base() ?>/" class="btn-primary">← Voltar ao Início</a>
     </div>
 </div>
 

@@ -19,12 +19,12 @@ class ModeradorController
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
         $role = (int) $_SESSION['usuario']['role'];
         if (!in_array($role, [1, 2, 4])) {
-            header('Location: /Aptus/');
+            header(('Location: ' . aptus_base() . '/'));
             exit;
         }
     }
@@ -60,13 +60,14 @@ class ModeradorController
         $this->verificaPermissao();
 
         $id = (int) ($_POST['id'] ?? 0);
-        if ($id <= 0) { header('Location: /Aptus/moderator/anuncios'); exit; }
+        if ($id <= 0) { header(('Location: ' . aptus_base() . '/moderator/anuncios')); exit; }
+        $this->bloquearAnuncioProprio($id);
 
         $this->anuncio->aprovar($id);
         $this->notificarFreelancer($id, 'aprovado');
 
         $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio aprovado com sucesso!'];
-        header('Location: /Aptus/moderator/anuncios');
+        header(('Location: ' . aptus_base() . '/moderator/anuncios'));
         exit;
     }
 
@@ -75,14 +76,47 @@ class ModeradorController
         $this->verificaPermissao();
 
         $id     = (int) ($_POST['id'] ?? 0);
-        $motivo = trim($_POST['motivo'] ?? 'Conteúdo inadequado');
-        if ($id <= 0) { header('Location: /Aptus/moderator/anuncios'); exit; }
+        $motivo = trim((string) ($_POST['motivo'] ?? '')) ?: 'Conteúdo inadequado';
+        $motivo = mb_substr($motivo, 0, 200);
+        if ($id <= 0) { header(('Location: ' . aptus_base() . '/moderator/anuncios')); exit; }
+        $this->bloquearAnuncioProprio($id);
 
         $this->anuncio->rejeitar($id, $motivo);
         $this->notificarFreelancer($id, 'rejeitado', $motivo);
 
         $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio rejeitado com sucesso!'];
-        header('Location: /Aptus/moderator/anuncios');
+        header(('Location: ' . aptus_base() . '/moderator/anuncios'));
+        exit;
+    }
+
+    /**
+     * Revoga um anúncio já aprovado: ele sai do ar, o dono é notificado e só
+     * volta após editar e passar por nova aprovação.
+     */
+    public function revogarAnuncio()
+    {
+        $this->verificaPermissao();
+
+        $id     = (int) ($_POST['id'] ?? 0);
+        $motivo = trim((string) ($_POST['motivo'] ?? ''));
+        if ($id <= 0) { header(('Location: ' . aptus_base() . '/moderator/anuncios')); exit; }
+        $this->bloquearAnuncioProprio($id);
+
+        if ($motivo === '' || mb_strlen($motivo) > 200) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o motivo da revogação (até 200 caracteres).'];
+            header(('Location: ' . aptus_base() . '/moderator/anuncios?status=2'));
+            exit;
+        }
+
+        if ($this->anuncio->revogar($id, $motivo)) {
+            $this->notificarFreelancer($id, 'revogado', $motivo);
+            require_once __DIR__ . '/../Helpers/SecurityHelper.php';
+            SecurityHelper::logAuditoria('anuncio_revogado', $_SESSION['usuario']['id'], "Anúncio {$id}: {$motivo}", 'warning');
+            $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio revogado. O anunciante foi notificado.'];
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'aviso', 'mensagem' => 'Só é possível revogar anúncios aprovados.'];
+        }
+        header(('Location: ' . aptus_base() . '/moderator/anuncios?status=2'));
         exit;
     }
 
@@ -94,12 +128,13 @@ class ModeradorController
         $this->verificaPermissao();
 
         $id = (int) ($_POST['id'] ?? 0);
-        if ($id <= 0) { header('Location: /Aptus/moderator/anuncios'); exit; }
+        if ($id <= 0) { header(('Location: ' . aptus_base() . '/moderator/anuncios')); exit; }
+        $this->bloquearAnuncioProprio($id);
 
         $this->moderador->suspenderAnuncio($id);
 
         $_SESSION['flash'] = ['tipo' => 'sucesso', 'mensagem' => 'Anúncio suspenso.'];
-        header('Location: /Aptus/moderator/anuncios');
+        header(('Location: ' . aptus_base() . '/moderator/anuncios'));
         exit;
     }
 
@@ -113,10 +148,17 @@ class ModeradorController
             $anuncio = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$anuncio) return;
 
-            $titulo   = $status === 'aprovado' ? 'Seu anúncio foi aprovado!' : 'Seu anúncio foi rejeitado';
-            $mensagem = $status === 'aprovado'
-                ? "Seu anúncio '{$anuncio['titulo']}' foi aprovado e está disponível para visualização."
-                : "Seu anúncio '{$anuncio['titulo']}' foi rejeitado. Motivo: " . ($motivo ?? 'Não informado');
+            $motivoTxt = $motivo ?: 'Não informado';
+            [$titulo, $mensagem] = match ($status) {
+                'aprovado' => ['Seu anúncio foi aprovado!',
+                               "Seu anúncio '{$anuncio['titulo']}' foi aprovado e está disponível para visualização."],
+                'revogado' => ['Seu anúncio foi revogado',
+                               "A aprovação do anúncio '{$anuncio['titulo']}' foi revogada e ele saiu do ar. Motivo: {$motivoTxt}. "
+                               . 'Edite o anúncio para corrigir e ele voltará para nova análise.'],
+                default    => ['Seu anúncio foi rejeitado',
+                               "Seu anúncio '{$anuncio['titulo']}' foi rejeitado. Motivo: {$motivoTxt}. "
+                               . 'Edite o anúncio para corrigir e ele voltará para nova análise.'],
+            };
 
             $sql  = "INSERT INTO notificacao (id_usuario, tipo, titulo, mensagem, tabela_origem, registro_id)
                      VALUES (?, ?, ?, ?, ?, ?)";
@@ -133,15 +175,11 @@ class ModeradorController
     public function denuncias()
     {
         $this->verificaPermissao();
-        $denuncias = $this->moderador->getDenunciasPendentes();
+        require_once __DIR__ . '/../Models/Denuncia.php';
+        $denunciaModel  = new Denuncia();
+        $denuncias      = $denunciaModel->listarHistorico($_GET);
+        $totalPendentes = $denunciaModel->countPendentes();
         require '../app/Views/moderator/denuncias.php';
-    }
-
-    public function disputas()
-    {
-        $this->verificaPermissao();
-        $disputas = $this->moderador->getDisputasPendentes();
-        require '../app/Views/moderator/disputas.php';
     }
 
     public function usuarios()
@@ -167,7 +205,7 @@ class ModeradorController
 
         if ($nome === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Informe o nome da categoria.'];
-            header('Location: /Aptus/moderator/categorias');
+            header(('Location: ' . aptus_base() . '/moderator/categorias'));
             exit;
         }
 
@@ -177,7 +215,7 @@ class ModeradorController
 
         if ($model->findByNome($nome)) {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Já existe uma categoria com este nome.'];
-            header('Location: /Aptus/moderator/categorias');
+            header(('Location: ' . aptus_base() . '/moderator/categorias'));
             exit;
         }
 
@@ -187,7 +225,7 @@ class ModeradorController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível criar a categoria.'];
         }
 
-        header('Location: /Aptus/moderator/categorias');
+        header(('Location: ' . aptus_base() . '/moderator/categorias'));
         exit;
     }
 
@@ -202,7 +240,7 @@ class ModeradorController
 
         if ($id <= 0 || $nome === '') {
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Dados inválidos.'];
-            header('Location: /Aptus/moderator/categorias');
+            header(('Location: ' . aptus_base() . '/moderator/categorias'));
             exit;
         }
 
@@ -215,7 +253,7 @@ class ModeradorController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível atualizar.'];
         }
 
-        header('Location: /Aptus/moderator/categorias');
+        header(('Location: ' . aptus_base() . '/moderator/categorias'));
         exit;
     }
 
@@ -225,7 +263,7 @@ class ModeradorController
 
         $id = (int) ($_POST['id'] ?? 0);
         if ($id <= 0) {
-            header('Location: /Aptus/moderator/categorias');
+            header(('Location: ' . aptus_base() . '/moderator/categorias'));
             exit;
         }
 
@@ -238,8 +276,20 @@ class ModeradorController
             $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Não foi possível remover.'];
         }
 
-        header('Location: /Aptus/moderator/categorias');
+        header(('Location: ' . aptus_base() . '/moderator/categorias'));
         exit;
     }
 
+    /**
+     * Moderador não pode moderar o próprio anúncio (conflito de interesse).
+     */
+    private function bloquearAnuncioProprio(int $anuncioId): void
+    {
+        $anuncio = $this->anuncio->findById($anuncioId);
+        if ($anuncio && (int) $anuncio['id_usuario'] === (int) $_SESSION['usuario']['id']) {
+            $_SESSION['flash'] = ['tipo' => 'erro', 'mensagem' => 'Você não pode moderar o seu próprio anúncio.'];
+            header(('Location: ' . aptus_base() . '/moderator/anuncios'));
+            exit;
+        }
+    }
 }

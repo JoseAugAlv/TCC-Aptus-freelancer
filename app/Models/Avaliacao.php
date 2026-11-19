@@ -5,6 +5,16 @@ require_once __DIR__ . '/../Config/database.php';
 
 class Avaliacao
 {
+    /**
+     * Avaliação que conta para a reputação de PRESTADOR (e para a nota do anúncio):
+     * feita pelo cliente sobre o freelancer, num serviço concluído.
+     * Exige os aliases a (avaliacao) e i (interesse).
+     */
+    public const COND_PRESTADOR = "i.situacao = 'concluido' AND a.id_avaliado = i.id_freelancer AND a.id_avaliador = i.id_contratante";
+
+    /** Avaliação recebida como CLIENTE (feita pelo freelancer), em serviço concluído. */
+    public const COND_CLIENTE = "i.situacao = 'concluido' AND a.id_avaliado = i.id_contratante AND a.id_avaliador = i.id_freelancer";
+
     private $conn;
 
     public function __construct()
@@ -129,22 +139,86 @@ class Avaliacao
     }
 
     /**
-     * Recalcula nota média do usuário
+     * Recalcula a reputação de prestador (usuario.nota_media / total_avaliacoes)
+     * a partir das avaliações reais. É chamada sempre que uma avaliação é salva.
      */
     public function recalcularNotaMedia($usuarioId)
     {
-        $sql = "SELECT AVG(nota) as media, COUNT(*) as total 
-                FROM avaliacao 
-                WHERE id_avaliado = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$usuarioId]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        $media = round($result['media'] ?? 0, 2);
-        $total = $result['total'] ?? 0;
-        
-        $sql = "UPDATE usuario SET nota_media = ?, total_avaliacoes = ? WHERE id_usuario = ?";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$media, $total, $usuarioId]);
+        $r = $this->resumoPrestador((int) $usuarioId);
+        $stmt = $this->conn->prepare("UPDATE usuario SET nota_media = ?, total_avaliacoes = ? WHERE id_usuario = ?");
+        return $stmt->execute([$r['media'], $r['total'], $usuarioId]);
+    }
+
+    /** Recalcula todos os usuários (corrige médias que não batem com as avaliações). */
+    public function recalcularTodos(): int
+    {
+        $ids = $this->conn->query("SELECT id_usuario FROM usuario")->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($ids as $id) {
+            $this->recalcularNotaMedia((int) $id);
+        }
+        return count($ids);
+    }
+
+    /** ['media' => float, 'total' => int] das avaliações recebidas como prestador. */
+    public function resumoPrestador(int $usuarioId): array
+    {
+        return $this->resumo("a.id_avaliado = ? AND " . self::COND_PRESTADOR, [$usuarioId]);
+    }
+
+    /** ['media' => float, 'total' => int] das avaliações recebidas como cliente. */
+    public function resumoCliente(int $usuarioId): array
+    {
+        return $this->resumo("a.id_avaliado = ? AND " . self::COND_CLIENTE, [$usuarioId]);
+    }
+
+    /** ['media' => float, 'total' => int] das avaliações de um anúncio. */
+    public function resumoAnuncio(int $anuncioId): array
+    {
+        return $this->resumo("i.id_anuncio = ? AND " . self::COND_PRESTADOR, [$anuncioId]);
+    }
+
+    /** Distribuição de notas (5 a 1) das avaliações de um anúncio. */
+    public function distribuicaoAnuncio(int $anuncioId): array
+    {
+        $stmt = $this->conn->prepare(
+            "SELECT a.nota, COUNT(*) AS qtd FROM avaliacao a JOIN interesse i ON i.id_interesse = a.id_interesse
+             WHERE i.id_anuncio = ? AND " . self::COND_PRESTADOR . " GROUP BY a.nota"
+        );
+        $stmt->execute([$anuncioId]);
+        $dist = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
+            $dist[(int) $r['nota']] = (int) $r['qtd'];
+        }
+        return $dist;
+    }
+
+    /** Avaliações (com comentário e resposta) de um anúncio, mais recentes primeiro. */
+    public function getDoAnuncio(int $anuncioId, int $limite = 20): array
+    {
+        $stmt = $this->conn->prepare(
+            "SELECT a.id_avaliacao, a.nota, a.comentario, a.resposta_avaliado, a.data_resposta, a.data_avaliacao,
+                    av.nome AS avaliador_nome, av.username AS avaliador_username, av.foto_perfil AS avaliador_foto
+             FROM avaliacao a
+             JOIN interesse i ON i.id_interesse = a.id_interesse
+             JOIN usuario av ON av.id_usuario = a.id_avaliador
+             WHERE i.id_anuncio = ? AND " . self::COND_PRESTADOR . "
+             ORDER BY a.data_avaliacao DESC, a.id_avaliacao DESC
+             LIMIT " . max(1, $limite)
+        );
+        $stmt->execute([$anuncioId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function resumo(string $where, array $params): array
+    {
+        $stmt = $this->conn->prepare(
+            "SELECT AVG(a.nota) AS media, COUNT(*) AS total
+             FROM avaliacao a JOIN interesse i ON i.id_interesse = a.id_interesse
+             WHERE {$where}"
+        );
+        $stmt->execute($params);
+        $r = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+        $total = (int) ($r['total'] ?? 0);
+        return ['media' => $total ? round((float) $r['media'], 2) : 0.0, 'total' => $total];
     }
 }

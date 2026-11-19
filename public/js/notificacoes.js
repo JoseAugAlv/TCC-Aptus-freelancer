@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function atualizarBadgeNotificacoes() {
-        fetch('/Aptus/notificacoes/contador', {
+        fetch(window.APTUS_BASE + '/notificacoes/contador', {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(function(response) {
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var formData = new FormData();
         formData.append('id', id);
 
-        fetch('/Aptus/notificacoes/marcar-lida', {
+        fetch(window.APTUS_BASE + '/notificacoes/marcar-lida', {
             method: 'POST',
             headers: {
                 'X-CSRF-Token': getCsrfToken(),
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function marcarTodasLidas() {
-        fetch('/Aptus/notificacoes/marcar-todas-lidas', {
+        fetch(window.APTUS_BASE + '/notificacoes/marcar-todas-lidas', {
             method: 'POST',
             headers: {
                 'X-CSRF-Token': getCsrfToken(),

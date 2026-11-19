@@ -26,7 +26,7 @@ $anuncios = $anuncios ?? [];
     <?php endif; ?>
 
     <div class="btn-criar-container">
-        <a href="/Aptus/anuncios/criar" class="btn-criar">
+        <a href="<?= aptus_base() ?>/anuncios/criar" class="btn-criar">
             <i class="fas fa-plus"></i> Criar Novo Anúncio
         </a>
     </div>
@@ -35,8 +35,8 @@ $anuncios = $anuncios ?? [];
         <div class="empty-state">
             <i class="fas fa-box-open"></i>
             <p>Você ainda não possui anúncios.</p>
-            <p style="font-size: 0.9rem; color: #94a8b4;">Comece agora mesmo criando seu primeiro serviço</p>
-            <a href="/Aptus/anuncios/criar" class="btn-criar">
+            <p style="font-size: 0.9rem; color: var(--tema-texto-suave, #94a8b4);">Comece agora mesmo criando seu primeiro serviço</p>
+            <a href="<?= aptus_base() ?>/anuncios/criar" class="btn-criar">
                 Criar primeiro anúncio
             </a>
         </div>
@@ -65,7 +65,16 @@ $anuncios = $anuncios ?? [];
                                     <?= ucfirst($anuncio['situacao']) ?>
                                 </span>
                                 <?php if (($anuncio['id_situacao_moderacao'] ?? 0) == 1): ?>
-                                    <span class="status-badge pendente" style="margin-left: 0.3rem;">Pendente</span>
+                                    <span class="status-badge pendente" style="margin-left: 0.3rem;">Em análise</span>
+                                <?php elseif (($anuncio['id_situacao_moderacao'] ?? 0) == 3): ?>
+                                    <?php $__revogado = str_starts_with((string) ($anuncio['motivo_remocao'] ?? ''), 'Revogado:'); ?>
+                                    <span class="status-badge rejeitado" style="margin-left: 0.3rem;"
+                                          title="<?= htmlspecialchars($anuncio['motivo_remocao'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                                        <?= $__revogado ? 'Revogado' : 'Rejeitado' ?>
+                                    </span>
+                                    <small class="motivo-moderacao">
+                                        <?= htmlspecialchars($anuncio['motivo_remocao'] ?? '') ?> — edite para reenviar.
+                                    </small>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -77,15 +86,15 @@ $anuncios = $anuncios ?? [];
                             <td class="data"><?= date('d/m/Y', strtotime($anuncio['data_criacao'])) ?></td>
                             <td>
                                 <div class="acoes">
-                                    <a href="/Aptus/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>" class="btn-acao ver" title="Ver">
+                                    <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>" class="btn-acao ver" title="Ver">
                                         <i class="fas fa-eye"></i> <span>Ver</span>
                                     </a>
-                                    <a href="/Aptus/anuncios/editar/<?= $anuncio['id_anuncio'] ?>" class="btn-acao editar" title="Editar">
+                                    <a href="<?= aptus_base() ?>/anuncios/editar/<?= url_id($anuncio['id_anuncio']) ?>" class="btn-acao editar" title="Editar">
                                         <i class="fas fa-edit"></i> <span>Editar</span>
                                     </a>
 
                                     <?php if ($anuncio['situacao'] == 'ativo'): ?>
-                                        <form method="POST" action="/Aptus/anuncios/pausar" class="form-acao">
+                                        <form method="POST" action="<?= aptus_base() ?>/anuncios/pausar" class="form-acao">
                                             <input type="hidden" name="id" value="<?= $anuncio['id_anuncio'] ?>">
                                             <?= CsrfMiddleware::field() ?>
                                             <button type="submit" class="btn-acao pausar" title="Pausar">
@@ -93,7 +102,7 @@ $anuncios = $anuncios ?? [];
                                             </button>
                                         </form>
                                     <?php elseif ($anuncio['situacao'] == 'pausado'): ?>
-                                        <form method="POST" action="/Aptus/anuncios/ativar" class="form-acao">
+                                        <form method="POST" action="<?= aptus_base() ?>/anuncios/ativar" class="form-acao">
                                             <input type="hidden" name="id" value="<?= $anuncio['id_anuncio'] ?>">
                                             <?= CsrfMiddleware::field() ?>
                                             <button type="submit" class="btn-acao ativar" title="Ativar">
@@ -102,7 +111,7 @@ $anuncios = $anuncios ?? [];
                                         </form>
                                     <?php endif; ?>
 
-                                    <form method="POST" action="/Aptus/anuncios/excluir" class="form-acao"
+                                    <form method="POST" action="<?= aptus_base() ?>/anuncios/excluir" class="form-acao"
                                           onsubmit="return confirm('Tem certeza que deseja excluir este anúncio?');">
                                         <input type="hidden" name="id" value="<?= $anuncio['id_anuncio'] ?>">
                                         <?= CsrfMiddleware::field() ?>
@@ -120,7 +129,7 @@ $anuncios = $anuncios ?? [];
     <?php endif; ?>
 
     <div class="anuncio-voltar">
-        <a href="/Aptus/"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <a href="<?= aptus_base() ?>/"><i class="fas fa-arrow-left"></i> Voltar</a>
     </div>
 </div>
 

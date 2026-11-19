@@ -85,7 +85,7 @@ $erro = $erro ?? '';
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="/Aptus/contato" novalidate id="formContato">
+        <form method="POST" action="<?= aptus_base() ?>/contato" novalidate id="formContato">
             <?= CsrfMiddleware::field() ?>
             <div class="form-row">
                 <div class="form-group">
@@ -184,6 +184,6 @@ $erro = $erro ?? '';
     </div>
 </div>
 
-<script src="/Aptus/public/js/contato.js"></script>
+<script src="<?= aptus_base() ?>/public/js/contato.js"></script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

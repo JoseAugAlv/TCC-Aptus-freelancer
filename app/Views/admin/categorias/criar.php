@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../layouts/nav.php';
 <div class="admin-container">
     <div class="admin-header">
         <h1><i class="fas fa-plus"></i> Nova Categoria</h1>
-        <a href="/Aptus/admin/categorias" class="btn-voltar">
+        <a href="<?= aptus_base() ?>/admin/categorias" class="btn-voltar">
             <i class="fas fa-arrow-left"></i> Voltar
         </a>
     </div>
@@ -22,7 +22,7 @@ require_once __DIR__ . '/../../layouts/nav.php';
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
 
-    <form method="POST" action="/Aptus/admin/categorias/salvar" class="config-form">
+    <form method="POST" action="<?= aptus_base() ?>/admin/categorias/salvar" class="config-form">
         <div class="form-group">
             <label for="nome">Nome *</label>
             <input type="text" id="nome" name="nome" class="form-control"
@@ -46,7 +46,7 @@ require_once __DIR__ . '/../../layouts/nav.php';
             <button type="submit" class="btn-salvar">
                 <i class="fas fa-save"></i> Salvar
             </button>
-            <a href="/Aptus/admin/categorias" class="btn-voltar">
+            <a href="<?= aptus_base() ?>/admin/categorias" class="btn-voltar">
                 <i class="fas fa-times"></i> Cancelar
             </a>
         </div>

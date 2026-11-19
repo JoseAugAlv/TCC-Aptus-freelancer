@@ -3,7 +3,7 @@
  * app/Views/layouts/cookie_banner.php
  * Banner de consentimento de cookies (LGPD)
  */
-$APP_PATH = '/Aptus/';
+$APP_PATH = (aptus_base() . '/');
 ?>
 
 <div id="cookieBanner" class="cookie-banner" role="dialog" aria-modal="true"
@@ -21,7 +21,7 @@ $APP_PATH = '/Aptus/';
                 Utilizamos cookies para melhorar sua experiência, manter sua sessão segura
                 e analisar o uso do site. Você pode aceitar ou recusar os cookies não essenciais.
                 Saiba mais na nossa
-                <a href="/Aptus/cookies">Política de Cookies</a>.
+                <a href="<?= aptus_base() ?>/cookies">Política de Cookies</a>.
             </p>
         </div>
 
@@ -55,9 +55,9 @@ $APP_PATH = '/Aptus/';
     bottom: 0;
     width: 100%;
     z-index: 2147483647;
-    background: var(--cor-primaria, #006577);
+    background: var(--cor-primaria, var(--cor-primaria));
     color: #ffffff;
-    border-top: 3px solid var(--cor-dourado, #C9A227);
+    border-top: 3px solid var(--cor-dourado, var(--cor-dourado-decorativo));
     box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.25);
     padding: 0 0 60px 0
     transform: translateY(100%);
@@ -86,7 +86,7 @@ $APP_PATH = '/Aptus/';
     flex-shrink: 0;
     font-size: 1.7rem;
     line-height: 1;
-    color: var(--cor-dourado, #C9A227);
+    color: var(--cor-dourado, var(--cor-dourado-decorativo));
 }
 
 /* Texto */
@@ -113,7 +113,7 @@ $APP_PATH = '/Aptus/';
 }
 
 .cookie-banner-text a {
-    color: var(--cor-dourado, #C9A227);
+    color: var(--cor-dourado, var(--cor-dourado-decorativo));
     text-decoration: underline;
     font-weight: 600;
     transition: color .25s;
@@ -146,8 +146,8 @@ $APP_PATH = '/Aptus/';
 
 /* Botão ACEITAR — fundo dourado, texto verde-escuro */
 .cookie-btn-accept {
-    background: var(--cor-dourado, #C9A227);
-    color: var(--cor-primaria, #006577);
+    background: var(--cor-dourado, var(--cor-dourado-decorativo));
+    color: var(--cor-primaria, var(--tema-primaria-texto, var(--cor-primaria)));
 }
 
 .cookie-btn-accept:hover {
@@ -164,8 +164,8 @@ $APP_PATH = '/Aptus/';
 }
 
 .cookie-btn-refuse:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: #ffffff;
+    background: rgba(var(--rgb-superficie, 255, 255, 255), 0.12);
+    border-color: color-mix(in srgb, #ffffff var(--tema-pastel-borda, 100%), var(--cor-borda));
     color: #ffffff;
 }
 

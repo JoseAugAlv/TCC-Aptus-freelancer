@@ -1,7 +1,7 @@
 <?php
 // app/Views/relatorios/index.php
 
-$tituloPagina = $tituloPagina ?? 'Relatorios - Aptus';
+$tituloPagina = $tituloPagina ?? 'Relatórios - Aptus';
 $cssPagina = $cssPagina ?? 'relatorios.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
@@ -30,17 +30,17 @@ require_once __DIR__ . '/../layouts/nav.php';
             <div class="kpi-label">Buscas (30 dias)</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-search" style="color: #3b82f6;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-search" style="color: var(--cor-info);"></i></div>
             <div class="kpi-value"><?= $totalBuscasSemana ?? 0 ?></div>
             <div class="kpi-label">Buscas (7 dias)</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-tags" style="color: #f59e0b;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-tags" style="color: var(--cor-aviso);"></i></div>
             <div class="kpi-value"><?= $buscasSemCategoria ?? 0 ?></div>
             <div class="kpi-label">Buscas sem categoria</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-icon"><i class="fas fa-briefcase" style="color: #10b981;"></i></div>
+            <div class="kpi-icon"><i class="fas fa-briefcase" style="color: var(--cor-sucesso);"></i></div>
             <div class="kpi-value"><?= $totalAnuncios ?? 0 ?></div>
             <div class="kpi-label">Anúncios Ativos</div>
         </div>
@@ -89,7 +89,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                                     <td><?= $cat['total_buscas'] ?></td>
                                     <td>
                                         <div class="progress-bar">
-                                            <div class="progress-fill" style="width: <?= $percentual ?>%; background: <?= $posicao <= 3 ? '#10b981' : ($posicao <= 5 ? '#f59e0b' : '#3b82f6') ?>;">
+                                            <div class="progress-fill" style="width: <?= $percentual ?>%; background: <?= $posicao <= 3 ? 'var(--cor-sucesso)' : ($posicao <= 5 ? 'var(--cor-aviso)' : 'var(--cor-info)') ?>;">
                                                 <?= $percentual ?>%
                                             </div>
                                         </div>
@@ -104,7 +104,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                 </table>
             </div>
             <div class="card-footer">
-                <a href="/Aptus/relatorios/categorias-pdf" class="btn-pdf" target="_blank">
+                <a href="<?= aptus_base() ?>/relatorios/categorias-pdf" class="btn-pdf" target="_blank">
                     <i class="fas fa-file-pdf"></i> Baixar PDF
                 </a>
             </div>
@@ -138,7 +138,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                                     <td><?= $termo['total'] ?></td>
                                     <td>
                                         <div class="progress-bar">
-                                            <div class="progress-fill" style="width: <?= $percentual ?>%; background: <?= $posicao <= 3 ? '#10b981' : ($posicao <= 5 ? '#f59e0b' : '#3b82f6') ?>;">
+                                            <div class="progress-fill" style="width: <?= $percentual ?>%; background: <?= $posicao <= 3 ? 'var(--cor-sucesso)' : ($posicao <= 5 ? 'var(--cor-aviso)' : 'var(--cor-info)') ?>;">
                                                 <?= $percentual ?>%
                                             </div>
                                         </div>
@@ -153,7 +153,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                 </table>
             </div>
             <div class="card-footer">
-                <a href="/Aptus/relatorios/termos-pdf" class="btn-pdf" target="_blank">
+                <a href="<?= aptus_base() ?>/relatorios/termos-pdf" class="btn-pdf" target="_blank">
                     <i class="fas fa-file-pdf"></i> Baixar PDF
                 </a>
             </div>
@@ -175,7 +175,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                 </thead>
                 <tbody>
                     <?php if (empty($usuariosMaisBuscam)): ?>
-                        <tr><td colspan="4">Nenhum usuario registrado</td></tr>
+                        <tr><td colspan="4">Nenhum usuário registrado</td></tr>
                     <?php else: ?>
                         <?php $posicao = 1; foreach ($usuariosMaisBuscam as $user): ?>
                             <tr>
@@ -192,7 +192,7 @@ require_once __DIR__ . '/../layouts/nav.php';
     </div>
 
     <div class="relatorios-links">
-        <a href="/Aptus/admin/dashboard"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</a>
+        <a href="<?= aptus_base() ?>/admin/dashboard"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</a>
     </div>
 </div>
 

@@ -7,12 +7,19 @@ composer.lock
 .env.local
 /app/Config/database.local.php
 
+/claude
+/graphify-out
+CLAUDE.md
+/.claude
+alteracoes_desejadas.md
+alteração.md
+
 # Logs
 /logs/*.log
 /logs/auditoria.log
 
 # Uploads de usuário (fotos de perfil, anúncios, portfólio, comprovantes)
-/public/uploads/*
+
 /codigo_completo.txt
 !/public/uploads/.gitkeep
 
@@ -43,3 +50,6 @@ npm-debug.log
 # Arquivos temporários
 *.tmp
 *.swp
+
+# Scripts de diagnóstico/manutenção nunca devem ir para public/
+public/_*.php

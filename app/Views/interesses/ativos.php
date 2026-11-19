@@ -30,7 +30,7 @@ $usuario    = $_SESSION['usuario'] ?? null;
         <div class="interesses-empty">
             <p>Nenhum serviço ativo</p>
             <p>Quando um serviço for aprovado, ele aparecerá aqui.</p>
-            <a href="/Aptus/anuncios" class="btn-primary">Ver Anúncios</a>
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-primary">Ver Anúncios</a>
         </div>
     <?php else: ?>
 
@@ -43,32 +43,26 @@ $usuario    = $_SESSION['usuario'] ?? null;
             <h2>Em Andamento</h2>
             <div class="interesses-grid">
                 <?php foreach ($ativos as $interesse):
-                    $isContratante    = ($usuario && $interesse['id_contratante'] == $usuario['id']);
-                    $usuarioJaAvaliou = !empty($interesse['usuario_ja_avaliou']);
-                    $outroJaAvaliou   = !empty($interesse['outro_ja_avaliou']);
-                    $ambosJaAvaliaram = $usuarioJaAvaliou && $outroJaAvaliou;
-                    $outroNome        = $isContratante
-                        ? ($interesse['freelancer_nome']  ?? 'Freelancer')
+                    $isContratante = ($usuario && $interesse['id_contratante'] == $usuario['id']);
+                    $outroNome     = $isContratante
+                        ? ($interesse['freelancer_nome']  ?? 'Prestador')
                         : ($interesse['contratante_nome'] ?? 'Cliente');
+                    $papelOutro    = $isContratante ? 'prestador' : 'cliente';
 
-                    $contratanteConfirmou = $interesse['confirmado_contratante'] ?? false;
-                    $freelancerConfirmou  = $interesse['confirmado_freelancer']  ?? false;
-                    $jaConfirmou          = $isContratante ? $contratanteConfirmou : $freelancerConfirmou;
-                    $outroConfirmou       = $isContratante ? $freelancerConfirmou  : $contratanteConfirmou;
-                    $pagamentoDivergente  = (isset($interesse['situacao_final']) && $interesse['situacao_final'] === 'divergente');
+                    // "Concluir serviço": cada parte confirma; com as duas, vira concluído
+                    $jaConfirmou         = !empty($interesse[$isContratante ? 'concluido_contratante' : 'concluido_freelancer']);
+                    $outroConfirmou      = !empty($interesse[$isContratante ? 'concluido_freelancer' : 'concluido_contratante']);
+                    $pagamentoDivergente = (isset($interesse['situacao_final']) && $interesse['situacao_final'] === 'divergente');
 
-                    if ($jaConfirmou && $outroConfirmou) {
-                        $statusConfirmacao = 'Ambos confirmaram - Concluído!';
-                        $statusCor         = '#10b981';
-                    } elseif ($jaConfirmou) {
-                        $statusConfirmacao = 'Aguardando confirmação do ' . ($isContratante ? 'freelancer' : 'cliente');
-                        $statusCor         = '#f59e0b';
+                    if ($jaConfirmou) {
+                        $statusConfirmacao = 'Você concluiu. Aguardando o ' . $papelOutro . ' confirmar.';
+                        $statusClasse      = 'aguardando';
                     } elseif ($outroConfirmou) {
-                        $statusConfirmacao = ($isContratante ? 'Freelancer' : 'Cliente') . ' já confirmou. Confirme também!';
-                        $statusCor         = '#3b82f6';
+                        $statusConfirmacao = 'O ' . $papelOutro . ' já concluiu. Falta só você confirmar!';
+                        $statusClasse      = 'sua-vez';
                     } else {
-                        $statusConfirmacao = 'Aguardando confirmação de ambos';
-                        $statusCor         = '#94a3b8';
+                        $statusConfirmacao = 'Em andamento. Quando o serviço terminar, clique em "Concluir serviço".';
+                        $statusClasse      = 'andamento';
                     }
                 ?>
                     <div class="interesse-card">
@@ -91,88 +85,47 @@ $usuario    = $_SESSION['usuario'] ?? null;
                             <p class="interesse-preco">
                                 R$ <?= number_format($interesse['anuncio_preco'] ?? 0, 2, ',', '.') ?>
                             </p>
-                            <div class="interesse-status-confirmacao" style="color: <?= $statusCor ?>;">
-                                <strong>Status:</strong> <?= $statusConfirmacao ?>
+                            <div class="interesse-status-confirmacao conclusao-<?= $statusClasse ?>">
+                                <i class="fas <?= $statusClasse === 'sua-vez' ? 'fa-bell' : ($statusClasse === 'aguardando' ? 'fa-hourglass-half' : 'fa-tools') ?>" aria-hidden="true"></i>
+                                <?= htmlspecialchars($statusConfirmacao) ?>
                             </div>
-                            <?php if ($jaConfirmou): ?>
-                                <p class="interesse-confirmado">Você já confirmou a execução do serviço.</p>
-                            <?php endif; ?>
                             <?php if ($pagamentoDivergente): ?>
-                                <p style="color:#dc2626;">
+                                <p style="color:var(--cor-erro-escuro);">
                                     <i class="fas fa-exclamation-triangle"></i>
                                     Pagamento divergente. Abra uma disputa para resolver.
                                 </p>
                             <?php endif; ?>
                         </div>
 
-                        <?php if (!$usuarioJaAvaliou && !$pagamentoDivergente): ?>
-                            <div class="avaliacao-form-container">
-                                <h4>Avaliar Serviço</h4>
-                                <p>Avalie o serviço antes de confirmar a execução</p>
-
-                                <form method="POST" action="/Aptus/avaliacoes/salvar" class="avaliacao-form">
-                                    <input type="hidden" name="interesse_id" value="<?= (int) $interesse['id_interesse'] ?>">
-
-                                    <div class="avaliacao-estrelas">
-                                        <label>Nota</label>
-                                        <div class="estrelas">
-                                            <?php for ($n = 1; $n <= 5; $n++): ?>
-                                                <input type="radio" name="nota" value="<?= $n ?>"
-                                                       id="star<?= $n ?>_<?= $interesse['id_interesse'] ?>"
-                                                       <?= $n === 1 ? 'required' : '' ?>>
-                                                <label for="star<?= $n ?>_<?= $interesse['id_interesse'] ?>">
-                                                    <i class="fas fa-star"></i>
-                                                </label>
-                                            <?php endfor; ?>
-                                        </div>
-                                    </div>
-
-                                    <div class="avaliacao-comentario">
-                                        <label for="comentario_<?= $interesse['id_interesse'] ?>">Comentário</label>
-                                        <textarea id="comentario_<?= $interesse['id_interesse'] ?>"
-                                                  name="comentario" rows="3"
-                                                  placeholder="Descreva sua experiência..."></textarea>
-                                    </div>
-
-                                    <div class="avaliacao-acoes">
-                                        <button type="submit" class="btn-enviar-avaliacao">Enviar Avaliação</button>
-                                    </div>
-                                    <?= CsrfMiddleware::field() ?>
-                                </form>
-                            </div>
-                        <?php elseif ($usuarioJaAvaliou && !$pagamentoDivergente): ?>
-                            <div class="avaliacao-ja-feita">
-                                <p><i class="fas fa-check-circle" style="color:#10b981;"></i> Você já avaliou este serviço.</p>
-                            </div>
-                        <?php endif; ?>
+                        <p class="conclusao-dica">
+                            <i class="fas fa-star" aria-hidden="true"></i>
+                            Depois que você e o <?= $papelOutro ?> concluírem, cada um poderá avaliar o outro.
+                        </p>
 
                         <div class="interesse-acoes">
-                            <a href="/Aptus/chat/<?= $interesse['id_interesse'] ?>" class="btn-chat">Chat</a>
-                            <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?>" class="btn-detalhes">Detalhes</a>
+                            <a href="<?= aptus_base() ?>/chat/<?= url_id($interesse['id_interesse']) ?>" class="btn-chat">Chat</a>
+                            <a href="<?= aptus_base() ?>/interesses/detalhes/<?= url_id($interesse['id_interesse']) ?>" class="btn-detalhes">Detalhes</a>
 
                             <?php if (!$pagamentoDivergente): ?>
 
-                                <?php if ($ambosJaAvaliaram && !$jaConfirmou): ?>
-                                    <form method="POST" action="/Aptus/interesses/confirmar-execucao" style="display:inline;">
+                                <?php if (!$jaConfirmou): ?>
+                                    <form method="POST" action="<?= aptus_base() ?>/interesses/confirmar-execucao" style="display:inline;">
                                         <input type="hidden" name="id" value="<?= (int) $interesse['id_interesse'] ?>">
                                         <?= CsrfMiddleware::field() ?>
                                         <button type="submit" class="btn-confirmar"
-                                                onclick="return confirm('Confirmar que o serviço foi executado?')">
-                                            Confirmar Execução
+                                                onclick="return confirm('Confirmar que o serviço foi feito? Quando o <?= $papelOutro ?> confirmar também, o serviço é concluído.')">
+                                            <i class="fas fa-check-double" aria-hidden="true"></i> Concluir serviço
                                         </button>
                                     </form>
-
-                                <?php elseif ($usuarioJaAvaliou && !$outroJaAvaliou): ?>
-                                    <span class="aviso-aguardando"
-                                          style="padding:10px 16px; background:#fef3c7; color:#92400e;
-                                                 border-radius:8px; font-size:.85rem; display:inline-block;">
-                                        <i class="fas fa-hourglass-half"></i>
-                                        Aguardando a outra parte avaliar…
+                                <?php else: ?>
+                                    <span class="aviso-aguardando">
+                                        <i class="fas fa-hourglass-half" aria-hidden="true"></i>
+                                        Aguardando o <?= $papelOutro ?>
                                     </span>
                                 <?php endif; ?>
 
                             <?php else: ?>
-                                <a href="/Aptus/disputas/criar?interesse_id=<?= $interesse['id_interesse'] ?>"
+                                <a href="<?= aptus_base() ?>/disputas/criar?interesse_id=<?= url_id($interesse['id_interesse']) ?>"
                                    class="btn-disputa">Abrir Disputa</a>
                             <?php endif; ?>
                         </div>
@@ -212,21 +165,23 @@ $usuario    = $_SESSION['usuario'] ?? null;
 
                         <?php if (!$usuarioJaAvaliou): ?>
                             <div class="avaliacao-form-container">
-                                <h4>Avaliar Serviço</h4>
-                                <p>Deixe sua avaliação sobre o serviço</p>
+                                <h4>Avaliar <?= $isContratante ? 'o prestador' : 'o cliente' ?></h4>
+                                <p>Como foi trabalhar com <?= htmlspecialchars($outroNome) ?>?</p>
 
-                                <form method="POST" action="/Aptus/avaliacoes/salvar" class="avaliacao-form">
+                                <form method="POST" action="<?= aptus_base() ?>/avaliacoes/salvar" class="avaliacao-form">
                                     <input type="hidden" name="interesse_id" value="<?= (int) $interesse['id_interesse'] ?>">
 
                                     <div class="avaliacao-estrelas">
                                         <label>Nota</label>
                                         <div class="estrelas">
-                                            <?php for ($n = 1; $n <= 5; $n++): ?>
+                                            <?php // De 5 para 1: o CSS usa row-reverse, então na tela fica 1..5 da esquerda para a direita
+                                                  for ($n = 5; $n >= 1; $n--): ?>
                                                 <input type="radio" name="nota" value="<?= $n ?>"
                                                        id="starC<?= $n ?>_<?= $interesse['id_interesse'] ?>"
                                                        <?= $n === 1 ? 'required' : '' ?>>
-                                                <label for="starC<?= $n ?>_<?= $interesse['id_interesse'] ?>">
-                                                    <i class="fas fa-star"></i>
+                                                <label for="starC<?= $n ?>_<?= $interesse['id_interesse'] ?>" title="<?= $n ?> estrela<?= $n > 1 ? 's' : '' ?>">
+                                                    <i class="fas fa-star" aria-hidden="true"></i>
+                                                    <span class="sr-only"><?= $n ?> estrela<?= $n > 1 ? 's' : '' ?></span>
                                                 </label>
                                             <?php endfor; ?>
                                         </div>
@@ -245,11 +200,15 @@ $usuario    = $_SESSION['usuario'] ?? null;
                                     <?= CsrfMiddleware::field() ?>
                                 </form>
                             </div>
+                        <?php else: ?>
+                            <div class="avaliacao-ja-feita">
+                                <p><i class="fas fa-check-circle" aria-hidden="true"></i> Você já avaliou este serviço.</p>
+                            </div>
                         <?php endif; ?>
 
                         <div class="interesse-acoes">
-                            <a href="/Aptus/chat/<?= $interesse['id_interesse'] ?>" class="btn-chat">Chat</a>
-                            <a href="/Aptus/interesses/detalhes/<?= $interesse['id_interesse'] ?>" class="btn-detalhes">Detalhes</a>
+                            <a href="<?= aptus_base() ?>/chat/<?= url_id($interesse['id_interesse']) ?>" class="btn-chat">Chat</a>
+                            <a href="<?= aptus_base() ?>/interesses/detalhes/<?= url_id($interesse['id_interesse']) ?>" class="btn-detalhes">Detalhes</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -259,9 +218,9 @@ $usuario    = $_SESSION['usuario'] ?? null;
     <?php endif; ?>
 
     <div class="interesses-links">
-        <a href="/Aptus/interesses/pendentes">Propostas Pendentes</a>
-        <a href="/Aptus/interesses/meus">Meus Interesses</a>
-        <a href="/Aptus/">Voltar</a>
+        <a href="<?= aptus_base() ?>/interesses/pendentes">Propostas Pendentes</a>
+        <a href="<?= aptus_base() ?>/interesses/meus">Meus Interesses</a>
+        <a href="<?= aptus_base() ?>/">Voltar</a>
     </div>
 </div>
 

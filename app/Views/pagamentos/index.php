@@ -79,7 +79,7 @@ $interesses = $interesses ?? [];
                                 <?php if ($confirmadoContratante): ?>
                                     <button type="button" class="btn btn-secondary" disabled>Você já confirmou (contratante)</button>
                                 <?php else: ?>
-                                    <a href="/Aptus/pagamentos/confirmar?id=<?= (int) $int['id_interesse'] ?>&amp;papel=contratante"
+                                    <a href="<?= aptus_base() ?>/pagamentos/confirmar?id=<?= url_id($int['id_interesse']) ?>&amp;papel=contratante"
                                        class="btn btn-primary">Confirmar como Contratante</a>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -88,7 +88,7 @@ $interesses = $interesses ?? [];
                                 <?php if ($confirmadoFreelancer): ?>
                                     <button type="button" class="btn btn-secondary" disabled>Você já confirmou (freelancer)</button>
                                 <?php else: ?>
-                                    <a href="/Aptus/pagamentos/confirmar?id=<?= (int) $int['id_interesse'] ?>&amp;papel=freelancer"
+                                    <a href="<?= aptus_base() ?>/pagamentos/confirmar?id=<?= url_id($int['id_interesse']) ?>&amp;papel=freelancer"
                                        class="btn btn-primary">Confirmar como Freelancer</a>
                                 <?php endif; ?>
                             <?php endif; ?>

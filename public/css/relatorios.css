@@ -1,17 +1,3 @@
-:root {
-    --cor-primaria: #006577;
-    --cor-secundaria: #C9A227;
-    --cor-fundo: #e2fbff;
-    --cor-dourado: #C9A227;
-    --cor-branco: #ffffff;
-    --cor-texto-principal: #1a1a1a;
-    --cor-texto-secundario: #555555;
-    --cor-sombra: rgba(0, 101, 119, 0.1);
-    --cor-hover: #004d5c;
-    --cor-borda: #b3e5fc;
-    --transicao-padrao: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -20,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, var(--tema-fundo-alt, #f5f7fa) 0%, var(--tema-fundo-gradiente, #c3cfe2) 100%);
     color: var(--cor-texto-principal);
     line-height: 1.6;
     overflow-x: hidden;
@@ -46,7 +32,7 @@ html {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -101,21 +87,21 @@ html {
 }
 
 .flash-sucesso {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: var(--tema-sucesso-bg, #d4edda);
+    color: var(--tema-sucesso-text, #155724);
+    border: 1px solid color-mix(in srgb, #c3e6cb var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
 .flash-erro {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: var(--tema-erro-bg, #f8d7da);
+    color: var(--tema-erro-text, #721c24);
+    border: 1px solid color-mix(in srgb, #f5c6cb var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
 .flash-aviso {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffc107;
+    background: var(--tema-aviso-bg, #fff3cd);
+    color: var(--tema-aviso-text, #856404);
+    border: 1px solid color-mix(in srgb, #ffc107 var(--tema-pastel-borda, 100%), var(--cor-borda));
 }
 
 .kpi-grid {
@@ -127,7 +113,7 @@ html {
 
 .kpi-card {
     position: relative;
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 15px;
     border: 1px solid rgba(0, 101, 119, 0.1);
     padding: 1.5rem 1.3rem;
@@ -162,7 +148,7 @@ html {
 
 .kpi-icon {
     font-size: 1.8rem;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 0.6rem;
     display: inline-flex;
     align-items: center;
@@ -186,7 +172,7 @@ html {
 .kpi-value {
     font-size: 1.8rem;
     font-weight: 800;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     line-height: 1.1;
     margin-bottom: 0.25rem;
 }
@@ -208,7 +194,7 @@ html {
 
 .card {
     position: relative;
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 15px;
     border: 1px solid rgba(0, 101, 119, 0.1);
     padding: 1.8rem;
@@ -241,12 +227,12 @@ html {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 1.2rem;
     padding-bottom: 0.8rem;
-    border-bottom: 1px solid #eef2f5;
+    border-bottom: 1px solid var(--tema-borda, #eef2f5);
 }
 
 .card h3 i {
@@ -268,8 +254,8 @@ html {
 .table-wrapper thead th {
     text-align: left;
     padding: 0.8rem 0.9rem;
-    background: #f4f8fa;
-    color: var(--cor-primaria);
+    background: color-mix(in srgb, #f4f8fa var(--tema-pastel, 100%), var(--cor-superficie));
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-weight: 700;
     font-size: 0.78rem;
     text-transform: uppercase;
@@ -289,7 +275,7 @@ html {
 .table-wrapper tbody td {
     padding: 0.75rem 0.9rem;
     color: var(--cor-texto-principal);
-    border-bottom: 1px solid #f0f4f7;
+    border-bottom: 1px solid color-mix(in srgb, #f0f4f7 var(--tema-pastel-borda, 100%), var(--cor-borda));
     vertical-align: middle;
 }
 
@@ -307,7 +293,7 @@ html {
 
 .table-wrapper tbody td:first-child {
     font-weight: 700;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     width: 40px;
 }
 
@@ -319,14 +305,14 @@ html {
 
 .table-wrapper tbody td[colspan] {
     text-align: center;
-    color: #94a3b8;
+    color: var(--tema-texto-suave, #94a3b8);
     font-style: italic;
     padding: 1.8rem 1rem;
 }
 
 .progress-bar {
     position: relative;
-    background: #eef2f5;
+    background: color-mix(in srgb, #eef2f5 var(--tema-pastel, 100%), var(--cor-superficie));
     border-radius: 20px;
     height: 22px;
     overflow: hidden;
@@ -352,7 +338,7 @@ html {
     justify-content: flex-end;
     margin-top: 1.2rem;
     padding-top: 1rem;
-    border-top: 1px solid #eef2f5;
+    border-top: 1px solid var(--tema-borda, #eef2f5);
 }
 
 .btn-pdf {
@@ -365,7 +351,7 @@ html {
     font-weight: 700;
     letter-spacing: 0.3px;
     color: var(--cor-branco);
-    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    background: linear-gradient(135deg, var(--cor-erro-escuro), #b91c1c);
     border: none;
     border-radius: 10px;
     text-decoration: none;
@@ -413,9 +399,9 @@ html {
     padding: 0.85rem 1.8rem;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--cor-primaria);
-    background: var(--cor-branco);
-    border: 2px solid var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
+    background: var(--tema-superficie, var(--cor-branco));
+    border: 2px solid var(--tema-primaria-texto, var(--cor-primaria));
     border-radius: 10px;
     text-decoration: none;
     box-shadow: 0 2px 8px rgba(0, 101, 119, 0.08);
@@ -428,8 +414,8 @@ html {
 
 .relatorios-links a:hover {
     background: rgba(0, 101, 119, 0.08);
-    color: var(--cor-hover);
-    border-color: var(--cor-hover);
+    color: var(--tema-hover-texto, var(--cor-hover));
+    border-color: var(--tema-hover-texto, var(--cor-hover));
     box-shadow: 0 6px 16px rgba(0, 101, 119, 0.2);
 }
 

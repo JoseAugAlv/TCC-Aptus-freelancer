@@ -9,7 +9,7 @@ $categorias = $categorias ?? [];
 <div class="admin-container">
     <div class="admin-header">
         <h1><i class="fas fa-tags"></i> Categorias</h1>
-        <a href="/Aptus/admin/categorias/criar" class="btn-criar"><i class="fas fa-plus"></i> Nova Categoria</a>
+        <a href="<?= aptus_base() ?>/admin/categorias/criar" class="btn-criar"><i class="fas fa-plus"></i> Nova Categoria</a>
     </div>
     <hr>
 
@@ -43,10 +43,10 @@ $categorias = $categorias ?? [];
                         <td><i class="<?= htmlspecialchars($cat['icone'] ?? 'fas fa-tag') ?>"></i></td>
                         <td>
                             <div class="acoes-tabela">
-                                <a href="/Aptus/admin/categorias/editar/<?= $cat['id_categoria'] ?>" class="btn-editar">
+                                <a href="<?= aptus_base() ?>/admin/categorias/editar/<?= url_id($cat['id_categoria']) ?>" class="btn-editar">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
-                                <form method="POST" action="/Aptus/admin/categorias/excluir"
+                                <form method="POST" action="<?= aptus_base() ?>/admin/categorias/excluir"
                                       class="form-inline"
                                       onsubmit="return confirm('Excluir esta categoria?');">
                                     <input type="hidden" name="id" value="<?= (int) $cat['id_categoria'] ?>">
@@ -93,19 +93,19 @@ $categorias = $categorias ?? [];
     transition: transform .15s, box-shadow .15s;
 }
 .btn-editar {
-    background: #006577;
+    background: var(--cor-primaria);
     color: #fff;
 }
 .btn-editar:hover {
-    background: #004d5c;
+    background: var(--cor-hover);
     transform: translateY(-1px);
 }
 .btn-excluir {
-    background: #ef4444;
+    background: var(--cor-erro);
     color: #fff;
 }
 .btn-excluir:hover {
-    background: #dc2626;
+    background: var(--cor-erro-escuro);
     transform: translateY(-1px);
 }
 </style>

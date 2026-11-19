@@ -14,7 +14,7 @@ $motivos = $motivos ?? [];
 <div class="disputa-container">
     <div class="disputa-header">
         <h1>Abrir Disputa</h1>
-        <p>Resolva conflitos relacionados ao servico</p>
+        <p>Resolva conflitos relacionados ao serviço</p>
     </div>
 
     <hr>
@@ -28,17 +28,17 @@ $motivos = $motivos ?? [];
 
     <div class="disputa-card">
         <div class="disputa-info">
-            <p><strong>Servico:</strong> <?= htmlspecialchars($interesse['anuncio_titulo'] ?? 'N/A') ?></p>
+            <p><strong>Serviço:</strong> <?= htmlspecialchars($interesse['anuncio_titulo'] ?? 'N/A') ?></p>
             <p><strong>Freelancer:</strong> <?= htmlspecialchars($interesse['freelancer_nome'] ?? 'N/A') ?></p>
             <p><strong>Cliente:</strong> <?= htmlspecialchars($interesse['contratante_nome'] ?? 'N/A') ?></p>
             <p><strong>Valor:</strong> R$ <?= number_format($interesse['anuncio_preco'] ?? 0, 2, ',', '.') ?></p>
         </div>
 
         <div class="disputa-aviso">
-            <p><i class="fas fa-exclamation-triangle"></i> A disputa sera analisada por um moderador. Ambos os lados serao notificados.</p>
+            <p><i class="fas fa-exclamation-triangle"></i> A disputa será analisada por um moderador. Ambos os lados serão notificados.</p>
         </div>
 
-        <form method="POST" action="/Aptus/disputas/salvar">
+        <form method="POST" action="<?= aptus_base() ?>/disputas/salvar">
             <input type="hidden" name="interesse_id" value="<?= $interesse['id_interesse'] ?? 0 ?>">
 
             <div class="form-group">
@@ -54,7 +54,7 @@ $motivos = $motivos ?? [];
             </div>
 
             <div class="form-group">
-                <label for="descricao">Descricao *</label>
+                <label for="descricao">Descrição *</label>
                 <textarea id="descricao" name="descricao" rows="5" 
                           placeholder="Descreva detalhadamente o problema..." required></textarea>
             </div>
@@ -63,7 +63,7 @@ $motivos = $motivos ?? [];
                 <button type="submit" class="btn-enviar">
                     <i class="fas fa-gavel"></i> Abrir Disputa
                 </button>
-                <a href="/Aptus/interesses/ativos" class="btn-cancelar">
+                <a href="<?= aptus_base() ?>/interesses/ativos" class="btn-cancelar">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
             </div>

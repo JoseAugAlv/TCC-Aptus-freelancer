@@ -15,21 +15,15 @@ html {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    color: #1a1a1a;
+    background: linear-gradient(135deg, var(--tema-fundo-alt, #f5f7fa) 0%, var(--tema-fundo-gradiente, #c3cfe2) 100%);
+    color: var(--tema-texto, #1a1a1a);
     line-height: 1.6;
     overflow-x: hidden;
 }
 
 /* ========== VARIÁVEIS ========== */
 :root {
-    --cor-primaria: #006577;
-    --cor-secundaria: #C9A227;
-    --cor-dourado: #C9A227;
-    --cor-hover: #004d5c;
     --cor-texto-principal: #1a2f3e;
-    --cor-texto-secundario: #555555;
-    --cor-branco: #ffffff;
     --cor-fundo: #f5f7fa;
     --cor-sombra: rgba(0, 101, 119, 0.12);
     --transicao-padrao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,7 +75,7 @@ body {
 .contato-hero h1 {
     font-size: clamp(1.8rem, 5vw, 3rem);
     font-weight: 800;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-dourado));
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -123,11 +117,11 @@ body {
 .info-card {
     flex: 1;
     min-width: 0;
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 20px;
     padding: 2rem 1.5rem;
     box-shadow: 0 4px 30px var(--cor-sombra);
-    border-top: 4px solid var(--cor-primaria);
+    border-top: 4px solid var(--tema-primaria-texto, var(--cor-primaria));
     transition: var(--transicao-padrao);
 }
 
@@ -138,7 +132,7 @@ body {
 .info-card h2 {
     font-size: clamp(1.2rem, 2.5vw, 1.4rem);
     font-weight: 700;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
@@ -199,7 +193,7 @@ body {
 }
 
 .info-text a:hover {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
 }
 
 .divider {
@@ -259,7 +253,7 @@ body {
 .form-card {
     flex: 1.6;
     min-width: 0;
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 20px;
     padding: 2rem 2rem;
     box-shadow: 0 4px 30px var(--cor-sombra);
@@ -297,15 +291,15 @@ body {
 }
 
 .alerta.sucesso {
-    background: #e8f8f0;
-    border: 1px solid #82d9a8;
-    color: #1a7a47;
+    background: var(--tema-sucesso-bg, #e8f8f0);
+    border: 1px solid color-mix(in srgb, #82d9a8 var(--tema-pastel-borda, 100%), var(--cor-borda));
+    color: var(--tema-sucesso-text, #1a7a47);
 }
 
 .alerta.erro {
-    background: #fff0f0;
+    background: var(--tema-erro-bg, #fff0f0);
     border: 1px solid #f5a8a8;
-    color: #c0392b;
+    color: var(--tema-erro-text, #c0392b);
 }
 
 .alerta i {
@@ -349,34 +343,34 @@ body {
     margin-left: 2px;
 }
 
-.form-group input,
+.form-group input:where(:not([type="checkbox"], [type="radio"], [type="file"])),
 .form-group select,
 .form-group textarea {
     width: 100%;
     padding: .85rem 1.1rem;
-    border: 1.5px solid #d8edf1;
+    border: 1.5px solid var(--tema-borda-primaria, #d8edf1);
     border-radius: 12px;
     font-size: clamp(0.9rem, 1vw, 0.97rem);
     font-family: inherit;
     color: var(--cor-texto-principal);
-    background: #f8fdfe;
+    background: var(--tema-fundo-alt, #f8fdfe);
     transition: border-color .25s, box-shadow .25s, background .25s;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
 }
 
-.form-group input:focus,
+.form-group input:where(:not([type="checkbox"], [type="radio"], [type="file"])):focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: var(--cor-primaria);
-    background: var(--cor-branco);
+    border-color: var(--tema-primaria-texto, var(--cor-primaria));
+    background: var(--tema-superficie, var(--cor-branco));
     box-shadow: 0 0 0 4px rgba(0,101,119,.1);
 }
 
-.form-group input::placeholder,
+.form-group input:where(:not([type="checkbox"], [type="radio"], [type="file"]))::placeholder,
 .form-group textarea::placeholder {
-    color: #a0b8c4;
+    color: var(--tema-texto-suave, #a0b8c4);
 }
 
 .form-group textarea {
@@ -401,7 +395,7 @@ body {
 }
 
 .char-count.limite {
-    color: #e74c3c;
+    color: var(--cor-erro);
 }
 
 /* ===== BOTÃO ENVIAR ===== */
@@ -455,7 +449,7 @@ body {
 }
 
 .privacidade i {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-right: 4px;
 }
 
@@ -473,7 +467,7 @@ body {
 .faq-section h2 {
     font-size: clamp(1.2rem, 2.5vw, 1.5rem);
     font-weight: 700;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
@@ -488,11 +482,11 @@ body {
 }
 
 .faq-item {
-    background: var(--cor-branco);
+    background: var(--tema-superficie, var(--cor-branco));
     border-radius: 14px;
     padding: 1.5rem;
     box-shadow: 0 2px 16px rgba(0,101,119,.07);
-    border-left: 4px solid var(--cor-primaria);
+    border-left: 4px solid var(--tema-primaria-texto, var(--cor-primaria));
     cursor: pointer;
     transition: box-shadow .25s, transform .25s;
     -webkit-tap-highlight-color: transparent;
@@ -518,7 +512,7 @@ body {
 }
 
 .faq-pergunta i {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     transition: transform .3s;
     font-size: .85rem;
     flex-shrink: 0;
@@ -631,7 +625,7 @@ body {
         margin-bottom: 1rem;
     }
 
-    .form-group input,
+    .form-group input:where(:not([type="checkbox"], [type="radio"], [type="file"])),
     .form-group select,
     .form-group textarea {
         padding: 0.7rem 0.9rem;
@@ -699,7 +693,7 @@ body {
         font-size: 1.1rem;
     }
 
-    .form-group input,
+    .form-group input:where(:not([type="checkbox"], [type="radio"], [type="file"])),
     .form-group select,
     .form-group textarea {
         padding: 0.6rem 0.8rem;

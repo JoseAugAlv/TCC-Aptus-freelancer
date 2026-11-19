@@ -10,7 +10,7 @@ class AdminCategoriaController
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['usuario']) || !in_array((int) $_SESSION['usuario']['role'], [1, 4], true)) {
-            header('Location: /Aptus/login');
+            header(('Location: ' . aptus_base() . '/login'));
             exit;
         }
     }
@@ -50,7 +50,7 @@ class AdminCategoriaController
             $model->create(['nome' => $nome, 'descricao' => $descricao, 'icone' => $icone]);
         }
 
-        header('Location: /Aptus/admin/categorias');
+        header(('Location: ' . aptus_base() . '/admin/categorias'));
         exit;
     }
 
@@ -62,7 +62,7 @@ class AdminCategoriaController
         $cat   = $model->findById((int) $id);
 
         if (!$cat) {
-            header('Location: /Aptus/admin/categorias');
+            header(('Location: ' . aptus_base() . '/admin/categorias'));
             exit;
         }
 
@@ -87,7 +87,7 @@ class AdminCategoriaController
             ]);
         }
 
-        header('Location: /Aptus/admin/categorias');
+        header(('Location: ' . aptus_base() . '/admin/categorias'));
         exit;
     }
 
@@ -110,7 +110,7 @@ class AdminCategoriaController
             ];
         }
 
-        header('Location: /Aptus/admin/categorias');
+        header(('Location: ' . aptus_base() . '/admin/categorias'));
         exit;
     }
 }

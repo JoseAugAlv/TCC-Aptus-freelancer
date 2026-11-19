@@ -1,22 +1,6 @@
-/* ========== VARIÁVEIS CSS ========== */
-:root {
-    --cor-primaria: #006577;
-    --cor-fundo: #e2fbff;
-    --cor-dourado: #C9A227;
-    --cor-branco: #ffffff;
-    --cor-texto-principal: #1a1a1a;
-    --cor-texto-secundario: #555555;
-    --cor-sombra: rgba(0, 101, 119, 0.1);
-    --cor-hover: #004d5c;
-    --cor-borda: #b3e5fc;
-
-    /* Transições */
-    --transicao-padrao: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 /* ========== FOOTER MODERNO ========== */
 .footer-moderno {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(var(--rgb-superficie, 255, 255, 255), 0.7);
     backdrop-filter: blur(10px);
     border-top: 1px solid var(--cor-sombra);
     margin-top: 4rem;
@@ -46,7 +30,7 @@
 
 /* ===== TÍTULOS DAS COLUNAS ===== */
 .footer-titulo {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
@@ -106,7 +90,7 @@
 }
 
 .footer-links a:hover {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     transform: translateX(4px);
 }
 
@@ -122,13 +106,13 @@
 }
 
 .footer-contato i {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     width: 20px;
     font-size: 0.9rem;
 }
 
 .footer-contato:hover {
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     transform: translateX(4px);
 }
 
@@ -182,7 +166,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--cor-primaria);
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 0.8rem;
     font-weight: 600;
     background: rgba(0, 101, 119, 0.05);
@@ -303,3 +287,32 @@
 .footer-col:nth-child(2) { animation-delay: 0.2s; }
 .footer-col:nth-child(3) { animation-delay: 0.3s; }
 .footer-col:nth-child(4) { animation-delay: 0.4s; }
+/* ===== CELULAR: rodapé em 2 colunas, alinhado à esquerda =====
+   (antes: tudo empilhado e centralizado, ocupando várias telas) */
+@media (max-width: 550px) {
+    .footer-moderno { padding: 2rem 0 1rem; }
+    /* .footer-moderno na frente: o responsive.css (carregado depois) força 1 coluna */
+    .footer-moderno .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.75rem 1.25rem;
+        text-align: left;
+    }
+    .footer-col { align-items: flex-start; }
+    .footer-titulo {
+        text-align: left;
+        font-size: 0.95rem;
+        margin-bottom: 0.9rem;
+        padding-bottom: 0.45rem;
+    }
+    .footer-links li { text-align: left; margin-bottom: 0.45rem; }
+    .footer-links a { justify-content: flex-start; font-size: 0.85rem; padding: 0.2rem 0; }
+    .footer-links a::after { left: 0; transform: none; }
+    .footer-contato {
+        justify-content: flex-start;
+        font-size: 0.82rem;
+        word-break: break-word;
+    }
+    .footer-social { justify-content: flex-start; }
+    .footer-bottom { gap: 0.6rem; margin-top: 1.5rem; padding-top: 1.25rem; }
+    .footer-bottom p { font-size: 0.8rem; }
+}

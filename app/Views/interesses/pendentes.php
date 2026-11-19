@@ -30,7 +30,7 @@ $interesses = $interesses ?? [];
             <i class="fas fa-inbox"></i>
             <h3>Nenhuma proposta pendente</h3>
             <p>Quando um cliente enviar uma proposta, ela aparecerá aqui.</p>
-            <a href="/Aptus/anuncios" class="btn-primary">Ver Anúncios</a>
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-primary">Ver Anúncios</a>
         </div>
     <?php else: ?>
         <div class="interesses-grid">
@@ -39,7 +39,7 @@ $interesses = $interesses ?? [];
                     <div class="interesse-header">
                         <div class="interesse-cliente">
                             <?php if (!empty($interesse['contratante_foto']) && $interesse['contratante_foto'] != 'default.png'): ?>
-                                <img src="/Aptus/public/uploads/<?= htmlspecialchars($interesse['contratante_foto']) ?>" 
+                                <img src="<?= aptus_base() ?>/public/uploads/<?= htmlspecialchars($interesse['contratante_foto']) ?>" 
                                      alt="<?= htmlspecialchars($interesse['contratante_nome']) ?>">
                             <?php else: ?>
                                 <i class="fas fa-user-circle"></i>
@@ -61,24 +61,31 @@ $interesses = $interesses ?? [];
                         <p class="interesse-preco">
                             <i class="fas fa-tag"></i> R$ <?= number_format($interesse['anuncio_preco'], 2, ',', '.') ?>
                         </p>
+                        <?php if ((int) ($interesse['total_concorrentes'] ?? 0) > 0): ?>
+                            <p class="interesse-concorrentes">
+                                <i class="fas fa-users"></i>
+                                Mais <?= (int) $interesse['total_concorrentes'] ?> cliente(s) querem este serviço.
+                                Ao aceitar esta proposta, as outras serão recusadas automaticamente.
+                            </p>
+                        <?php endif; ?>
                     </div>
 
                     <div class="interesse-acoes">
-                        <form method="POST" action="/Aptus/interesses/aceitar" style="display: inline;">
+                        <form method="POST" action="<?= aptus_base() ?>/interesses/aceitar" style="display: inline;">
                             <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
-                            <button type="submit" class="btn-aceitar" onclick="return confirm('Aceitar esta proposta?')">
+                            <button type="submit" class="btn-aceitar" onclick="return confirm('Aceitar esta proposta? <?= (int) ($interesse['total_concorrentes'] ?? 0) > 0 ? 'As outras propostas para este serviço serão recusadas.' : '' ?>')">
                                 <i class="fas fa-check"></i> Aceitar
                             </button>
                         <?= CsrfMiddleware::field() ?>
 </form>
-                        <form method="POST" action="/Aptus/interesses/recusar" style="display: inline;">
+                        <form method="POST" action="<?= aptus_base() ?>/interesses/recusar" style="display: inline;">
                             <input type="hidden" name="id" value="<?= $interesse['id_interesse'] ?>">
                             <button type="submit" class="btn-recusar" onclick="return confirm('Recusar esta proposta?')">
                                 <i class="fas fa-times"></i> Recusar
                             </button>
                         <?= CsrfMiddleware::field() ?>
 </form>
-                        <a href="/Aptus/chat/<?= $interesse['id_interesse'] ?>" class="btn-chat">
+                        <a href="<?= aptus_base() ?>/chat/<?= url_id($interesse['id_interesse']) ?>" class="btn-chat">
                             <i class="fas fa-comments"></i> Chat
                         </a>
                     </div>
@@ -88,9 +95,9 @@ $interesses = $interesses ?? [];
     <?php endif; ?>
 
     <div class="interesses-links">
-        <a href="/Aptus/interesses/ativos"><i class="fas fa-check-circle"></i> Serviços Ativos</a>
-        <a href="/Aptus/interesses/meus"><i class="fas fa-list"></i> Meus Interesses</a>
-        <a href="/Aptus/"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <a href="<?= aptus_base() ?>/interesses/ativos"><i class="fas fa-check-circle"></i> Serviços Ativos</a>
+        <a href="<?= aptus_base() ?>/interesses/meus"><i class="fas fa-list"></i> Meus Interesses</a>
+        <a href="<?= aptus_base() ?>/"><i class="fas fa-arrow-left"></i> Voltar</a>
     </div>
 </div>
 

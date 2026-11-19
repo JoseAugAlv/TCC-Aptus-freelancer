@@ -12,7 +12,7 @@ $favoritos = $favoritos ?? [];
 
 <div class="favoritos-container">
     <div class="favoritos-header">
-        <h1><i class="fas fa-heart" style="color: #ef4444;"></i> Meus Favoritos</h1>
+        <h1><i class="fas fa-heart" style="color: var(--cor-erro);"></i> Meus Favoritos</h1>
         <p>Serviços que você salvou para ver depois</p>
     </div>
 
@@ -30,7 +30,7 @@ $favoritos = $favoritos ?? [];
             <i class="fas fa-heart" style="font-size: 4rem; color: #d1d5db;"></i>
             <h3>Você ainda não tem favoritos</h3>
             <p>Explore os serviços e salve seus favoritos clicando no coração.</p>
-            <a href="/Aptus/anuncios" class="btn-explorar">
+            <a href="<?= aptus_base() ?>/anuncios" class="btn-explorar">
                 <i class="fas fa-search"></i> Explorar Serviços
             </a>
         </div>
@@ -57,7 +57,7 @@ $favoritos = $favoritos ?? [];
                             <?= htmlspecialchars($favorito['categoria_nome'] ?? 'Geral') ?>
                         </div>
                         <h3>
-                            <a href="/Aptus/anuncios/<?= htmlspecialchars($favorito['slug']) ?>">
+                            <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($favorito['slug']) ?>">
                                 <?= htmlspecialchars($favorito['titulo']) ?>
                             </a>
                         </h3>
@@ -80,12 +80,12 @@ $favoritos = $favoritos ?? [];
                             </div>
                         </div>
                         <div class="favorito-stats">
-                            <span><i class="fas fa-star" style="color: #f59e0b;"></i> <?= number_format($favorito['nota_media'] ?? 0, 1) ?></span>
+                            <span><?php $estrelasNota = $favorito['nota_anuncio'] ?? 0; $estrelasTotal = $favorito['total_avaliacoes_anuncio'] ?? 0; $estrelasCompacto = true; require __DIR__ . '/../partials/estrelas.php'; $estrelasCompacto = false; ?></span>
                             <span><i class="fas fa-eye"></i> <?= (int) ($favorito['visualizacoes'] ?? 0) ?></span>
                             <span><i class="fas fa-handshake"></i> <?= (int) ($favorito['total_interesses'] ?? 0) ?></span>
                         </div>
                         <div class="favorito-acoes">
-                            <a href="/Aptus/anuncios/<?= htmlspecialchars($favorito['slug']) ?>" class="btn-ver">
+                            <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($favorito['slug']) ?>" class="btn-ver">
                                 <i class="fas fa-eye"></i> Ver Serviço
                             </a>
                             <button class="btn-remover-favorito-texto" data-anuncio-id="<?= (int) $favorito['id_anuncio'] ?>">
@@ -99,7 +99,7 @@ $favoritos = $favoritos ?? [];
     <?php endif; ?>
 
     <div class="favoritos-voltar">
-        <a href="/Aptus/"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <a href="<?= aptus_base() ?>/"><i class="fas fa-arrow-left"></i> Voltar</a>
     </div>
 </div>
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var formData = new FormData();
             formData.append('anuncio_id', anuncioId);
 
-            fetch('/Aptus/favoritos/remover', {
+            fetch('<?= aptus_base() ?>/favoritos/remover', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-Token': csrfToken,

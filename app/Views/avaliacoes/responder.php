@@ -10,39 +10,52 @@ require_once __DIR__ . '/../layouts/nav.php';
 $avaliacao = $avaliacao ?? [];
 ?>
 
-<h1>Responder Avaliação</h1>
-<p>Responda ao comentário do cliente</p>
-
-<hr>
-
-<?php if (isset($_SESSION['flash'])): ?>
-    <div class="flash-<?= $_SESSION['flash']['tipo'] ?>">
-        <?= htmlspecialchars($_SESSION['flash']['mensagem']) ?>
+<div class="avaliacao-container">
+    <div class="avaliacao-header">
+        <h1><i class="fas fa-reply"></i> Responder Avaliação</h1>
+        <p>Responda ao comentário do cliente</p>
     </div>
-    <?php unset($_SESSION['flash']); ?>
-<?php endif; ?>
 
-<div>
-    <h3>Avaliação de <?= htmlspecialchars($avaliacao['avaliador_nome'] ?? '') ?></h3>
-    <p><strong>Nota:</strong> <?= $avaliacao['nota'] ?? 0 ?> estrelas</p>
-    <p><strong>Comentário:</strong> <?= nl2br(htmlspecialchars($avaliacao['comentario'] ?? '')) ?></p>
+    <?php if (isset($_SESSION['flash'])): ?>
+        <div class="flash-<?= htmlspecialchars($_SESSION['flash']['tipo']) ?>">
+            <?= htmlspecialchars($_SESSION['flash']['mensagem']) ?>
+        </div>
+        <?php unset($_SESSION['flash']); ?>
+    <?php endif; ?>
+
+    <div class="avaliacao-card">
+        <div class="avaliacao-info">
+            <p><strong>Avaliação de:</strong> <?= htmlspecialchars($avaliacao['avaliador_nome'] ?? '') ?></p>
+            <p><strong>Nota:</strong>
+                <?php $nota = (int) ($avaliacao['nota'] ?? 0); ?>
+                <span class="avaliacao-estrelas-leitura" aria-label="<?= $nota ?> de 5 estrelas">
+                    <?php for ($n = 1; $n <= 5; $n++): ?>
+                        <i class="<?= $n <= $nota ? 'fas' : 'far' ?> fa-star" aria-hidden="true"></i>
+                    <?php endfor; ?>
+                </span>
+            </p>
+            <p><strong>Comentário:</strong> <?= nl2br(htmlspecialchars($avaliacao['comentario'] ?? '')) ?></p>
+        </div>
+
+        <form method="POST" action="<?= aptus_base() ?>/avaliacoes/salvar-resposta">
+            <input type="hidden" name="avaliacao_id" value="<?= (int) ($avaliacao['id_avaliacao'] ?? 0) ?>">
+
+            <div class="form-group">
+                <label for="resposta">Sua resposta *</label>
+                <textarea id="resposta" name="resposta" rows="4" placeholder="Escreva sua resposta ao cliente..." required></textarea>
+            </div>
+
+            <div class="avaliacao-acoes">
+                <button type="submit" class="btn-enviar">
+                    <i class="fas fa-paper-plane"></i> Enviar Resposta
+                </button>
+                <a href="<?= aptus_base() ?>/interesses/detalhes/<?= url_id((int) ($avaliacao['id_interesse'] ?? 0)) ?>" class="btn-cancelar">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+            <?= CsrfMiddleware::field() ?>
+        </form>
+    </div>
 </div>
-
-<hr>
-
-<form method="POST" action="/Aptus/avaliacoes/salvar-resposta">
-    <input type="hidden" name="avaliacao_id" value="<?= $avaliacao['id_avaliacao'] ?? 0 ?>">
-
-    <div>
-        <label for="resposta">Sua Resposta</label>
-        <textarea id="resposta" name="resposta" rows="4" placeholder="Escreva sua resposta ao cliente..." required></textarea>
-    </div>
-
-    <div>
-        <button type="submit">Enviar Resposta</button>
-        <a href="/Aptus/interesses/detalhes/<?= $avaliacao['id_interesse'] ?? 0 ?>">Cancelar</a>
-    </div>
-<?= CsrfMiddleware::field() ?>
-</form>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

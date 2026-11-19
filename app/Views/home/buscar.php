@@ -2,7 +2,7 @@
 require_once __DIR__ . "/../../Middleware/CsrfMiddleware.php";
 // app/Views/home/buscar.php
 
-$tituloPagina = $tituloPagina ?? 'Busca Avancada - Aptus';
+$tituloPagina = $tituloPagina ?? 'Busca Avançada - Aptus';
 $cssPagina = $cssPagina ?? 'home.css';
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/nav.php';
@@ -19,26 +19,26 @@ $ordenar = $ordenar ?? 'recentes';
 
 <div class="busca-container">
     <div class="busca-header">
-        <h1>Busca Avancada</h1>
-        <p>Encontre os melhores servicos com filtros personalizados</p>
+        <h1>Busca Avançada</h1>
+        <p>Encontre os melhores serviços com filtros personalizados</p>
     </div>
 
     <hr>
 
     <div class="busca-filtros">
-        <form method="GET" action="/Aptus/buscar" class="filtros-form">
+        <form method="GET" action="<?= aptus_base() ?>/buscar" class="filtros-form">
             <div class="filtros-row">
                 <div class="filtro-group">
-                    <label for="q">O que voce procura?</label>
+                    <label for="q">O que você procura?</label>
                     <input type="text" id="q" name="q" value="<?= htmlspecialchars($termo) ?>" placeholder="Digite palavras-chave...">
                 </div>
 
                 <div class="filtro-group">
                     <label for="categoria">Categoria</label>
                     <select id="categoria" name="categoria">
-                        <option value="0">Todas as categorias</option>
+                        <option value="">Todas as categorias</option>
                         <?php foreach ($categorias as $cat): ?>
-                            <option value="<?= $cat['id_categoria'] ?>" <?= ($filtroCategoria == $cat['id_categoria']) ? 'selected' : '' ?>>
+                            <option value="<?= url_id($cat['id_categoria']) ?>" <?= ((int) $filtroCategoria === (int) $cat['id_categoria']) ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($cat['nome']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -46,7 +46,7 @@ $ordenar = $ordenar ?? 'recentes';
                 </div>
 
                 <div class="filtro-group">
-                    <label for="avaliacao">Avaliacao minima</label>
+                    <label for="avaliacao">Avaliação mínima</label>
                     <select id="avaliacao" name="avaliacao">
                         <option value="0">Todas</option>
                         <option value="4.5" <?= ($filtroAvaliacao == 4.5) ? 'selected' : '' ?>>4.5+ estrelas</option>
@@ -62,8 +62,8 @@ $ordenar = $ordenar ?? 'recentes';
                     <select id="ordenar" name="ordenar">
                         <option value="recentes" <?= ($ordenar == 'recentes') ? 'selected' : '' ?>>Mais recentes</option>
                         <option value="avaliacao" <?= ($ordenar == 'avaliacao') ? 'selected' : '' ?>>Melhor avaliados</option>
-                        <option value="preco_asc" <?= ($ordenar == 'preco_asc') ? 'selected' : '' ?>>Menor preco</option>
-                        <option value="preco_desc" <?= ($ordenar == 'preco_desc') ? 'selected' : '' ?>>Maior preco</option>
+                        <option value="preco_asc" <?= ($ordenar == 'preco_asc') ? 'selected' : '' ?>>Menor preço</option>
+                        <option value="preco_desc" <?= ($ordenar == 'preco_desc') ? 'selected' : '' ?>>Maior preço</option>
                         <option value="visualizacoes" <?= ($ordenar == 'visualizacoes') ? 'selected' : '' ?>>Mais vistos</option>
                     </select>
                 </div>
@@ -71,43 +71,42 @@ $ordenar = $ordenar ?? 'recentes';
 
             <div class="filtros-row">
                 <div class="filtro-group">
-                    <label for="preco_min">Preco minimo (R$)</label>
+                    <label for="preco_min">Preço mínimo (R$)</label>
                     <input type="number" id="preco_min" name="preco_min" value="<?= $filtroPrecoMin ?>" placeholder="0" min="0" step="10">
                 </div>
 
                 <div class="filtro-group">
-                    <label for="preco_max">Preco maximo (R$)</label>
+                    <label for="preco_max">Preço máximo (R$)</label>
                     <input type="number" id="preco_max" name="preco_max" value="<?= $filtroPrecoMax ?>" placeholder="1000" min="0" step="10">
                 </div>
 
                 <div class="filtro-group filtro-actions">
                     <button type="submit" class="btn-buscar">Buscar</button>
-                    <a href="/Aptus/buscar" class="btn-limpar">Limpar filtros</a>
+                    <a href="<?= aptus_base() ?>/buscar" class="btn-limpar">Limpar filtros</a>
                 </div>
             </div>
-        <?= CsrfMiddleware::field() ?>
 </form>
     </div>
 
-    <?php if (!empty($termo) || $filtroCategoria > 0 || $filtroPrecoMin > 0 || $filtroPrecoMax > 0): ?>
+    <?php if (!empty($termo) || $filtroCategoria > 0 || $filtroAvaliacao > 0 || $filtroPrecoMin > 0 || $filtroPrecoMax > 0): ?>
         <div class="resultados-header">
-            <span class="total-resultados"><?= count($resultados) ?> resultado(s) encontrado(s)</span>
-            <a href="/Aptus/buscar" class="btn-limpar-pequeno">Limpar busca</a>
+            <span class="total-resultados"><?= (int) ($totalResultados ?? count($resultados)) ?> resultado(s) encontrado(s)</span>
+            <a href="<?= aptus_base() ?>/buscar" class="btn-limpar-pequeno">Limpar busca</a>
         </div>
     <?php endif; ?>
 
     <div class="resultados-grid">
-        <?php if (empty($resultados) && (!empty($termo) || $filtroCategoria > 0 || $filtroPrecoMin > 0 || $filtroPrecoMax > 0)): ?>
+        <?php if (empty($resultados) && (!empty($termo) || $filtroCategoria > 0 || $filtroAvaliacao > 0 || $filtroPrecoMin > 0 || $filtroPrecoMax > 0)): ?>
             <div class="empty-state">
                 <i class="fas fa-search"></i>
                 <h3>Nenhum resultado encontrado</h3>
                 <p>Tente buscar com outros termos ou remova os filtros.</p>
-                <a href="/Aptus/buscar" class="btn-limpar">Limpar busca</a>
+                <a href="<?= aptus_base() ?>/buscar" class="btn-limpar">Limpar busca</a>
             </div>
         <?php elseif (empty($resultados)): ?>
             <div class="empty-state">
                 <i class="fas fa-search"></i>
-                <h3>Busque por servicos</h3>
+                <h3>Busque por serviços</h3>
                 <p>Utilize os filtros acima para encontrar profissionais qualificados.</p>
             </div>
         <?php else: ?>
@@ -115,7 +114,7 @@ $ordenar = $ordenar ?? 'recentes';
                 <div class="anuncio-card">
                     <div class="anuncio-imagem">
                         <?php if (!empty($anuncio['foto_capa'])): ?>
-                            <img src="/Aptus/public/uploads/anuncios/<?= htmlspecialchars($anuncio['foto_capa']) ?>" 
+                            <img src="<?= htmlspecialchars(\UploadHelper::capaUrl($anuncio['foto_capa']), ENT_QUOTES, 'UTF-8') ?>"
                                  alt="<?= htmlspecialchars($anuncio['titulo']) ?>">
                         <?php else: ?>
                             <i class="fas fa-briefcase"></i>
@@ -129,15 +128,7 @@ $ordenar = $ordenar ?? 'recentes';
                         <h3><?= htmlspecialchars($anuncio['titulo']) ?></h3>
                         
                         <div class="anuncio-avaliacao">
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                                <?php if ($i <= round($anuncio['nota_media'] ?? 0)): ?>
-                                    <i class="fas fa-star"></i>
-                                <?php else: ?>
-                                    <i class="far fa-star"></i>
-                                <?php endif; ?>
-                            <?php endfor; ?>
-                            <span class="nota"><?= number_format($anuncio['nota_media'] ?? 0, 1) ?></span>
-                            <span class="total">(<?= $anuncio['total_avaliacoes'] ?? 0 ?>)</span>
+                            <?php $estrelasNota = $anuncio['nota_anuncio'] ?? 0; $estrelasTotal = $anuncio['total_avaliacoes_anuncio'] ?? 0; require __DIR__ . '/../partials/estrelas.php'; ?>
                         </div>
                         
                         <p class="descricao">
@@ -159,7 +150,7 @@ $ordenar = $ordenar ?? 'recentes';
                             <span><i class="fas fa-handshake"></i> <?= $anuncio['total_interesses'] ?? 0 ?></span>
                         </div>
                         
-                        <a href="/Aptus/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>" class="btn-ver">
+                        <a href="<?= aptus_base() ?>/anuncios/<?= htmlspecialchars($anuncio['slug']) ?>" class="btn-ver">
                             Ver Detalhes
                         </a>
                     </div>
@@ -167,6 +158,25 @@ $ordenar = $ordenar ?? 'recentes';
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+
+    <?php if (($totalPaginas ?? 1) > 1): ?>
+        <?php
+            $__qs = $_GET;
+            $__link = function (int $p) use ($__qs) {
+                $__qs['pagina'] = $p;
+                return (aptus_base() . '/buscar?') . htmlspecialchars(http_build_query($__qs), ENT_QUOTES, 'UTF-8');
+            };
+        ?>
+        <nav class="paginacao" aria-label="Paginação dos resultados">
+            <?php if ($paginaAtual > 1): ?>
+                <a href="<?= $__link($paginaAtual - 1) ?>" class="btn-limpar-pequeno" rel="prev">&laquo; Anterior</a>
+            <?php endif; ?>
+            <span class="total-resultados">Página <?= (int) $paginaAtual ?> de <?= (int) $totalPaginas ?></span>
+            <?php if ($paginaAtual < $totalPaginas): ?>
+                <a href="<?= $__link($paginaAtual + 1) ?>" class="btn-limpar-pequeno" rel="next">Próxima &raquo;</a>
+            <?php endif; ?>
+        </nav>
+    <?php endif; ?>
 </div>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

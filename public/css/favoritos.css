@@ -15,7 +15,7 @@
     font-weight: 800;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #006577, #C9A227);
+    background: linear-gradient(135deg, var(--tema-primaria-texto, var(--cor-primaria)), var(--cor-dourado-decorativo));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -27,7 +27,7 @@
 }
 
 .favoritos-header p {
-    color: #555555;
+    color: var(--tema-texto-sec, #555555);
     font-size: 1.1rem;
     font-weight: 400;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -36,18 +36,18 @@
 .favoritos-header hr {
     border: none;
     height: 2px;
-    background: linear-gradient(90deg, #006577, #C9A227, transparent);
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-dourado-decorativo), transparent);
     margin: 20px auto;
     max-width: 200px;
 }
 
 /* ===== FLASH MESSAGES ===== */
 .flash-sucesso {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--cor-sucesso-bg);
+    color: var(--cor-sucesso-text);
     padding: 14px 20px;
     border-radius: 10px;
-    border-left: 4px solid #10b981;
+    border-left: 4px solid var(--cor-sucesso);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -57,11 +57,11 @@
 }
 
 .flash-erro {
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--cor-erro-bg);
+    color: var(--cor-erro-text);
     padding: 14px 20px;
     border-radius: 10px;
-    border-left: 4px solid #ef4444;
+    border-left: 4px solid var(--cor-erro);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -71,11 +71,11 @@
 }
 
 .flash-aviso {
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--cor-aviso-bg);
+    color: var(--cor-aviso-text);
     padding: 14px 20px;
     border-radius: 10px;
-    border-left: 4px solid #f59e0b;
+    border-left: 4px solid var(--cor-aviso);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -100,22 +100,22 @@
 .favoritos-empty {
     text-align: center;
     padding: 4rem 2rem;
-    background: white;
+    background: var(--tema-superficie, white);
     border-radius: 16px;
-    border: 2px dashed #d1d5db;
+    border: 2px dashed var(--tema-borda, #d1d5db);
     margin: 20px 0;
 }
 
 .favoritos-empty i {
     display: block;
     font-size: 4rem;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     opacity: 0.4;
     margin-bottom: 1rem;
 }
 
 .favoritos-empty h3 {
-    color: #333;
+    color: var(--tema-texto, #333);
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
     font-weight: 700;
@@ -123,7 +123,7 @@
 }
 
 .favoritos-empty p {
-    color: #888;
+    color: var(--tema-texto-sec, #888);
     margin-bottom: 1.5rem;
     font-size: 1rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -134,7 +134,7 @@
     align-items: center;
     gap: 10px;
     padding: 14px 32px;
-    background: linear-gradient(135deg, #006577, #004d5c);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
     color: #ffffff;
     border-radius: 10px;
     text-decoration: none;
@@ -167,11 +167,11 @@
 
 /* ===== CARD DO FAVORITO ===== */
 .favorito-card {
-    background: white;
+    background: var(--tema-superficie, white);
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-    border: 1px solid #eef2f6;
+    border: 1px solid var(--tema-borda, #eef2f6);
     transition: all 0.3s ease;
     height: 100%;
     display: flex;
@@ -181,14 +181,14 @@
 .favorito-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 30px rgba(0, 101, 119, 0.12);
-    border-color: #006577;
+    border-color: var(--tema-primaria-texto, var(--cor-primaria));
 }
 
 /* ===== IMAGEM DO FAVORITO ===== */
 .favorito-imagem {
     position: relative;
     height: 200px;
-    background: #f8fafc;
+    background: var(--tema-fundo-alt, #f8fafc);
     overflow: hidden;
 }
 
@@ -209,8 +209,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f0f7ff, #e8f0fe);
-    color: #006577;
+    background: linear-gradient(135deg, color-mix(in srgb, #f0f7ff var(--tema-pastel, 100%), var(--cor-superficie)), color-mix(in srgb, #e8f0fe var(--tema-pastel, 100%), var(--cor-superficie)));
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     font-size: 4rem;
 }
 
@@ -235,7 +235,7 @@
 }
 
 .btn-remover-favorito:hover {
-    background: #dc2626;
+    background: var(--cor-erro-escuro);
     transform: scale(1.1);
     box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
 }
@@ -262,7 +262,7 @@
     align-items: center;
     gap: 6px;
     background: rgba(0, 101, 119, 0.08);
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     padding: 4px 14px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -285,17 +285,17 @@
 }
 
 .favorito-info h3 a {
-    color: #1a2f3e;
+    color: var(--tema-texto, #1a2f3e);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .favorito-info h3 a:hover {
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
 }
 
 .favorito-descricao {
-    color: #555555;
+    color: var(--tema-texto-sec, #555555);
     font-size: 0.95rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.5;
@@ -310,7 +310,7 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 12px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--tema-borda, #f0f0f0);
     margin-bottom: 10px;
 }
 
@@ -318,7 +318,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #555555;
+    color: var(--tema-texto-sec, #555555);
     font-size: 0.9rem;
     font-weight: 500;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -329,26 +329,26 @@
     height: 28px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--tema-borda, #e2e8f0);
 }
 
 .favorito-freelancer i {
     font-size: 1.5rem;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
 }
 
 .favorito-preco {
     font-size: 1.1rem;
     font-weight: 700;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #5a3a0e;
+    color: color-mix(in srgb, #5a3a0e var(--tema-tinta, 100%), #ffffff);
 }
 
 /* ===== STATS ===== */
 .favorito-stats {
     display: flex;
     gap: 16px;
-    color: #888;
+    color: var(--tema-texto-sec, #888);
     font-size: 0.85rem;
     margin-bottom: 12px;
     font-weight: 400;
@@ -371,7 +371,7 @@
     gap: 10px;
     margin-top: auto;
     padding-top: 12px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--tema-borda, #f0f0f0);
 }
 
 .favorito-acoes .btn-ver {
@@ -381,7 +381,7 @@
     justify-content: center;
     gap: 8px;
     padding: 10px 16px;
-    background: linear-gradient(135deg, #006577, #004d5c);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-hover));
     color: white;
     border-radius: 8px;
     text-decoration: none;
@@ -408,7 +408,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #006577;
+    color: var(--tema-primaria-texto, var(--cor-primaria));
     text-decoration: none;
     font-weight: 600;
     font-size: 1rem;
@@ -419,7 +419,7 @@
 }
 
 .favoritos-voltar a:hover {
-    color: #5a3a0e;
+    color: color-mix(in srgb, #5a3a0e var(--tema-tinta, 100%), #ffffff);
     background: rgba(201, 162, 39, 0.08);
     transform: translateX(-5px);
 }

@@ -65,7 +65,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                         </thead>
                         <tbody>
                             <?php if (empty($ultimosUsuarios)): ?>
-                                <tr><td colspan="4" style="text-align: center; color: #888;">Nenhum usuário cadastrado</td></tr>
+                                <tr><td colspan="4" style="text-align: center; color: var(--tema-texto-sec, #888);">Nenhum usuário cadastrado</td></tr>
                             <?php else: ?>
                                 <?php foreach ($ultimosUsuarios as $user): ?>
                                     <tr>
@@ -74,7 +74,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                                                 <img src="<?= htmlspecialchars(\UploadHelper::getUrl($user['foto_perfil']), ENT_QUOTES, 'UTF-8') ?>"
                                                      alt="Foto" class="avatar-mini">
                                             <?php else: ?>
-                                                <i class="fas fa-user-circle" style="font-size: 1.5rem; color: #94a3b8;"></i>
+                                                <i class="fas fa-user-circle" style="font-size: 1.5rem; color: var(--tema-texto-suave, #94a3b8);"></i>
                                             <?php endif; ?>
                                             <?= htmlspecialchars($user['nome']) ?>
                                         </td>
@@ -108,7 +108,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                         </thead>
                         <tbody>
                             <?php if (empty($ultimosAnuncios)): ?>
-                                <tr><td colspan="5" style="text-align: center; color: #888;">Nenhum anúncio cadastrado</td></tr>
+                                <tr><td colspan="5" style="text-align: center; color: var(--tema-texto-sec, #888);">Nenhum anúncio cadastrado</td></tr>
                             <?php else: ?>
                                 <?php foreach ($ultimosAnuncios as $anuncio): ?>
                                     <tr>
@@ -140,17 +140,17 @@ require_once __DIR__ . '/../layouts/nav.php';
                 <h3><i class="fas fa-info-circle"></i> Resumo</h3>
                 <ul class="resumo-list">
                     <li>
-                        <i class="fas fa-user-tie" style="color: #3b82f6;"></i>
+                        <i class="fas fa-user-tie" style="color: var(--cor-info);"></i>
                         <span>Administradores</span>
                         <strong><?= $totaisPorTipo['Admin'] ?? 0 ?></strong>
                     </li>
                     <li>
-                        <i class="fas fa-user-cog" style="color: #f59e0b;"></i>
+                        <i class="fas fa-user-cog" style="color: var(--cor-aviso);"></i>
                         <span>Moderadores</span>
                         <strong><?= $totaisPorTipo['Moderador'] ?? 0 ?></strong>
                     </li>
                     <li>
-                        <i class="fas fa-user" style="color: #10b981;"></i>
+                        <i class="fas fa-user" style="color: var(--cor-sucesso);"></i>
                         <span>Usuários</span>
                         <strong><?= $totaisPorTipo['Usuario'] ?? 0 ?></strong>
                     </li>
@@ -160,7 +160,7 @@ require_once __DIR__ . '/../layouts/nav.php';
                         <strong><?= $totaisPorTipo['Master'] ?? 0 ?></strong>
                     </li>
                     <li>
-                        <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+                        <i class="fas fa-exclamation-triangle" style="color: var(--cor-erro);"></i>
                         <span>Denúncias Pendentes</span>
                         <strong><?= $denunciasPendentes ?></strong>
                     </li>
